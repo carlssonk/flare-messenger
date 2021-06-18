@@ -1,0 +1,16 @@
+.center {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  .spinner {
+    color: var(--primary-cyan);
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.flare-icon {
+  width: 100px;
+  margin-bottom: auto;
+}

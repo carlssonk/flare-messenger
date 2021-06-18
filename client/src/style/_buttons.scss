@@ -1,0 +1,18 @@
+.auth-wrapper {
+  border-radius: 20px !important;
+  ion-button {
+    --background: var(--secondary-background);
+    height: 50px;
+    margin: 8px;
+    --border-radius: 20px;
+    width: 100%;
+  }
+  .login-btn {
+    --background: var(--primary-cyan);
+    margin-top: 22px;
+  }
+  .small-btn {
+    --background: transparent;
+    height: 30px;
+  }
+}
