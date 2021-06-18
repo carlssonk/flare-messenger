@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const passport = require("passport");
-const { validationResult } = require("express-validator");
 
 module.exports.user = (req, res) => {
   console.log(req.isAuthenticated());
