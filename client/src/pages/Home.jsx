@@ -8,6 +8,7 @@ import {
   faEdit,
   faSearch,
   faUserPlus,
+  faCamera,
 } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
@@ -42,10 +43,11 @@ function Home() {
           <div className="header">
             <div className="nav-wrapper">
               <DeviceInfo />
-
               <div className="nav-container">
                 <div className="profile-btn">
-                  <img src={ProfileImg} alt="" />
+                  <Link to="/profile">
+                    <img src={ProfileImg} alt="" />
+                  </Link>
                 </div>
                 <div className="page-label">Chats</div>
                 <div className="nav__icon">
@@ -61,9 +63,15 @@ function Home() {
               <input type="text" className="search" placeholder="Search" />
             </div>
           </div>
+
+          <div className="bottom">HOasdasdME</div>
+          <div className="footer">
+            <div className="camera-box">
+              <FontAwesomeIcon icon={faCamera} />
+            </div>
+            <div className="blur"></div>
+          </div>
         </div>
-        <Link to="/profile">Profile</Link>
-        <div>HOME</div>
       </motion.div>
     </>
   );
