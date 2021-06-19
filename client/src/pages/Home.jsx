@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import DeviceInfo from "../components/DeviceInfo";
 import ProfileImg from "../imgs/oliverhaha.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Jeb_ from "../imgs/Jens-Bergensten.png";
 import {
   faEdit,
   faSearch,
@@ -63,11 +64,116 @@ function Home() {
               <input type="text" className="search" placeholder="Search" />
             </div>
           </div>
+          <ul className="chat-list">
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <li>
+              <div className="img-box">
+                <img src={Jeb_} alt="" />
+              </div>
+              <div className="text-box">
+                <div className="friend">Jens Bergensten</div>
+                <div className="message">The business plan looking goo...</div>
+              </div>
+              <div className="time-box">9:40 AM</div>
+            </li>
+            <div className="bottom-space"></div>
+          </ul>
 
-          <div className="bottom">HOasdasdME</div>
-          <div className="footer">
-            <div className="camera-box">
-              <FontAwesomeIcon icon={faCamera} />
+          {/* <div className="bottom">HOasdasdME</div> */}
+          <div className="footer-wrapper">
+            <div className="footer">
+              <div className="camera-box">
+                <FontAwesomeIcon icon={faCamera} />
+              </div>
             </div>
             <div className="blur"></div>
           </div>
