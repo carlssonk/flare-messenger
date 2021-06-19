@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import { UserContext } from "./context/UserContext";
 import { AnimatePresence } from "framer-motion";
+import AddFriends from "./pages/AddFriends";
 
 function App() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function App() {
               <Route exact path="/" component={Authenticate} />
             )}
             <PrivateRoute user={user} path="/profile" component={Profile} />
+            <PrivateRoute user={user} path="/add" component={AddFriends} />
           </Switch>
         ) : (
           <Loading />

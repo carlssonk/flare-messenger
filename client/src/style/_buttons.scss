@@ -16,3 +16,32 @@
     height: 30px;
   }
 }
+
+.add-page {
+  ion-button {
+    --background: #4b4b4b;
+    height: 32px;
+    margin: 8px;
+    --border-radius: 40px;
+    text-transform: none !important;
+  }
+  ion-label {
+    text-transform: none !important;
+  }
+
+  .accept-btn {
+    --padding-start: 10px;
+    --padding-end: 5px;
+    svg {
+      font-size: 14px;
+      margin: 8px;
+    }
+  }
+
+  .switch-btn {
+    color: white;
+    --indicator-color: var(--primary-cyan);
+    --color-checked: white;
+    --color: white;
+  }
+}
