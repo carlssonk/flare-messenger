@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import DeviceInfo from "../components/DeviceInfo";
+import ProfileImg from "../imgs/oliverhaha.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faSearch,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
   const containerVariants = {
@@ -30,6 +38,30 @@ function Home() {
         animate="visible"
         exit="exit"
       >
+        <div className="home-page">
+          <div className="header">
+            <div className="nav-wrapper">
+              <DeviceInfo />
+
+              <div className="nav-container">
+                <div className="profile-btn">
+                  <img src={ProfileImg} alt="" />
+                </div>
+                <div className="page-label">Chats</div>
+                <div className="nav__icon">
+                  <FontAwesomeIcon icon={faUserPlus} />
+                </div>
+                <div className="nav__icon">
+                  <FontAwesomeIcon icon={faEdit} />
+                </div>
+              </div>
+            </div>
+            <div className="search-box">
+              <FontAwesomeIcon icon={faSearch} />
+              <input type="text" className="search" placeholder="Search" />
+            </div>
+          </div>
+        </div>
         <Link to="/profile">Profile</Link>
         <div>HOME</div>
       </motion.div>

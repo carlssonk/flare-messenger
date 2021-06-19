@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 import Login from "../components/Login";
 import Signup from "../components/Signup";

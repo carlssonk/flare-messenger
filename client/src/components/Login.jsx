@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { IonPage, IonButton } from "@ionic/react";
-import FlareIcon from "../flare-icon.svg";
-import { motion, AnimatePresence } from "framer-motion";
-import { useHistory } from "react-router-dom";
+import FlareIcon from "../imgs/flare-icon.svg";
+import { motion } from "framer-motion";
 
 function Login({ changePage }) {
   const { setUser } = useContext(UserContext);
@@ -70,7 +69,7 @@ function Login({ changePage }) {
         animate="visible"
         exit="exit"
       >
-        <IonPage className="auth-wrapper">
+        <IonPage className="auth-page">
           <img src={FlareIcon} className="flare-icon" alt="logo" />
           <form onSubmit={handleLogin}>
             <input

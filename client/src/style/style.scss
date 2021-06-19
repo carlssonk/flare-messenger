@@ -1,6 +1,7 @@
 @import "utilities";
 @import "inputs";
 @import "buttons";
+@import "components";
 @import "config";
 
 * {
@@ -25,7 +26,7 @@ body {
   height: 100%;
 }
 
-.auth-wrapper {
+.auth-page {
   width: 100%;
   height: 100%;
   display: flex;
@@ -38,5 +39,91 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+}
+
+.home-page {
+  .header {
+    height: 156px;
+    .nav-wrapper {
+      width: 100%;
+      // position: relative;
+      background-color: rgb(24, 24, 24);
+      // display: flex;
+      //
+      /* Add the blur effect */
+
+      .nav-container {
+        display: grid;
+        grid-template-columns: 1fr 12fr 4fr 1fr;
+        color: white;
+        height: 64px;
+        place-items: center;
+
+        padding: 0 14px;
+        // .profile-box {
+        //   display: flex;
+        //   justify-content: center;
+        //   align-items: center;
+        .profile-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 100%;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        // }
+        .page-label {
+          display: flex;
+          width: 100%;
+          font-size: 30px;
+          align-items: center;
+          padding-left: 12px;
+        }
+        .nav__icon {
+          display: grid;
+          place-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 100%;
+          background-color: rgb(75, 75, 75);
+          font-size: 18px;
+        }
+      }
+    }
+    .search-box {
+      position: relative;
+      width: 100%;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 14px;
+      .search {
+        color: white;
+        width: 100%;
+        height: 32px;
+        background-color: rgb(47, 48, 54);
+        border-radius: 12px;
+        margin: 0 !important;
+        border-bottom: none !important;
+        padding-left: 36px !important;
+        padding-bottom: 4px;
+        transition: 0s !important;
+        &:focus {
+          border-bottom: none !important;
+          box-shadow: none !important;
+          background-color: rgba(47, 48, 54, 0.9);
+        }
+      }
+      svg {
+        position: absolute;
+        left: 26px;
+        color: rgba(255, 255, 255, 0.637);
+      }
+    }
   }
 }

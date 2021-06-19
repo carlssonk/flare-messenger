@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { IonPage, IonButton } from "@ionic/react";
-import FlareIcon from "../flare-icon.svg";
+import FlareIcon from "../imgs/flare-icon.svg";
 import { passwordList } from "../utils/commonPasswords";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faEye } from "@fortawesome/free-regular-svg-icons";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Colors for form validation
 const formRed = "#ff0042";
@@ -202,7 +202,7 @@ function Signup({ changePage }) {
         animate="visible"
         exit="exit"
       >
-        <IonPage className="auth-wrapper">
+        <IonPage className="auth-page">
           <img src={FlareIcon} className="flare-icon" alt="logo" />
           <form onSubmit={handleSignup}>
             <div className="input-box">

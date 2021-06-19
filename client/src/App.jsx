@@ -1,10 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { Switch, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
 import Loading from "./components/Loading";
@@ -12,7 +7,7 @@ import "./style/style.min.css";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import { UserContext } from "./context/UserContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const location = useLocation();
@@ -24,13 +19,7 @@ function App() {
 
   useEffect(() => {
     getUser();
-    getError();
   }, []);
-
-  const getError = async () => {
-    const res = await fetch("/api/error");
-    const data = await res.json();
-  };
 
   const getUser = async () => {
     const res = await fetch(`/api/user`);
