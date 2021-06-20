@@ -5,7 +5,7 @@ import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../../imgs/Jens-Bergensten.png";
 import { Scroll } from "framer";
 
-function FindFriends({ toggleScroll }) {
+function FindFriends({ toggleScroll, incomingRequests }) {
   return (
     <div className="incoming-requests-wrapper">
       <Scroll
@@ -15,232 +15,27 @@ function FindFriends({ toggleScroll }) {
       >
         <div className="incoming__label">Incoming Requests</div>
 
-        <ul className="incoming__requests">
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
-          <li>
-            <div>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="name">Jens Bergensten</div>
-            </div>
-            <div>
-              <IonButton className="accept-btn">
-                Accept
-                <FontAwesomeIcon icon={faUserPlus} />
-              </IonButton>
-              <FontAwesomeIcon icon={faTimes} className="reject-btn" />
-            </div>
-          </li>
+        <ul className="incoming__requests users-list">
+          {incomingRequests &&
+            incomingRequests.map((e) => {
+              return (
+                <li key={e._id}>
+                  <div>
+                    <div className="img-box">
+                      <img src={Jeb_} alt="" />
+                    </div>
+                    <div className="name">{e.username}</div>
+                  </div>
+                  <div>
+                    <IonButton className="accept-btn">
+                      Accept
+                      <FontAwesomeIcon icon={faUserPlus} />
+                    </IonButton>
+                    <FontAwesomeIcon icon={faTimes} className="reject-btn" />
+                  </div>
+                </li>
+              );
+            })}
         </ul>
       </Scroll>
     </div>
