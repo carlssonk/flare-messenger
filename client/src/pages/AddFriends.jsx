@@ -7,12 +7,20 @@ import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
 
 function AddFriends() {
   const [pageNum, setPageNum] = useState(0);
-
   const [toggleScroll, setToggleScroll] = useState(true);
 
+  const [search, setSearch] = useState("");
+
+  const handleFindUsers = async (e) => {
+    // setSearch(e.target.value)
+    const res = await fetch(`/api/friends?search${e.target.value}`);
+    const users = await res.json();
+    console.log(users);
+  };
+
   return (
-    <IonPage className="add-page">
-      <Header />
+    <IonPage className="add-page page">
+      <Header handleFindUsers={handleFindUsers} />
       <IonSegment swipeGesture="false">
         <IonSegmentButton
           className={

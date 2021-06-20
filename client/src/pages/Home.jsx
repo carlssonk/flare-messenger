@@ -26,7 +26,7 @@ function Home() {
   // };
 
   return (
-    <div className="home-page">
+    <div className="home-page page">
       <Header />
       <div className="chat-list">
         <Scroll

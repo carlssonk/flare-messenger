@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
+
 import DeviceInfo from "./DeviceInfo";
 import ProfileImg from "../imgs/oliverhaha.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +11,7 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Header() {
+function Header({ handleFindUsers }) {
   const location = useLocation();
 
   return (
@@ -19,9 +20,9 @@ function Header() {
         <DeviceInfo />
         <div className="nav-container">
           <div className="profile-btn">
-            <Link to="/profile">
+            <NavLink to="/profile">
               <img src={ProfileImg} alt="" />
-            </Link>
+            </NavLink>
           </div>
           <div className="page-label">
             {location.pathname === "/" ? "Chats" : null}
@@ -29,25 +30,25 @@ function Header() {
           </div>
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
-              <Link to="/add">
+              <NavLink to="/add">
                 <div className="icon" style={{ marginRight: "10px" }}>
                   <FontAwesomeIcon icon={faUserPlus} />
                 </div>
-              </Link>
+              </NavLink>
             ) : null}
             {location.pathname === "/" ? (
               <div className="icon">
                 <FontAwesomeIcon icon={faEdit} />
               </div>
             ) : (
-              <Link to="/">
+              <NavLink to="/">
                 <div className="icon">
                   <FontAwesomeIcon
                     icon={faTimes}
                     style={{ fontSize: "20px" }}
                   />
                 </div>
-              </Link>
+              </NavLink>
             )}
           </div>
         </div>
@@ -55,7 +56,12 @@ function Header() {
       <div className="search-box">
         <FontAwesomeIcon icon={faSearch} />
         {location.pathname === "/add" ? (
-          <input type="text" className="search" placeholder="Find Friends" />
+          <input
+            onChange={handleFindUsers}
+            type="text"
+            className="search"
+            placeholder="Find Friends"
+          />
         ) : (
           <input type="text" className="search" placeholder="Search" />
         )}
