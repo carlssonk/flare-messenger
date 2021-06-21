@@ -58,7 +58,7 @@ function App() {
               <TransitionGroup>
                 <CSSTransition
                   key={location.key}
-                  timeout={500}
+                  timeout={400}
                   classNames={className}
                   onEnter={() => setIsAnimating(true)}
                   onExited={() => setIsAnimating(false)}

@@ -37,7 +37,7 @@
 }
 .forward-appear-active,
 .forward-enter.forward-enter-active {
-  transition: 400ms !important;
+  transition: 300ms !important;
   transform: translate3d(0, 0, 0);
   pointer-events: none !important;
   overflow: hidden !important;
@@ -45,7 +45,7 @@
 
 .forward-exit {
   transform: scale3d(0.9, 0.9, 0.9);
-  transition: 400ms;
+  transition: 300ms;
   opacity: 0.7;
   pointer-events: none !important;
   overflow: hidden !important;
@@ -61,7 +61,7 @@
 }
 .backward-appear-active,
 .backward-enter.backward-enter-active {
-  transition: 400ms;
+  transition: 300ms;
   transform: scale3d(1, 1, 1);
   opacity: 1;
   pointer-events: none !important;
@@ -69,7 +69,7 @@
 }
 
 .backward-exit.backward-exit-active {
-  transition: 400ms;
+  transition: 300ms;
   transform: translate3d(100%, 0, 0);
   pointer-events: none !important;
   overflow: hidden !important;

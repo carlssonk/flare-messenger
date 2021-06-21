@@ -29,6 +29,14 @@ router.route("/logout").post(users.logout);
 // FRIENDS
 router.route("/friends").get(friends.searchUsers);
 router.route("/friends/request").post(friends.sendFriendRequest);
-router.route("/friends/incoming").get(friends.incomingRequests);
+
+// router.route("/friends/incoming").get(friends.incomingRequests);
+// router.route("/friends/sent").get(friends.sentRequests);
+router.route("/friends/friendsandpending").get(friends.friendsAndPending);
+
+router.route("/friends/handle").post(friends.handleRequest);
+// router.route("/friends/accept").post(friends.acceptRequest);
+// router.route("/friends/reject").post(friends.rejectRequest);
+// router.route("/friends/cancel").post(friends.cancelRequest);
 
 module.exports = router;

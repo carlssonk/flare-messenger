@@ -10,15 +10,34 @@ module.exports.sendFriendRequest = async (req, res) => {
     { $addToSet: { "friends.sentRequests": userId } }
   );
 
-  await User.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { _id: userId },
-    { $addToSet: { "friends.incomingRequests": myId } }
-  );
+    {
+      $addToSet: { "friends.incomingRequests": myId },
+    }
+  ).select("username email");
+
+  res.json({ user });
+};
+
+module.exports.handleRequest = async (req, res) => {
+  const myId = req.user._id;
+  const { id: userId, action } = req.query;
+
+  if (action === "accept") {
+    await acceptRequest(myId, userId);
+  }
+  if (action === "reject") {
+    await rejectRequest(myId, userId);
+  }
+  if (action === "cancel") {
+    await cancelRequest(myId, userId);
+  }
 
   res.json({ userId });
 };
 
-module.exports.acceptRequest = async (myId, userId) => {
+const acceptRequest = async (myId, userId) => {
   await User.findOneAndUpdate(
     { _id: myId },
     {
@@ -26,7 +45,6 @@ module.exports.acceptRequest = async (myId, userId) => {
       $pull: { "friends.incomingRequests": userId },
     }
   );
-
   await User.findOneAndUpdate(
     { _id: userId },
     {
@@ -36,18 +54,107 @@ module.exports.acceptRequest = async (myId, userId) => {
   );
 };
 
-module.exports.rejectRequest = async (myId, userId) => {
+const rejectRequest = async (myId, userId) => {
   await User.findOneAndUpdate(
     { _id: myId },
     { $pull: { "friends.incomingRequests": userId } }
   );
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { "friends.sentRequests": myId } }
+  );
 };
 
-module.exports.cancelRequest = async (myId, userId) => {
+const cancelRequest = async (myId, userId) => {
+  // console.log("DEBUGG");
+  console.log(userId);
   await User.findOneAndUpdate(
     { _id: myId },
     { $pull: { "friends.sentRequests": userId } }
   );
+
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { "friends.incomingRequests": myId } }
+  );
+};
+
+// module.exports.acceptRequest = async (req, res) => {
+//   const myId = req.user._id;
+//   const userId = req.query.id;
+
+//   res.json({ userId });
+// };
+
+// module.exports.rejectRequest = async (req, res) => {
+//   const myId = req.user._id;
+//   const userId = req.query.id;
+
+// };
+
+// module.exports.cancelRequest = async (req, res) => {
+//   const myId = req.user._id;
+//   const userId = req.query.id;
+
+// };
+
+module.exports.searchUsers = async (req, res) => {
+  const { search } = req.query;
+  const foundUsers = await User.find({
+    username: { $regex: "^" + search },
+  });
+  // Remove myself from the array
+  const foundMyIdx = foundUsers.findIndex(
+    (e) => e.username === req.user.username
+  );
+  if (foundMyIdx >= 0) foundUsers.splice(foundMyIdx, 1);
+
+  res.json({ foundUsers });
+};
+
+// module.exports.incomingRequests = async (req, res) => {
+//   const { _id } = req.user;
+
+//   const user = await User.findById(
+//     _id,
+//     "-username -email -_id -__v -friends.friends -friends.sentRequests"
+//   ).populate("friends.incomingRequests", "-friends -__v");
+
+//   const incoming = user.friends.incomingRequests;
+
+//   res.json({ incoming });
+// };
+
+// module.exports.sentRequests = async (req, res) => {
+//   const { _id } = req.user;
+
+//   const user = await User.findById(
+//     _id,
+//     "-username -email -_id -__v -friends.friends -friends.incomingRequests"
+//   ).populate("friends.sentRequests", "-friends -__v");
+
+//   const sent = user.friends.sentRequests;
+
+//   res.json({ sent });
+// };
+
+module.exports.friendsAndPending = async (req, res) => {
+  const { _id } = req.user;
+
+  const user = await User.findById(_id, "-username -email -_id -__v")
+    .populate("friends.sentRequests", "-friends -__v")
+    .populate("friends.friends", "-friends -__v")
+    .populate("friends.incomingRequests", "-friends -__v");
+
+  const incoming = user.friends.incomingRequests;
+  const sent = user.friends.sentRequests;
+  const sentIncomingAndFriends = [
+    ...incoming,
+    ...sent,
+    ...user.friends.friends,
+  ];
+
+  res.json({ sentIncomingAndFriends, incoming, sent });
 };
 
 module.exports.removeFriend = async (myId, userId) => {
@@ -67,39 +174,4 @@ module.exports.showFriends = async (myId) => {
     .populate("friends.incomingRequests", "-friends -_id -__v")
     .populate("friends.sentRequests", "-friends -_id -__v");
   console.log(friends.friends);
-};
-
-module.exports.searchUsers = async (req, res) => {
-  const { search } = req.query;
-  const foundUsers = await User.find({
-    username: { $regex: "^" + search },
-  });
-  // Remove myself from the array
-  const foundMyIdx = foundUsers.findIndex(
-    (e) => e.username === req.user.username
-  );
-  if (foundMyIdx >= 0) foundUsers.splice(foundMyIdx, 1);
-  res.json({ foundUsers });
-};
-
-module.exports.incomingRequests = async (req, res) => {
-  const { _id } = req.user;
-
-  const user = await User.findById(
-    _id,
-    "-username -email -_id -__v -friends.friends -friends.sentRequests"
-  ).populate("friends.incomingRequests", "-friends -__v");
-
-  const incoming = user.friends.incomingRequests;
-
-  res.json({ incoming });
-};
-
-module.exports.sentRequests = async (req, res) => {
-  const { id } = req.user._id;
-
-  const friends = await User.findById(id).populate(
-    "friends.incomingRequests",
-    "-friends -_id -__v"
-  );
 };

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
-import { Scroll } from "framer";
+// import { Scroll } from "framer";
 
 function Home() {
   // const containerVariants = {
@@ -29,134 +29,134 @@ function Home() {
     <div className="home-page page">
       <Header />
       <div className="chat-list">
-        <Scroll
+        {/* <Scroll
           style={{ height: "100%", width: "100%", position: "relative" }}
           dragElastic={0.2}
-        >
-          <ul>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <li>
-              <div className="img-box">
-                <img src={Jeb_} alt="" />
-              </div>
-              <div className="text-box">
-                <div className="friend">Jens Bergensten</div>
-                <div className="message">The business plan looking goo...</div>
-              </div>
-              <div className="time-box">9:40 AM</div>
-            </li>
-            <div className="bottom-space"></div>
-          </ul>
-        </Scroll>
+        > */}
+        <ul>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <li>
+            <div className="img-box">
+              <img src={Jeb_} alt="" />
+            </div>
+            <div className="text-box">
+              <div className="friend">Jens Bergensten</div>
+              <div className="message">The business plan looking goo...</div>
+            </div>
+            <div className="time-box">9:40 AM</div>
+          </li>
+          <div className="bottom-space"></div>
+        </ul>
+        {/* </Scroll> */}
       </div>
 
       {/* <div className="bottom">HOasdasdME</div> */}
