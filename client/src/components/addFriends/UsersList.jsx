@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IonButton } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../../imgs/Jens-Bergensten.png";
 
 function UsersList({ users, handleAddUser, friendsAndPending }) {

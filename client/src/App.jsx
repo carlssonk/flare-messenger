@@ -1,10 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import {
-  Switch,
-  Route,
-  useLocation,
-  BrowserRouter as Router,
-} from "react-router-dom";
+import { Switch, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Authenticate from "./pages/Authenticate";
 import Loading from "./components/Loading";
@@ -21,14 +16,9 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [className, setClassName] = useState("forward");
 
   const userValue = useMemo(() => ({ user, setUser }), [user, setUser]);
-  const animateValue = useMemo(
-    () => ({ isAnimating, setIsAnimating }),
-    [isAnimating, setIsAnimating]
-  );
 
   useEffect(() => {
     getUser();
@@ -60,8 +50,6 @@ function App() {
                   key={location.key}
                   timeout={400}
                   classNames={className}
-                  onEnter={() => setIsAnimating(true)}
-                  onExited={() => setIsAnimating(false)}
                 >
                   <Switch location={location} key={location.key}>
                     {user ? (

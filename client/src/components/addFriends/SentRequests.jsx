@@ -1,7 +1,6 @@
 import React from "react";
-import { IonButton } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../../imgs/Jens-Bergensten.png";
 
 function SentRequests({ sentRequests, handleRequest }) {

@@ -5,6 +5,7 @@ import SentRequests from "../components/addFriends/SentRequests";
 import SwipeableViews from "react-swipeable-views";
 import UsersList from "../components/addFriends/UsersList";
 import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
+import { findUserAndRemove } from "../utils/friends";
 
 function AddFriends() {
   const [pageNum, setPageNum] = useState(0);
@@ -25,7 +26,6 @@ function AddFriends() {
     if (e.target.value === "") return setUsers([]);
     const res = await fetch(`/api/friends?search=${e.target.value}`);
     const data = await res.json();
-    console.log(data.foundUsers);
     setUsers(data.foundUsers);
   };
 
@@ -37,14 +37,25 @@ function AddFriends() {
         "Content-Type": "application/json",
       },
     });
-    await res.json();
-    removeUserFromArray("users", id);
+    const data = await res.json();
+    if (data.friends) handleYouAreNowFriends();
+    handleUpdateArraysAdd(id);
+  };
+
+  const handleUpdateArraysAdd = (id) => {
+    const usersCopy = [...users];
+    const findIdx = usersCopy.findIndex((e) => e._id === id);
+    // Add to sent requests array
+    setSentRequests((sentRequests) => [...sentRequests, usersCopy[findIdx]]);
+    // Add to friends and pending array
+    setFriendsAndPending((friendsAndPending) => [
+      ...friendsAndPending,
+      usersCopy[findIdx],
+    ]);
   };
 
   // Accept || Reject || Cancel
   const handleRequest = async (action, id) => {
-    console.log(action);
-    console.log(id);
     const res = await fetch(`/api/friends/handle?action=${action}&id=${id}`, {
       method: "POST",
       headers: {
@@ -53,55 +64,46 @@ function AddFriends() {
       },
     });
     await res.json();
-    if (action === "accept" || action === "reject") {
-      removeUserFromArray("incomingRequests", id, action);
+    if (action === "accept") {
+      removeUserFromArray("incomingRequests", id);
+      handleYouAreNowFriends();
+    }
+    if (action === "reject") {
+      removeUserFromArray("incomingRequests", id);
+      removeFromFriendsAndPending(id);
     }
     if (action === "cancel") {
-      removeUserFromArray("sentRequests", id, action);
+      removeUserFromArray("sentRequests", id);
+      removeFromFriendsAndPending(id);
     }
   };
 
-  const removeUserFromArray = (array, id, action) => {
-    if (array === "users") {
-      const usersCopy = [...users];
-      const findIdx = usersCopy.findIndex((e) => e._id === id);
-
-      // Add user to sentRequests array and all friends array
-      console.log(usersCopy[findIdx]);
-      setSentRequests((sentRequests) => [...sentRequests, usersCopy[findIdx]]);
-      setFriendsAndPending((friendsAndPending) => [
-        ...friendsAndPending,
-        usersCopy[findIdx],
-      ]);
-
-      if (findIdx >= 0) usersCopy.splice(findIdx, 1);
-      setUsers(usersCopy);
-    }
+  const removeUserFromArray = (array, id) => {
     if (array === "incomingRequests") {
-      const incomingCopy = [...incomingRequests];
-      const findIdx = incomingCopy.findIndex((e) => e._id === id);
-      if (findIdx >= 0) incomingCopy.splice(findIdx, 1);
-      setIncomingRequests(incomingCopy);
-
-      console.log(action);
-      if (action !== "reject") return;
-      const pendingCopy = [...friendsAndPending];
-      const findIdx2 = pendingCopy.findIndex((e) => e._id === id);
-      if (findIdx2 >= 0) pendingCopy.splice(findIdx2, 1);
-      setFriendsAndPending(pendingCopy);
+      const updatedArray = findUserAndRemove(incomingRequests, id);
+      setIncomingRequests(updatedArray);
     }
 
     if (array === "sentRequests") {
-      const sentCopy = [...sentRequests];
-      const findIdx = sentCopy.findIndex((e) => e._id === id);
-      if (findIdx >= 0) sentCopy.splice(findIdx, 1);
-      setSentRequests(sentCopy);
-
-      const pendingCopy = [...friendsAndPending];
-      const findIdx2 = pendingCopy.findIndex((e) => e._id === id);
-      if (findIdx2 >= 0) pendingCopy.splice(findIdx2, 1);
-      setFriendsAndPending(pendingCopy);
+      const updatedArray = findUserAndRemove(sentRequests, id);
+      setSentRequests(updatedArray);
     }
+  };
+
+  // const findUserAndRemove = (array, id) => {
+  //   const arrayCopy = [...array];
+  //   const findIdx = arrayCopy.findIndex((e) => e._id === id);
+  //   if (findIdx >= 0) arrayCopy.splice(findIdx, 1);
+  //   return arrayCopy;
+  // };
+
+  const removeFromFriendsAndPending = (id) => {
+    const updatedArrayB = findUserAndRemove(friendsAndPending, id);
+    setFriendsAndPending(updatedArrayB);
+  };
+
+  const handleYouAreNowFriends = () => {
+    alert("you are now friends!");
   };
 
   const getFriends = async () => {
