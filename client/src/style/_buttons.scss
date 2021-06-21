@@ -27,6 +27,27 @@
   }
   ion-label {
     text-transform: none !important;
+    color: rgb(220, 220, 220);
+  }
+  ion-segment {
+    padding: 0 60px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+  ion-segment-button {
+    min-height: 30px;
+    max-height: 30px;
+    font-size: 12px;
+    min-width: unset;
+    max-width: unset;
+    max-width: 100px;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    &::part(indicator) {
+      width: 60%;
+      margin: 2px auto;
+    }
   }
 
   .accept-btn {
@@ -41,7 +62,13 @@
   .switch-btn {
     color: white;
     --indicator-color: var(--primary-cyan);
+    --indicator-height: 1px;
     --color-checked: white;
     --color: white;
   }
+
+  // ion-segment-button::part(indicator) {
+  //   width: 36px;
+  //   margin: auto;
+  // }
 }
