@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
+import { IonToast } from '@ionic/react';
 
 function NewGroup() {
   const [friends, setFriends] = useState([]);
@@ -38,6 +39,12 @@ function NewGroup() {
     return false;
   };
 
+
+  const [showToast, setShowToast] = useState(false)
+  // const handleToast = () => {
+
+  // }
+
   return (
     <div className="new-page page">
       <Header />
@@ -68,7 +75,17 @@ function NewGroup() {
           })}
         </ul>
       </div>
-      <div className="create-chat-box">
+      <div style={{bottom: "100px !important", paddingBottom: "100px !important", marginBottom: "100px !important"}}>
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message="Select at least 1 friend."
+        position="top"
+        duration={750}
+        mode="ios"
+      />
+      </div>
+      <div className="create-chat-box" onClick={() => selectedFriends.length <= 0 ? setShowToast(true) : null}>
         <button className="create-chat-btn">Create Group</button>
         <div className="padding"></div>
       </div>

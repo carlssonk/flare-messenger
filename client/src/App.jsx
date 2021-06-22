@@ -33,10 +33,6 @@ function App() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    console.log(nav);
-  }, [nav]);
-
   return (
     <NavContext.Provider value={navValue}>
       <UserContext.Provider value={userValue}>
@@ -49,6 +45,8 @@ function App() {
                     key={location.key}
                     timeout={400}
                     classNames={nav}
+                    onEnter={() => document.documentElement.style.setProperty('--scrollbar-size', "0px")}
+                    onExited={() => document.documentElement.style.setProperty('--scrollbar-size', "10px")}
                   >
                     <Switch location={location} key={location.key}>
                       {user ? (
