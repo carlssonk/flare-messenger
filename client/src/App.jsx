@@ -13,6 +13,7 @@ import AddFriends from "./pages/AddFriends";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import NewChat from "./pages/NewChat";
 import NewGroup from "./pages/NewGroup";
+import Chat from "./pages/Chat";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -45,8 +46,18 @@ function App() {
                     key={location.key}
                     timeout={400}
                     classNames={nav}
-                    onEnter={() => document.documentElement.style.setProperty('--scrollbar-size', "0px")}
-                    onExited={() => document.documentElement.style.setProperty('--scrollbar-size', "10px")}
+                    onEnter={() =>
+                      document.documentElement.style.setProperty(
+                        "--scrollbar-size",
+                        "0px"
+                      )
+                    }
+                    onExited={() =>
+                      document.documentElement.style.setProperty(
+                        "--scrollbar-size",
+                        "10px"
+                      )
+                    }
                   >
                     <Switch location={location} key={location.key}>
                       {user ? (
@@ -73,6 +84,11 @@ function App() {
                         user={user}
                         path="/new/group"
                         component={NewGroup}
+                      />
+                      <PrivateRoute
+                        user={user}
+                        path="/chat/:id"
+                        component={Chat}
                       />
                     </Switch>
                   </CSSTransition>
