@@ -1,4 +1,7 @@
 import React from "react";
+import RippleButton from "../components/effects/RippleButton";
+import { IonRippleEffect, IonApp } from "@ionic/react";
+import Ripple from "react-ripples";
 // import { motion } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,7 +29,7 @@ function Home() {
   // };
 
   return (
-    <div className="home-page page">
+    <IonApp className="home-page page">
       <Header />
       <div className="chat-list">
         {/* <Scroll
@@ -34,7 +37,8 @@ function Home() {
           dragElastic={0.2}
         > */}
         <ul>
-          <li>
+          {/* <li> */}
+          <RippleButton>
             <div className="img-box">
               <img src={Jeb_} alt="" />
             </div>
@@ -43,7 +47,8 @@ function Home() {
               <div className="message">The business plan looking goo...</div>
             </div>
             <div className="time-box">9:40 AM</div>
-          </li>
+          </RippleButton>
+          {/* </li> */}
           <li>
             <div className="img-box">
               <img src={Jeb_} alt="" />
@@ -162,14 +167,19 @@ function Home() {
       {/* <div className="bottom">HOasdasdME</div> */}
       <div className="footer-wrapper">
         <div className="footer">
-          <div className="camera-box">
+          <RippleButton scale={1} className="camera-box">
+            {/* <div className="camera-box"> */}
             <FontAwesomeIcon icon={faCamera} />
-          </div>
+            {/* </div> */}
+          </RippleButton>
         </div>
         <div className="blur"></div>
       </div>
-    </div>
+    </IonApp>
   );
 }
 
 export default Home;
+{
+  /* <FontAwesomeIcon icon={faCamera} /> */
+}

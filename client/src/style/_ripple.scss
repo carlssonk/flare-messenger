@@ -1,0 +1,77 @@
+// RIPPLE EFFECT
+
+.ripple-effect {
+  overflow: hidden;
+}
+.ripple-effect > * {
+  pointer-events: none;
+}
+
+.render-ripples {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.ripple {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  animation: 500ms ease 1 forwards ripple-effect;
+  z-index: 1000;
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale3d(1, 1, 1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 0.2;
+  }
+  60% {
+    transform: scale3d(
+      var(--ripple-scale),
+      var(--ripple-scale),
+      var(--ripple-scale)
+    );
+  }
+  100% {
+    opacity: 0;
+    transform: scale3d(
+      var(--ripple-scale),
+      var(--ripple-scale),
+      var(--ripple-scale)
+    );
+  }
+}
+
+.pause {
+  animation: unset;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  width: 10px;
+  height: 10px;
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  z-index: -1;
+  opacity: 0.2;
+  transform: scale3d(
+    var(--ripple-scale),
+    var(--ripple-scale),
+    var(--ripple-scale)
+  );
+}
