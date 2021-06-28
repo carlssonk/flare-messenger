@@ -11,6 +11,7 @@ import {
   faUserPlus,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import Ripple from "../components/effects/Ripple";
 
 function Header({ handleFindUsers }) {
   const location = useLocation();
@@ -46,12 +47,13 @@ function Header({ handleFindUsers }) {
           </div>
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
-              <div onClick={() => handleNavigation("/add")}>
-                <div className="icon" style={{ marginRight: "10px" }}>
-                  <FontAwesomeIcon icon={faUserPlus} />
-                </div>
-              </div>
-            ) : null}
+              // onClick={() => handleNavigation("/add")}
+              // <Ripple.div>
+              <Ripple.Div className="icon" style={{ marginRight: "10px" }}>
+                <FontAwesomeIcon icon={faUserPlus} />
+              </Ripple.Div>
+            ) : // </Ripple.div>
+            null}
             {location.pathname === "/" ? (
               <div onClick={() => handleNavigation("/new/chat")}>
                 <div className="icon">

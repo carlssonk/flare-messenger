@@ -2,6 +2,7 @@
 
 .ripple-effect {
   overflow: hidden;
+  position: relative;
 }
 .ripple-effect > * {
   pointer-events: none;

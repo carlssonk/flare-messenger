@@ -1,13 +1,13 @@
 import React from "react";
-import RippleButton from "../components/effects/RippleButton";
-import { IonRippleEffect, IonApp } from "@ionic/react";
-import Ripple from "react-ripples";
+// import Ripple from "../components/effects/RippleButton";
+import { IonApp } from "@ionic/react";
 // import { motion } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import Ripple from "../components/effects/Ripple";
 // import { Scroll } from "framer";
 
 function Home() {
@@ -37,8 +37,7 @@ function Home() {
           dragElastic={0.2}
         > */}
         <ul>
-          {/* <li> */}
-          <RippleButton>
+          <Ripple.Li>
             <div className="img-box">
               <img src={Jeb_} alt="" />
             </div>
@@ -47,9 +46,8 @@ function Home() {
               <div className="message">The business plan looking goo...</div>
             </div>
             <div className="time-box">9:40 AM</div>
-          </RippleButton>
-          {/* </li> */}
-          <li>
+          </Ripple.Li>
+          <Ripple.Li>
             <div className="img-box">
               <img src={Jeb_} alt="" />
             </div>
@@ -58,7 +56,7 @@ function Home() {
               <div className="message">The business plan looking goo...</div>
             </div>
             <div className="time-box">9:40 AM</div>
-          </li>
+          </Ripple.Li>
           <li>
             <div className="img-box">
               <img src={Jeb_} alt="" />
@@ -167,11 +165,11 @@ function Home() {
       {/* <div className="bottom">HOasdasdME</div> */}
       <div className="footer-wrapper">
         <div className="footer">
-          <RippleButton scale={1} className="camera-box">
+          <Ripple.Div className="camera-box">
             {/* <div className="camera-box"> */}
             <FontAwesomeIcon icon={faCamera} />
             {/* </div> */}
-          </RippleButton>
+          </Ripple.Div>
         </div>
         <div className="blur"></div>
       </div>
@@ -180,6 +178,3 @@ function Home() {
 }
 
 export default Home;
-{
-  /* <FontAwesomeIcon icon={faCamera} /> */
-}

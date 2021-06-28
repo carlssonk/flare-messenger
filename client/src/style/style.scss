@@ -1,3 +1,4 @@
+@import "ripple";
 @import "utilities";
 @import "inputs";
 @import "buttons";
@@ -69,6 +70,7 @@ body {
         background-color: gray;
         border-radius: 100%;
         overflow: hidden;
+        margin-left: 12px;
         img {
           object-fit: cover;
           width: 100%;
@@ -88,6 +90,7 @@ body {
       .time-box {
         pointer-events: none;
         margin-left: auto;
+        margin-right: 12px;
       }
     }
     .bottom-space {
