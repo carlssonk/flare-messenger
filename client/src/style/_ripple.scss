@@ -20,7 +20,7 @@
   height: 100%;
   width: 10px;
   height: 10px;
-  background: #ffffff;
+  background: white;
   display: block;
   content: "";
   border-radius: 9999px;
@@ -35,10 +35,10 @@
     opacity: 0;
   }
   30% {
-    opacity: 0.2;
+    opacity: 1;
   }
   40% {
-    opacity: 0.2;
+    opacity: 1;
   }
   60% {
     transform: scale3d(

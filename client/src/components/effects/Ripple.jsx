@@ -4,9 +4,16 @@ import { v4 as uuidv4 } from "uuid";
 const Ripple = ({
   children,
   onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
   className,
   style,
   scale = 1,
+  color = "white",
+  opacity = 0.2,
   element = "div",
 }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -91,6 +98,8 @@ const Ripple = ({
               left: e.x,
               top: e.y,
               animationPlayState: isHolding ? "paused" : "",
+              backgroundColor: color,
+              filter: `opacity(${opacity})`,
             }}
           />
         );
@@ -104,6 +113,7 @@ const Ripple = ({
       key: 1,
       className: `ripple-effect ${className ? className : ""}`,
       style: style,
+      onClick: (e) => onClick && onClick(e),
       onMouseDown: (e) => {
         if (isMobile) return;
         setPause(true);
@@ -113,17 +123,19 @@ const Ripple = ({
           x: e.clientX - rect.left - 4,
           y: e.clientY - rect.y - 4,
         });
-        onClick && onClick(e);
+        onMouseDown && onMouseDown(e);
       },
-      onMouseUp: () => {
+      onMouseUp: (e) => {
         if (isMobile) return;
         setIsHolding(false);
         setPause(false);
+        onMouseUp && onMouseUp(e);
       },
-      onMouseLeave: () => {
+      onMouseLeave: (e) => {
         if (isMobile) return;
         setIsHolding(false);
         setPause(false);
+        onMouseLeave && onMouseLeave(e);
       },
       onTouchStart: (e) => {
         if (!isMobile) return;
@@ -134,315 +146,430 @@ const Ripple = ({
           x: e.touches[0].clientX - rect.left - 4,
           y: e.touches[0].clientY - rect.y - 4,
         });
-        onClick && onClick(e);
+        onTouchStart && onTouchStart(e);
       },
-      onTouchEnd: () => {
+      onTouchEnd: (e) => {
         if (!isMobile) return;
         setIsHolding(false);
         setPause(false);
+        onTouchEnd && onTouchEnd(e);
       },
     },
     [children, renderRipples]
   );
-
-  // JSX
-  // <li
-  //   className={`ripple-effect ${className}`}
-  //   onMouseDown={(e) => {
-  //     if (isMobile) return;
-  //     setPause(true);
-  //     const rect = e.target.getBoundingClientRect();
-  //     setRippleScale(e, rect);
-  //     addRipple({
-  //       x: e.clientX - rect.left - 4,
-  //       y: e.clientY - rect.y - 4,
-  //     });
-  //     onClick && onClick(e);
-  //   }}
-  //   onMouseUp={() => {
-  //     if (isMobile) return;
-  //     setIsHolding(false);
-  //     setPause(false);
-  //   }}
-  //   onMouseLeave={() => {
-  //     if (isMobile) return;
-  //     setIsHolding(false);
-  //     setPause(false);
-  //   }}
-  //   onTouchStart={(e) => {
-  //     if (!isMobile) return;
-  //     setPause(true);
-  //     const rect = e.target.getBoundingClientRect();
-  //     setRippleScale(e, rect);
-  //     addRipple({
-  //       x: e.touches[0].clientX - rect.left - 4,
-  //       y: e.touches[0].clientY - rect.y - 4,
-  //     });
-  //     onClick && onClick(e);
-  //   }}
-  //   onTouchEnd={() => {
-  //     if (!isMobile) return;
-  //     setIsHolding(false);
-  //     setPause(false);
-  //   }}
-  // >
-  //   {children}
-  //   <span className="render-ripples">
-  //     {ripples.map((e) => {
-  //       return (
-  //         <span
-  //           key={e.id}
-  //           className="ripple"
-  //           style={{
-  //             left: e.x,
-  //             top: e.y,
-  //             animationPlayState: isHolding ? "paused" : "",
-  //           }}
-  //         />
-  //       );
-  //     })}
-  //   </span>
-  // </li>
 };
 
-const Address = ({ children, onClick, className, scale }) => (
+const Article = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
-    onClick={onClick}
-    element="address"
-  />
-);
-Ripple.Address = Address;
-
-const Article = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
+    style={style}
     scale={scale}
-    className={className}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="article"
   />
 );
 Ripple.Article = Article;
 
-const Aside = ({ children, onClick, className, scale }) => (
+const Aside = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="aside"
   />
 );
 Ripple.Aside = Aside;
 
-const Header = ({ children, onClick, className, scale }) => (
+const Header = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="header"
   />
 );
 Ripple.Header = Header;
 
-const Footer = ({ children, onClick, className, scale }) => (
+const Footer = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="footer"
   />
 );
 Ripple.Footer = Footer;
 
-const H1 = ({ children, onClick, className, scale }) => (
+const Main = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
-    onClick={onClick}
-    element="h1"
-  />
-);
-Ripple.H1 = H1;
-
-const H2 = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
+    style={style}
     scale={scale}
-    className={className}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
-    element="h2"
-  />
-);
-Ripple.H2 = H2;
-
-const H3 = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
-    element="h3"
-  />
-);
-Ripple.H3 = H3;
-
-const H4 = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
-    element="h4"
-  />
-);
-Ripple.H4 = H4;
-
-const H5 = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
-    element="h5"
-  />
-);
-Ripple.H5 = H5;
-
-const H6 = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
-    element="h6"
-  />
-);
-Ripple.H6 = H6;
-
-const Main = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="main"
   />
 );
 Ripple.Main = Main;
 
-const Nav = ({ children, onClick, className, scale }) => (
+const Nav = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="nav"
   />
 );
 Ripple.Nav = Nav;
 
-const Section = ({ children, onClick, className, scale }) => (
+const Section = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="section"
   />
 );
 Ripple.Section = Section;
 
-const Div = ({ children, onClick, className, style, scale }) => (
+const Div = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
     style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="div"
   />
 );
 Ripple.Div = Div;
 
-const Span = ({ children, onClick, className, scale }) => (
+const Span = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="span"
   />
 );
 Ripple.Span = Span;
 
-const Li = ({ children, onClick, className, scale }) => (
+const Li = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="li"
   />
 );
 Ripple.Li = Li;
 
-const Ul = ({ children, onClick, className, scale }) => (
+const Ul = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="ul"
   />
 );
 Ripple.Ul = Ul;
 
-const Ol = ({ children, onClick, className, scale }) => (
+const Ol = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
+    style={style}
+    scale={scale}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="ol"
   />
 );
 Ripple.Ol = Ol;
 
-const P = ({ children, onClick, className, scale }) => (
+const Button = ({
+  children,
+  className,
+  style,
+  scale,
+  color,
+  opacity,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
+}) => (
   <Ripple
     children={children}
-    scale={scale}
     className={className}
-    onClick={onClick}
-    element="p"
-  />
-);
-Ripple.P = P;
-
-const Pre = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
+    style={style}
     scale={scale}
-    className={className}
+    color={color}
+    opacity={opacity}
     onClick={onClick}
-    element="pre"
-  />
-);
-Ripple.Pre = Pre;
-
-const Button = ({ children, onClick, className, scale }) => (
-  <Ripple
-    children={children}
-    scale={scale}
-    className={className}
-    onClick={onClick}
+    onMouseDown={onMouseDown}
+    onMouseUp={onMouseUp}
+    onMouseLeave={onMouseLeave}
+    onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}
     element="button"
   />
 );

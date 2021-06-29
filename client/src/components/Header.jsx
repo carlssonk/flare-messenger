@@ -47,28 +47,31 @@ function Header({ handleFindUsers }) {
           </div>
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
-              // onClick={() => handleNavigation("/add")}
-              // <Ripple.div>
-              <Ripple.Div className="icon" style={{ marginRight: "10px" }}>
+              <Ripple.Div
+                onMouseUp={() => handleNavigation("/add")}
+                onTouchEnd={() => handleNavigation("/add")}
+                className="icon"
+                style={{ marginRight: "10px" }}
+              >
                 <FontAwesomeIcon icon={faUserPlus} />
               </Ripple.Div>
-            ) : // </Ripple.div>
-            null}
+            ) : null}
             {location.pathname === "/" ? (
-              <div onClick={() => handleNavigation("/new/chat")}>
-                <div className="icon">
-                  <FontAwesomeIcon icon={faEdit} />
-                </div>
-              </div>
+              <Ripple.Div
+                onMouseUp={() => handleNavigation("/new/chat")}
+                onTouchEnd={() => handleNavigation("/new/chat")}
+                className="icon"
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </Ripple.Div>
             ) : (
-              <div onClick={() => handleNavigation("/")}>
-                <div className="icon">
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    style={{ fontSize: "20px" }}
-                  />
-                </div>
-              </div>
+              <Ripple.Div
+                onMouseUp={() => handleNavigation("/")}
+                onTouchEnd={() => handleNavigation("/")}
+                className="icon"
+              >
+                <FontAwesomeIcon icon={faTimes} style={{ fontSize: "20px" }} />
+              </Ripple.Div>
             )}
           </div>
         </div>
