@@ -83,3 +83,65 @@
   z-index: 0;
   backdrop-filter: blur(10px);
 }
+
+.remove-user {
+  transform: scale3d(0, 0, 0) !important;
+  width: 0px !important;
+  min-width: 0px !important;
+}
+
+.list-active {
+  height: 79px !important;
+}
+
+.create-group-show {
+  visibility: visible !important;
+  animation: createGroupShow 250ms forwards;
+}
+
+@keyframes createGroupShow {
+  from {
+    transform: scale3d(0, 0, 0);
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.create-group-hide {
+  animation: createGroupHide 250ms forwards;
+}
+
+@keyframes createGroupHide {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+  to {
+    transform: scale3d(0, 0, 0);
+  }
+}
+
+.show-fade-half {
+  visibility: visible !important;
+  animation: showFadeHalf 250ms forwards;
+}
+@keyframes showFadeHalf {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+.hide-fade-half {
+  animation: hideFade 250ms forwards;
+}
+@keyframes hideFade {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -33,12 +33,12 @@ function Header({ handleFindUsers }) {
       <div className="nav-wrapper">
         <DeviceInfo />
         <div className="nav-container">
-          <div
+          <Ripple.Div
             className="profile-btn"
             onClick={() => handleNavigation("/profile")}
           >
             <img src={ProfileImg} alt="" />
-          </div>
+          </Ripple.Div>
           <div className="page-label">
             {location.pathname === "/" ? "Chats" : null}
             {location.pathname === "/add" ? "Add Friends" : null}
@@ -48,8 +48,7 @@ function Header({ handleFindUsers }) {
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
               <Ripple.Div
-                onMouseUp={() => handleNavigation("/add")}
-                onTouchEnd={() => handleNavigation("/add")}
+                onClick={() => handleNavigation("/add")}
                 className="icon"
                 style={{ marginRight: "10px" }}
               >
@@ -58,16 +57,14 @@ function Header({ handleFindUsers }) {
             ) : null}
             {location.pathname === "/" ? (
               <Ripple.Div
-                onMouseUp={() => handleNavigation("/new/chat")}
-                onTouchEnd={() => handleNavigation("/new/chat")}
+                onClick={() => handleNavigation("/new/chat")}
                 className="icon"
               >
                 <FontAwesomeIcon icon={faEdit} />
               </Ripple.Div>
             ) : (
               <Ripple.Div
-                onMouseUp={() => handleNavigation("/")}
-                onTouchEnd={() => handleNavigation("/")}
+                onClick={() => handleNavigation("/")}
                 className="icon"
               >
                 <FontAwesomeIcon icon={faTimes} style={{ fontSize: "20px" }} />

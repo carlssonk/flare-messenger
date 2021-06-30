@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
-import { IonToast } from '@ionic/react';
+import { IonToast } from "@ionic/react";
+import Ripple from "../components/effects/Ripple";
+import CreateGroup from "../components/newGroup/CreateGroup";
 
 function NewGroup() {
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [selectedFriendsList, setSelectedFriendsList] = useState([]);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [togglePopup, setTogglePopup] = useState(false);
+  const [isFading, setIsFading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     getFriends();
   }, []);
+
+  useEffect(() => {
+    setIsFading(true);
+    setTimeout(() => setIsFading(false), 250);
+  }, [togglePopup]);
 
   const getFriends = async () => {
     const res = await fetch(`/api/friends/friends`);
@@ -21,12 +33,22 @@ function NewGroup() {
 
   const handleSelectFriend = (username, id) => {
     if (selectedFriends.some((e) => e.id === id)) {
+      setIsRemoving(true);
       const selectedFriendsCopy = [...selectedFriends];
       const updatedArray = selectedFriendsCopy.filter((e) => e.id !== id);
+
       setSelectedFriends(updatedArray);
+      setTimeout(() => {
+        setSelectedFriendsList(updatedArray);
+        setIsRemoving(false);
+      }, 250);
     } else {
       setSelectedFriends((selectedFriends) => [
         ...selectedFriends,
+        { username, id },
+      ]);
+      setSelectedFriendsList((selectedFriendsList) => [
+        ...selectedFriendsList,
         { username, id },
       ]);
     }
@@ -39,15 +61,46 @@ function NewGroup() {
     return false;
   };
 
-
-  const [showToast, setShowToast] = useState(false)
-  // const handleToast = () => {
-
-  // }
+  const handleTogglePopup = (bool) => {
+    if (isFading) return; // to avoid spam
+    setTogglePopup(bool);
+  };
 
   return (
     <div className="new-page page">
+      <CreateGroup
+        togglePopup={togglePopup}
+        handleTogglePopup={handleTogglePopup}
+      />
       <Header />
+      <ul
+        className={`selected-friends-list ${
+          selectedFriends.length > 0 ? "list-active" : ""
+        }`}
+      >
+        {selectedFriendsList.map((e) => {
+          return (
+            <li
+              key={e.id}
+              className={`${isInArray(e.id) ? "" : "remove-user"}`}
+            >
+              <div className="img-wrapper">
+                <div className="img-box">
+                  <img src={Jeb_} />
+                </div>
+                <div
+                  className="remove-btn"
+                  onClick={() => handleSelectFriend(e.username, e.id)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </div>
+              </div>
+
+              <div className="name">{e.username}</div>
+            </li>
+          );
+        })}
+      </ul>
       <div className="scroll-wrapper">
         <ul className="users-list">
           {friends.map((e) => {
@@ -55,9 +108,11 @@ function NewGroup() {
               <li
                 key={e._id}
                 className={`mouse-active ${
-                  isInArray(e._id) ? "users-selected" : null
+                  isInArray(e._id) ? "users-selected" : ""
                 }`}
-                onClick={() => handleSelectFriend(e.username, e._id)}
+                onClick={() =>
+                  isRemoving ? null : handleSelectFriend(e.username, e._id)
+                }
               >
                 <div>
                   <div className="img-box">
@@ -75,18 +130,31 @@ function NewGroup() {
           })}
         </ul>
       </div>
-      <div style={{bottom: "100px !important", paddingBottom: "100px !important", marginBottom: "100px !important"}}>
-      <IonToast
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message="Select at least 1 friend."
-        position="top"
-        duration={750}
-        mode="ios"
-      />
+      <div
+        style={{
+          bottom: "100px !important",
+          paddingBottom: "100px !important",
+          marginBottom: "100px !important",
+        }}
+      >
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Select at least 1 friend."
+          position="top"
+          duration={750}
+          mode="ios"
+        />
       </div>
-      <div className="create-chat-box" onClick={() => selectedFriends.length <= 0 ? setShowToast(true) : null}>
-        <button className="create-chat-btn">Create Group</button>
+      <div
+        className="create-group-box"
+        onClick={() =>
+          selectedFriends.length <= 0
+            ? setShowToast(true)
+            : handleTogglePopup(true)
+        }
+      >
+        <Ripple.Button className="create-group-btn">Create Group</Ripple.Button>
         <div className="padding"></div>
       </div>
     </div>

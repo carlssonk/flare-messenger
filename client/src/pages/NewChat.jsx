@@ -5,6 +5,7 @@ import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import { useHistory } from "react-router-dom";
 import Header from "../components/Header";
+import Ripple from "../components/effects/Ripple";
 
 function NewChat() {
   const [friends, setFriends] = useState([]);
@@ -35,24 +36,27 @@ function NewChat() {
     <div className="new-page page">
       <Header />
       <div className="scroll-wrapper">
-        <div onClick={() => handleNavigation("/new/group")}>
-          <div className="new-group-box mouse-active">
-            <FontAwesomeIcon icon={faUserFriends} className="check-icon" />
-            <div className="new-group-label">Create New Group</div>
-          </div>
-        </div>
+        {/* <div > */}
+        <Ripple.Div
+          className="new-group-box"
+          onClick={() => handleNavigation("/new/group")}
+        >
+          <FontAwesomeIcon icon={faUserFriends} className="check-icon" />
+          <div className="new-group-label">Create New Group</div>
+        </Ripple.Div>
+        {/* </div> */}
 
         <ul className="users-list">
           {friends.map((e) => {
             return (
-              <li key={e._id} className="mouse-active">
+              <Ripple.Li key={e._id}>
                 <div>
                   <div className="img-box">
                     <img src={Jeb_} alt="" />
                   </div>
                   <div className="name">{e.username}</div>
                 </div>
-              </li>
+              </Ripple.Li>
             );
           })}
         </ul>

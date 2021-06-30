@@ -70,7 +70,7 @@ body {
         background-color: gray;
         border-radius: 100%;
         overflow: hidden;
-        margin-left: 12px;
+        margin-left: 14px;
         img {
           object-fit: cover;
           width: 100%;
@@ -90,7 +90,7 @@ body {
       .time-box {
         pointer-events: none;
         margin-left: auto;
-        margin-right: 12px;
+        margin-right: 14px;
       }
     }
     .bottom-space {
@@ -199,6 +199,78 @@ body {
   .users-selected {
     background-color: rgba(0, 0, 0, 0.15);
   }
+  .selected-friends-list {
+    position: relative;
+    display: flex;
+    height: 0px;
+    overflow-x: auto;
+    transition: 250ms;
+    li {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 78px;
+      width: 70px;
+      min-width: 70px;
+      line-height: 1.4;
+      font-size: 16px;
+      position: relative;
+      animation: 250ms ease addUser;
+      transition: 250ms;
+      .img-wrapper {
+        position: relative;
+        height: 50px;
+        width: 50px;
+        .img-box {
+          width: 100%;
+          height: 100%;
+          border-radius: 100%;
+          overflow: hidden;
+          img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .remove-btn {
+          position: absolute;
+          color: white;
+          width: 18px;
+          height: 18px;
+          border-radius: 100%;
+          right: -2px;
+          bottom: -2px;
+          background-color: var(--primary-background);
+          display: grid;
+          place-items: center;
+          font-size: 12px;
+        }
+      }
+
+      .name {
+        color: white;
+      }
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%);
+      bottom: 0;
+      height: 1px;
+      width: 90%; /* or 100px */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+  @keyframes addUser {
+    0% {
+      transform: scale3d(0, 0, 0);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
+  }
   .new-group-box {
     position: relative;
     height: 60px;
@@ -227,30 +299,6 @@ body {
   }
   .check-icon {
     color: var(--primary-cyan);
-  }
-  .create-chat-box {
-    .create-chat-btn {
-      position: absolute;
-      width: 100%;
-      height: 60px;
-      bottom: 0;
-      display: grid;
-      place-items: center;
-      font-size: 26px;
-      background-color: var(--primary-cyan);
-      outline: none;
-      border: none;
-      opacity: 0.9;
-      &:hover {
-        background-color: rgba(27, 187, 187, 0.8);
-      }
-      &:active {
-        background-color: rgba(27, 187, 187, 0.7);
-      }
-    }
-    .padding {
-      padding-top: 60px;
-    }
   }
 }
 
