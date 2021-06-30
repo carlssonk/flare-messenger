@@ -48,7 +48,7 @@ const Ripple = ({
 
   useEffect(() => {
     if (!pause) return;
-    const timer = setTimeout(() => setIsHolding(true), 150);
+    const timer = setTimeout(() => setIsHolding(true), 200);
     return () => clearTimeout(timer);
   }, [pause]);
 
@@ -79,7 +79,7 @@ const Ripple = ({
     // How far away is the cursor relative to the middle of component. 1 = corner, 0 = middle
     const MAX_CURSOR_POS = diffX >= diffY ? diffX : diffY;
 
-    rippleScale = ((MAX_SIZE * 1.25 * MAX_CURSOR_POS) / 10) * scale;
+    rippleScale = ((MAX_SIZE * 1.3 * MAX_CURSOR_POS) / 10) * scale;
 
     document.documentElement.style.setProperty(
       "--ripple-scale",

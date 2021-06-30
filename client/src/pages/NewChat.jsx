@@ -6,6 +6,7 @@ import Jeb_ from "../imgs/Jens-Bergensten.png";
 import { useHistory } from "react-router-dom";
 import Header from "../components/Header";
 import Ripple from "../components/effects/Ripple";
+import { Link } from "react-router-dom";
 
 function NewChat() {
   const [friends, setFriends] = useState([]);
