@@ -8,13 +8,13 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
-  // friends: [{ status: Number }, { type: Schema.Types.ObjectId, ref: "User" }],
   friends: {
     sentRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
     incomingRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
     friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-});
+  chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
+},{timestamps: true});
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", UserSchema);

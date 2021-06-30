@@ -1,21 +1,30 @@
-const Friend = require("../models/friend");
 const User = require("../models/user");
 
 module.exports.sendFriendRequest = async (req, res) => {
   const myId = req.user._id;
   const userId = req.query.id;
 
+  // Check first if user already sent friend request
+  let checkUser = await User.findById(userId);
+  if (checkUser.friends.sentRequests.includes(myId)) {
+    await acceptRequest(myId, userId);
+    // Exra properties we dont need to return to client
+    checkUser.friends = undefined;
+    checkUser.__v = undefined;
+    return res.json({ checkUser, friends: true });
+  }
+
   await User.findOneAndUpdate(
     { _id: myId },
     { $addToSet: { "friends.sentRequests": userId } }
   );
 
-  const user = await User.findOneAndUpdate(
+  let user = await User.findOneAndUpdate(
     { _id: userId },
     {
       $addToSet: { "friends.incomingRequests": myId },
     }
-  ).select("username email");
+  ).select("username email __id");
 
   res.json({ user });
 };
@@ -66,8 +75,6 @@ const rejectRequest = async (myId, userId) => {
 };
 
 const cancelRequest = async (myId, userId) => {
-  // console.log("DEBUGG");
-  console.log(userId);
   await User.findOneAndUpdate(
     { _id: myId },
     { $pull: { "friends.sentRequests": userId } }
@@ -78,25 +85,6 @@ const cancelRequest = async (myId, userId) => {
     { $pull: { "friends.incomingRequests": myId } }
   );
 };
-
-// module.exports.acceptRequest = async (req, res) => {
-//   const myId = req.user._id;
-//   const userId = req.query.id;
-
-//   res.json({ userId });
-// };
-
-// module.exports.rejectRequest = async (req, res) => {
-//   const myId = req.user._id;
-//   const userId = req.query.id;
-
-// };
-
-// module.exports.cancelRequest = async (req, res) => {
-//   const myId = req.user._id;
-//   const userId = req.query.id;
-
-// };
 
 module.exports.searchUsers = async (req, res) => {
   const { search } = req.query;
@@ -111,32 +99,6 @@ module.exports.searchUsers = async (req, res) => {
 
   res.json({ foundUsers });
 };
-
-// module.exports.incomingRequests = async (req, res) => {
-//   const { _id } = req.user;
-
-//   const user = await User.findById(
-//     _id,
-//     "-username -email -_id -__v -friends.friends -friends.sentRequests"
-//   ).populate("friends.incomingRequests", "-friends -__v");
-
-//   const incoming = user.friends.incomingRequests;
-
-//   res.json({ incoming });
-// };
-
-// module.exports.sentRequests = async (req, res) => {
-//   const { _id } = req.user;
-
-//   const user = await User.findById(
-//     _id,
-//     "-username -email -_id -__v -friends.friends -friends.incomingRequests"
-//   ).populate("friends.sentRequests", "-friends -__v");
-
-//   const sent = user.friends.sentRequests;
-
-//   res.json({ sent });
-// };
 
 module.exports.friendsAndPending = async (req, res) => {
   const { _id } = req.user;
@@ -157,21 +119,26 @@ module.exports.friendsAndPending = async (req, res) => {
   res.json({ sentIncomingAndFriends, incoming, sent });
 };
 
-module.exports.removeFriend = async (myId, userId) => {
-  await User.findOneAndUpdate(
-    { _id: myId },
-    { $pull: { "friends.friends": userId } }
+
+module.exports.getFriends = async (req, res) => {
+  const { _id } = req.user;
+
+  const user = await User.findById(_id).populate(
+    "friends.friends",
+    "-friends -__v"
   );
-  await User.findOneAndUpdate(
-    { _id: userId },
-    { $pull: { "friends.friends": myId } }
-  );
+
+  res.json({ friends: user.friends.friends });
 };
 
-module.exports.showFriends = async (myId) => {
-  const friends = await User.findById(myId)
-    .populate("friends.friends", "-friends -_id -__v")
-    .populate("friends.incomingRequests", "-friends -_id -__v")
-    .populate("friends.sentRequests", "-friends -_id -__v");
-  console.log(friends.friends);
+
+module.exports.removeFriend = async (req, res) => {
+  // await User.findOneAndUpdate(
+  //   { _id: myId },
+  //   { $pull: { "friends.friends": userId } }
+  // );
+  // await User.findOneAndUpdate(
+  //   { _id: userId },
+  //   { $pull: { "friends.friends": myId } }
+  // );
 };

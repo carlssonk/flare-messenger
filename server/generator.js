@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const User = require("./models/user");
-const Friend = require("./models/friend");
 
 mongoose.connect("mongodb://localhost:27017/flare-chat", {
   useNewUrlParser: true,
