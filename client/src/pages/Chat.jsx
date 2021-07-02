@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DeviceInfo from "../components/DeviceInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,60 +8,89 @@ import {
   faEllipsisV,
   faCamera,
   faImages,
-  faSmile,
   faPaperPlane,
   faMicrophone,
+  faGrinSquintTears,
 } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Ripple from "../components/effects/Ripple";
 
+import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
+import "draft-js/dist/Draft.css";
+
+const draftUtils = require("draftjs-utils");
+
 function Chat() {
-  const [text, setText] = useState("");
-  const [rows, setRows] = useState(1);
+  const inputRef = useRef(null);
+  const editorWrapper = useRef(null);
+  const editorContainer = useRef(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (e) => {
-    if (isSubmitting) return;
-    setText(e.target.value);
+  // Keep this state even if its not used, we use the value from the state but not the state itself,
+  // because the value itself is more responsive than the state.
+  const [editorHeight, setEditorHeight] = useState(0);
+  const [editorMaxWidth, setEditorMaxWidth] = useState(0);
 
-    const string = e.target.value;
-    setRows(string.split(/\r\n|\r|\n/).length);
-  };
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
-  const calculateHeight = () => {
-    let height = 40;
+  const text = editorState.getCurrentContent().getPlainText();
 
-    if (rows === 2) height = 50;
-    if (rows === 3) height = 70;
-    if (rows === 4) height = 90;
-    if (rows === 5) height = 110;
-    if (rows === 6) height = 130;
-    if (rows === 7) height = 150;
-    if (rows >= 8) height = 170;
+  useEffect(() => {
+    setEditorHeight(
+      editorContainer.current && editorContainer.current.offsetHeight
+    );
+    setEditorMaxWidth(
+      editorWrapper.current && editorWrapper.current.offsetWidth
+    );
+  }, [editorState]);
 
-    if (isSubmitting) height = 40;
-
-    return height;
+  const keyBindning = (e) => {
+    if (listenSubmit(e)) return handleSubmit();
+    return getDefaultKeyBinding(e);
   };
 
   const listenSubmit = (e) => {
     if (e.keyCode == 13)
       if (!e.shiftKey) {
-        handleSubmit();
+        return true;
       }
+    return false;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
+    if (editorState.getCurrentContent().getPlainText().length === 0) return;
     resetInput();
-    alert("SUBMIT");
+
+    // const res = await fetch(`/api/login`, {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     username,
+    //     password,
+    //   }),
+    // });
+    // const user = await res.json();
+
     setTimeout(() => setIsSubmitting(false), 200);
   };
 
   const resetInput = () => {
-    setText("");
-    setRows(1);
+    setEditorState(draftUtils.clearEditorContent(editorState));
   };
+
+  const reportWindowSize = () => {
+    setEditorMaxWidth(
+      editorWrapper.current && editorWrapper.current.offsetWidth
+    );
+  };
+  window.onresize = reportWindowSize;
 
   return (
     <div className="chat-page page">
@@ -106,41 +135,56 @@ function Chat() {
         <ul className="message-list"></ul>
       </div>
       <div className="controller-container">
-        <Ripple.Div className="icon-left">
+        <Ripple.Div className="icon-outside">
           <FontAwesomeIcon icon={faCamera} />
         </Ripple.Div>
-        <Ripple.Div className="icon-left">
+        <Ripple.Div className="icon-outside">
           <FontAwesomeIcon icon={faImages} />
         </Ripple.Div>
         <div
           className="input-box"
           style={{
-            height: `${calculateHeight()}px`,
+            height: `${
+              editorContainer.current && editorContainer.current.offsetHeight
+            }px`,
+            minHeight: "40px",
+            marginRight: text.length > 0 ? "56px" : "",
+            transition: text.length <= 1 ? "100ms" : "0ms",
           }}
+          ref={inputRef}
         >
-          <Ripple.Div>
-            <FontAwesomeIcon icon={faSmile} />
+          <Ripple.Div className="icon-inside">
+            <FontAwesomeIcon icon={faGrinSquintTears} />
           </Ripple.Div>
-          <form>
-            <textarea
-              onKeyDown={(e) => listenSubmit(e)}
-              onChange={(e) => handleInputChange(e)}
-              value={text}
-              type="text"
-              placeholder="Enter Message"
-              style={{ padding: rows > 1 ? "4px 0" : "10px 0" }}
-            />
-          </form>
-          {text.length > 0 ? (
-            <Ripple.Div onClick={handleSubmit}>
-              <FontAwesomeIcon icon={faPaperPlane} className="send-btn" />
-            </Ripple.Div>
-          ) : (
-            <Ripple.Div>
+          <div className="editor-wrapper" ref={editorWrapper}>
+            <div
+              className="editor-container"
+              style={{
+                maxWidth: `${editorMaxWidth}px`,
+              }}
+              ref={editorContainer}
+            >
+              <Editor
+                editorState={editorState}
+                onChange={setEditorState}
+                placeholder="Enter Message"
+                keyBindingFn={keyBindning}
+              />
+            </div>
+          </div>
+          {text.length > 0 ? null : (
+            <Ripple.Div className="icon-inside">
               <FontAwesomeIcon icon={faMicrophone} />
             </Ripple.Div>
           )}
         </div>
+        <Ripple.Div
+          onClick={handleSubmit}
+          className="send-btn"
+          style={{ right: text.length > 0 ? "0" : "" }}
+        >
+          <FontAwesomeIcon icon={faPaperPlane} />
+        </Ripple.Div>
       </div>
     </div>
   );

@@ -145,3 +145,14 @@
     opacity: 0;
   }
 }
+
+.measure-text-length {
+  width: fit-content;
+  position: fixed;
+  visibility: hidden;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  line-height: 20px;
+  white-space: break-spaces;
+}

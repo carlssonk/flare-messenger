@@ -1,6 +1,7 @@
 :root {
   --primary-gradient: linear-gradient(to bottom, #f64f59, #c471ed, #12c2e9);
   --primary-cyan: #1bbbbb;
+  --secondary-cyan: #1aadad;
   --cyan-gradient: linear-gradient(to right, #169c9c, #1bd8d8);
   --primary-background: #101218;
   --secondary-background: #1a1c20;
@@ -8,6 +9,7 @@
   --ripple-scale: 0;
   --ripple-color: white;
   --ripple-opacity: 0.2;
+  --editor-padding: 4px 0;
 }
 
 /* Change Autocomplete styles in Chrome*/
