@@ -6,10 +6,10 @@ import Ripple from "../../components/effects/Ripple";
 function CreateGroup({ togglePopup, handleTogglePopup }) {
   return (
     <>
-      <div className="create-group-wrapper">
+      <div className="popup-wrapper">
         <div
-          className={`create-group-container ${
-            togglePopup ? "create-group-show" : "create-group-hide"
+          className={`popup-container ${
+            togglePopup ? "popup-show" : "popup-hide"
           }`}
         >
           <div className="camera-box">

@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import DeviceInfo from "../components/DeviceInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { NavContext } from "../context/NavContext";
 import {
   faChevronLeft,
   faPhoneAlt,
@@ -14,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Ripple from "../components/effects/Ripple";
+import { useLocation, useHistory } from "react-router-dom";
 
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
@@ -21,6 +23,11 @@ import "draft-js/dist/Draft.css";
 const draftUtils = require("draftjs-utils");
 
 function Chat() {
+  const location = useLocation();
+  const history = useHistory();
+
+  const [friends, setFriends] = useState([]);
+
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
   const editorContainer = useRef(null);
@@ -37,6 +44,18 @@ function Chat() {
   );
 
   const text = editorState.getCurrentContent().getPlainText();
+
+  const { setNav } = useContext(NavContext);
+
+  const handleNavigation = (to) => {
+    if (to === "/") {
+      setNav("backward");
+    } else {
+      setNav("forward");
+    }
+    // we need to give a small delay so our transition class appends on the DOM before we redirect
+    setTimeout(() => history.push(to), 10);
+  };
 
   useEffect(() => {
     setEditorHeight(
@@ -92,6 +111,18 @@ function Chat() {
   };
   window.onresize = reportWindowSize;
 
+  const getChatData = async () => {
+    const chatId = location.pathname.replace("/chat/", "");
+    const res = await fetch(`/api/chats/${chatId}`);
+    const data = await res.json();
+    // console.log(data);
+    setFriends(data.friends);
+  };
+
+  useEffect(() => {
+    getChatData();
+  }, []);
+
   return (
     <div className="chat-page page">
       <div className="header-wrapper">
@@ -99,7 +130,10 @@ function Chat() {
           <DeviceInfo />
           <div className="top-bar">
             <div className="left-section">
-              <Ripple.Div className="back-arrow">
+              <Ripple.Div
+                className="back-arrow"
+                onClick={() => handleNavigation("/")}
+              >
                 <FontAwesomeIcon icon={faChevronLeft} />
               </Ripple.Div>
 
@@ -111,7 +145,9 @@ function Chat() {
                 </div>
 
                 <div className="text-box">
-                  <div className="name">Jeb_</div>
+                  <div className="name">
+                    {friends[0] && friends[0].username}
+                  </div>
                   <div className="status">Currently Active</div>
                 </div>
               </div>

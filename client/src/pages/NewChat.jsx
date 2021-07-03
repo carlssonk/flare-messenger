@@ -33,11 +33,26 @@ function NewChat() {
     setTimeout(() => history.push(to), 10);
   };
 
+  const handleCreateChat = async (userId) => {
+    const res = await fetch(`/api/chats/new`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        isPrivate: true,
+      }),
+    });
+    const data = await res.json();
+    handleNavigation(`/chat/${data.chatId}`);
+  };
+
   return (
     <div className="new-page page">
       <Header />
       <div className="scroll-wrapper">
-        {/* <div > */}
         <Ripple.Div
           className="new-group-box"
           onClick={() => handleNavigation("/new/group")}
@@ -45,12 +60,11 @@ function NewChat() {
           <FontAwesomeIcon icon={faUserFriends} className="check-icon" />
           <div className="new-group-label">Create New Group</div>
         </Ripple.Div>
-        {/* </div> */}
 
         <ul className="users-list">
           {friends.map((e) => {
             return (
-              <Ripple.Li key={e._id}>
+              <Ripple.Li key={e._id} onClick={() => handleCreateChat(e._id)}>
                 <div>
                   <div className="img-box">
                     <img src={Jeb_} alt="" />

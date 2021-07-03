@@ -94,7 +94,7 @@
   height: 79px !important;
 }
 
-.create-group-show {
+.popup-show {
   visibility: visible !important;
   animation: createGroupShow 250ms forwards;
 }
@@ -108,7 +108,7 @@
   }
 }
 
-.create-group-hide {
+.popup-hide {
   animation: createGroupHide 250ms forwards;
 }
 
@@ -146,13 +146,13 @@
   }
 }
 
-.measure-text-length {
-  width: fit-content;
-  position: fixed;
-  visibility: hidden;
-  outline: none;
-  border: none;
-  font-size: 16px;
-  line-height: 20px;
-  white-space: break-spaces;
-}
+// .measure-text-length {
+//   width: fit-content;
+//   position: fixed;
+//   visibility: hidden;
+//   outline: none;
+//   border: none;
+//   font-size: 16px;
+//   line-height: 20px;
+//   white-space: break-spaces;
+// }
