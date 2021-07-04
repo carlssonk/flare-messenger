@@ -2,113 +2,216 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Draggable from "react-draggable";
 
+import { getImgSizeInfo } from "../../utils/previewAvatar";
+
+import CheckifCircleIsOutsideBounds from "./CheckIfCircleIsOutsideBounds";
+
 function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
   const imageRef = useRef(null);
+  const circleRef = useRef(null);
+  const imageWrapperRef = useRef(null);
 
-  const [imageLoaded, setImageLoaded] = useState("");
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [circleSize, setCircleSize] = useState();
   const [maxX, setMaxX] = useState(0);
   const [maxY, setMaxY] = useState(0);
+  const [isHolding, setIsHolding] = useState(false);
+  const [windowIsResizing, setWindowIsResizing] = useState(false);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+
+  const [isOutsideBounds, setIsOutsideBounds] = useState(false);
+  const [outsideBounds, setOutsideBounds] = useState({ y: 0, x: 0 });
+  const [lastX, setLastX] = useState(0);
+  const [lastY, setLastY] = useState(0);
+
+  const [inputValue, setInputValue] = useState(0);
+  const [scaleValue, setScaleValue] = useState(0);
 
   useEffect(() => {
-    keepAspectRatio();
-  }, [togglePopup]);
-
-  const keepAspectRatio = () => {
-    const WIDTH = boxRef.current.offsetWidth;
-    const HEIGHT = boxRef.current.offsetHeight;
-    if (WIDTH < HEIGHT) {
-      setCircleSize(WIDTH);
-    } else {
-      setCircleSize(HEIGHT);
+    if (imageLoaded) {
+      const imageInfo = getImgSizeInfo(imageRef.current);
+      setImageSize({ width: imageInfo.width, height: imageInfo.height });
     }
+  }, [imageLoaded]);
+
+  useEffect(() => {
+    setScaleValue(inputValue / 100 + 1);
+  }, [inputValue]);
+
+  useEffect(() => {
+    const setMaxDrag = () => {
+      const WIDTH = imageSize.width * scaleValue;
+      const HEIGHT = imageSize.height * scaleValue;
+
+      setMaxX((WIDTH - circleSize) / 2);
+      setMaxY((HEIGHT - circleSize) / 2);
+    };
+    if (imageLoaded) setMaxDrag();
+  }, [scaleValue, circleSize, imageLoaded, imageSize]);
+
+  useEffect(() => {
+    const getCircleSize = () => {
+      const WIDTH = imageSize.width;
+      const HEIGHT = imageSize.height;
+      if (WIDTH < HEIGHT) {
+        setCircleSize(WIDTH);
+      } else {
+        setCircleSize(HEIGHT);
+      }
+    };
+    if (imageSize.width > 0) getCircleSize();
+  }, [imageSize]);
+
+  const dragHandler = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleDrag = (_, data) => {
+    setLastY(data.lastY);
+    setLastX(data.lastX);
   };
 
   useEffect(() => {
-    if (imageLoaded) setMaxDrag();
-  }, [circleSize, imageLoaded]);
-
-  const setMaxDrag = () => {
-    setMaxX((imageRef.current.offsetWidth - circleSize) / 2);
-    setMaxY((imageRef.current.offsetHeight - circleSize) / 2);
-  };
+    setIsHolding(true);
+    const timeout = setTimeout(() => setIsHolding(false), 250);
+    return () => clearTimeout(timeout);
+  }, [windowIsResizing]);
 
   const handleWindowResize = () => {
-    keepAspectRatio();
-    setMaxDrag();
+    setWindowIsResizing((bool) => !bool);
+    const imageInfo = getImgSizeInfo(imageRef.current);
+    setImageSize({ width: imageInfo.width, height: imageInfo.height });
   };
-
   window.onresize = handleWindowResize;
+
+  useEffect(() => {
+    console.log(isHolding);
+    console.log(isOutsideBounds);
+  }, [isHolding, isOutsideBounds]);
 
   return (
     <>
+      <CheckifCircleIsOutsideBounds
+        imageSize={imageSize}
+        scaleValue={scaleValue}
+        circleRef={circleRef}
+        imageRef={imageRef}
+        maxY={maxY}
+        maxX={maxX}
+        setOutsideBounds={setOutsideBounds}
+        setIsOutsideBounds={setIsOutsideBounds}
+        lastX={lastX}
+        lastY={lastY}
+      />
       <div className="popup-wrapper">
         <div
           className={`popup-container ${
             togglePopup ? "popup-show" : "popup-hide"
           }`}
         >
-          <div className="popup-img-box" ref={boxRef}>
-            <div
-              className="popup-img-overlay"
-              style={{
-                maxWidth: `${circleSize}px`,
-                minWidth: `${circleSize}px`,
-                maxHeight: `${circleSize}px`,
-                minHeight: `${circleSize}px`,
-              }}
-            ></div>
-            <Draggable
-              nodeRef={nodeRef}
-              bounds={{
-                left: -maxX,
-                top: -maxY,
-                right: maxX,
-                bottom: maxY,
-              }}
-            >
+          <div className="popup-img-box-wrapper">
+            <div className="popup-img-box" ref={boxRef}>
               <div
-                ref={nodeRef}
-                className="image-wrapper-outer"
-                style={
-                  imageRef.current &&
-                  imageRef.current.offsetWidth > imageRef.current.offsetHeight
-                    ? {
-                        height: "100%",
-                      }
-                    : {
-                        width: "100%",
-                      }
+                ref={circleRef}
+                className="popup-img-overlay"
+                style={{
+                  maxWidth: `${circleSize}px`,
+                  minWidth: `${circleSize}px`,
+                  maxHeight: `${circleSize}px`,
+                  minHeight: `${circleSize}px`,
+                }}
+              ></div>
+              <Draggable
+                nodeRef={nodeRef}
+                bounds={{
+                  left: -maxX,
+                  top: -maxY,
+                  right: maxX,
+                  bottom: maxY,
+                }}
+                defaultPosition={{ x: 0, y: 0 }}
+                position={
+                  isOutsideBounds && isHolding
+                    ? { y: outsideBounds.y, x: outsideBounds.x }
+                    : null
                 }
+                onDrag={handleDrag}
               >
                 <div
-                  className="image-wrapper"
-                  style={{ width: "100%", height: "100%" }}
+                  ref={nodeRef}
+                  className="image-wrapper-outer"
+                  style={
+                    imageRef.current &&
+                    imageRef.current.offsetWidth > imageRef.current.offsetHeight
+                      ? {
+                          height: "100%",
+                        }
+                      : {
+                          width: "100%",
+                        }
+                  }
                 >
-                  <img
-                    ref={imageRef}
-                    src={imageUrl}
-                    alt=""
-                    onLoad={() => setImageLoaded(true)}
-                    style={
-                      imageRef.current &&
-                      imageRef.current.offsetWidth >
-                        imageRef.current.offsetHeight
-                        ? {
-                            minHeight: `${circleSize}px`,
-                            maxHeight: `${circleSize}px`,
-                          }
-                        : {
-                            minWidth: `${circleSize}px`,
-                            maxWidth: `${circleSize}px`,
-                          }
-                    }
-                  />
+                  <div
+                    className="image-wrapper"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      transform: `scale3d(${scaleValue},${scaleValue},${scaleValue})`,
+                    }}
+                    ref={imageWrapperRef}
+                  >
+                    <img
+                      ref={imageRef}
+                      src={imageUrl}
+                      alt=""
+                      onLoad={() => setImageLoaded(true)}
+                    />
+                  </div>
                 </div>
+              </Draggable>
+            </div>
+          </div>
+
+          <div className="track-wrapper">
+            <input
+              min={0}
+              max={100}
+              onChange={dragHandler}
+              onMouseDown={() => setIsHolding(true)}
+              onTouchStart={() => setIsHolding(true)}
+              onMouseUp={() => {
+                setIsHolding(false);
+                setIsOutsideBounds(false);
+              }}
+              onTouchEnd={() => {
+                setIsHolding(false);
+                setIsOutsideBounds(false);
+              }}
+              type="range"
+            />
+
+            <div className="track-box">
+              <div className="inner-track-box">
+                <div
+                  style={{
+                    transform: `translate3d(-${100 - inputValue}%, 0, 0)`,
+                  }}
+                  className="animate-track-fill"
+                ></div>
+                <div
+                  style={{
+                    transform: `translate3d(-${100 - inputValue}%, -50%, 0)`,
+                  }}
+                  className="animate-track"
+                >
+                  <div className="circle"></div>
+                </div>
+
+                <div className="fill-track"></div>
               </div>
-            </Draggable>
+            </div>
           </div>
         </div>
       </div>

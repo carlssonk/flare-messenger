@@ -86,7 +86,7 @@ function NewGroup() {
             >
               <div className="img-wrapper">
                 <div className="img-box">
-                  <img src={Jeb_} />
+                  <img src={Jeb_} alt="" />
                 </div>
                 <div
                   className="remove-btn"

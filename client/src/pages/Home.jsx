@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 // import Ripple from "../components/effects/RippleButton";
 import { IonApp } from "@ionic/react";
 // import { motion } from "framer-motion";
@@ -11,27 +11,12 @@ import Ripple from "../components/effects/Ripple";
 // import { Scroll } from "framer";
 
 function Home() {
-  const [chatList, setChatList] = useState([]);
+  // const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
     getChats();
   }, []);
-  // const containerVariants = {
-  //   hidden: {
-  //     opacity: 0,
-  //     scale: 0.7,
-  //   },
-  //   visible: {
-  //     opacity: 1,
-  //     scale: 1,
-  //     transition: { ease: "easeInOut", duration: 0.2 },
-  //   },
-  //   exit: {
-  //     opacity: 0,
-  //     transition: { ease: "easeInOut", duration: 0.2 },
-  //     scale: 0.7,
-  //   },
-  // };
+
   const getChats = async () => {
     const res = await fetch("/api/chats");
     const data = await res.json();

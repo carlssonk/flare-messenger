@@ -72,7 +72,7 @@ function Chat() {
   };
 
   const listenSubmit = (e) => {
-    if (e.keyCode == 13)
+    if (e.keyCode === 13)
       if (!e.shiftKey) {
         return true;
       }
@@ -111,17 +111,16 @@ function Chat() {
   };
   window.onresize = reportWindowSize;
 
-  const getChatData = async () => {
-    const chatId = location.pathname.replace("/chat/", "");
-    const res = await fetch(`/api/chats/${chatId}`);
-    const data = await res.json();
-    // console.log(data);
-    setFriends(data.friends);
-  };
-
   useEffect(() => {
+    const getChatData = async () => {
+      const chatId = location.pathname.replace("/chat/", "");
+      const res = await fetch(`/api/chats/${chatId}`);
+      const data = await res.json();
+      // console.log(data);
+      setFriends(data.friends);
+    };
     getChatData();
-  }, []);
+  }, [location]);
 
   return (
     <div className="chat-page page">
