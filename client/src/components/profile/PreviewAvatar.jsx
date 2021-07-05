@@ -32,7 +32,12 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
   useEffect(() => {
     if (imageLoaded) {
       const imageInfo = getImgSizeInfo(imageRef.current);
-      setImageSize({ width: imageInfo.width, height: imageInfo.height });
+      setImageSize({
+        width: imageInfo.width,
+        height: imageInfo.height,
+        naturalWidth: imageInfo.naturalWidth,
+        naturalHeight: imageInfo.naturalHeight,
+      });
     }
   }, [imageLoaded]);
 
@@ -79,17 +84,57 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
     return () => clearTimeout(timeout);
   }, [windowIsResizing]);
 
+  const calculatePosition = () => {
+    const SCALE =
+      imageSize.naturalWidth < imageSize.naturalHeight
+        ? imageSize.naturalWidth
+        : imageSize.naturalHeight;
+
+    const ZOOM = Math.round(SCALE / scaleValue);
+
+    console.log("ZOOM " + ZOOM);
+
+    const { top: circleTOP, left: circleLEFT } =
+      circleRef.current.getBoundingClientRect();
+
+    const { top: imageTOP, left: imageLEFT } =
+      imageRef.current.getBoundingClientRect();
+
+    const { top: imageNaturalTOP, left: imageNaturalLEFT } = getImgSizeInfo(
+      imageRef.current
+    );
+
+    const SCALE_TO_NATURAL = imageSize.naturalHeight / imageSize.height;
+
+    const FindX = Math.round(
+      ((circleLEFT - (imageLEFT + imageNaturalLEFT * scaleValue)) *
+        SCALE_TO_NATURAL) /
+        scaleValue
+    );
+    const FindY = Math.round(
+      ((circleTOP - (imageTOP + imageNaturalTOP * scaleValue)) *
+        SCALE_TO_NATURAL) /
+        scaleValue
+    );
+
+    return { ZOOM, FindX, FindY };
+  };
+
   const handleWindowResize = () => {
     setWindowIsResizing((bool) => !bool);
     const imageInfo = getImgSizeInfo(imageRef.current);
-    setImageSize({ width: imageInfo.width, height: imageInfo.height });
+    setImageSize({
+      width: imageInfo.width,
+      height: imageInfo.height,
+      naturalWidth: imageInfo.naturalWidth,
+      naturalHeight: imageInfo.naturalHeight,
+    });
+    console.log(calculatePosition());
   };
   window.onresize = handleWindowResize;
 
-  useEffect(() => {
-    console.log(isHolding);
-    console.log(isOutsideBounds);
-  }, [isHolding, isOutsideBounds]);
+  // HOW TO SCALE IMAGE ACCORDINGLY USING CLOUDINARY API
+  // https://res.cloudinary.com/plexeronthecloud/image/upload/ar_1,c_crop,w_${Zoom},x_${FindX},y_${FindY}/v1625506265/YelpCamp/boxes_mqd5wg.png
 
   return (
     <>
@@ -177,7 +222,7 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
           <div className="track-wrapper">
             <input
               min={0}
-              max={100}
+              max={200}
               onChange={dragHandler}
               onMouseDown={() => setIsHolding(true)}
               onTouchStart={() => setIsHolding(true)}
@@ -196,13 +241,15 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
               <div className="inner-track-box">
                 <div
                   style={{
-                    transform: `translate3d(-${100 - inputValue}%, 0, 0)`,
+                    transform: `translate3d(-${(200 - inputValue) / 2}%, 0, 0)`,
                   }}
                   className="animate-track-fill"
                 ></div>
                 <div
                   style={{
-                    transform: `translate3d(-${100 - inputValue}%, -50%, 0)`,
+                    transform: `translate3d(-${
+                      (200 - inputValue) / 2
+                    }%, -50%, 0)`,
                   }}
                   className="animate-track"
                 >

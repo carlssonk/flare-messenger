@@ -9,6 +9,9 @@ function getRenderedSize(contains, cWidth, cHeight, width, height, pos) {
       this.width = Math.round(cHeight * oRatio);
       this.height = Math.round(cHeight);
     }
+    this.naturalWidth = width;
+    this.naturalHeight = height;
+
     this.left = (cWidth - this.width) * (pos / 100);
     this.right = this.width + this.left;
 
