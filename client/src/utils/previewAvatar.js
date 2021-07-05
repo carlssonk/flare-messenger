@@ -35,3 +35,42 @@ export function getImgSizeInfo(img) {
     parseInt(pos[0])
   );
 }
+
+export const calculatePosition = (
+  imageSize,
+  circleRef,
+  imageRef,
+  scaleValue
+) => {
+  const SCALE =
+    imageSize.naturalWidth < imageSize.naturalHeight
+      ? imageSize.naturalWidth
+      : imageSize.naturalHeight;
+
+  const ZOOM = Math.round(SCALE / scaleValue);
+
+  const { top: circleTOP, left: circleLEFT } =
+    circleRef.current.getBoundingClientRect();
+
+  const { top: imageTOP, left: imageLEFT } =
+    imageRef.current.getBoundingClientRect();
+
+  const { top: imageNaturalTOP, left: imageNaturalLEFT } = getImgSizeInfo(
+    imageRef.current
+  );
+
+  const SCALE_TO_NATURAL = imageSize.naturalHeight / imageSize.height;
+
+  const FindX = Math.round(
+    ((circleLEFT - (imageLEFT + imageNaturalLEFT * scaleValue)) *
+      SCALE_TO_NATURAL) /
+      scaleValue
+  );
+  const FindY = Math.round(
+    ((circleTOP - (imageTOP + imageNaturalTOP * scaleValue)) *
+      SCALE_TO_NATURAL) /
+      scaleValue
+  );
+
+  return { ZOOM, FindX, FindY };
+};

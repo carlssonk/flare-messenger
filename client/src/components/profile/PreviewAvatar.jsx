@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Draggable from "react-draggable";
 
-import { getImgSizeInfo } from "../../utils/previewAvatar";
+import { getImgSizeInfo, calculatePosition } from "../../utils/previewAvatar";
 
 import CheckifCircleIsOutsideBounds from "./CheckIfCircleIsOutsideBounds";
 
@@ -84,42 +84,6 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
     return () => clearTimeout(timeout);
   }, [windowIsResizing]);
 
-  const calculatePosition = () => {
-    const SCALE =
-      imageSize.naturalWidth < imageSize.naturalHeight
-        ? imageSize.naturalWidth
-        : imageSize.naturalHeight;
-
-    const ZOOM = Math.round(SCALE / scaleValue);
-
-    console.log("ZOOM " + ZOOM);
-
-    const { top: circleTOP, left: circleLEFT } =
-      circleRef.current.getBoundingClientRect();
-
-    const { top: imageTOP, left: imageLEFT } =
-      imageRef.current.getBoundingClientRect();
-
-    const { top: imageNaturalTOP, left: imageNaturalLEFT } = getImgSizeInfo(
-      imageRef.current
-    );
-
-    const SCALE_TO_NATURAL = imageSize.naturalHeight / imageSize.height;
-
-    const FindX = Math.round(
-      ((circleLEFT - (imageLEFT + imageNaturalLEFT * scaleValue)) *
-        SCALE_TO_NATURAL) /
-        scaleValue
-    );
-    const FindY = Math.round(
-      ((circleTOP - (imageTOP + imageNaturalTOP * scaleValue)) *
-        SCALE_TO_NATURAL) /
-        scaleValue
-    );
-
-    return { ZOOM, FindX, FindY };
-  };
-
   const handleWindowResize = () => {
     setWindowIsResizing((bool) => !bool);
     const imageInfo = getImgSizeInfo(imageRef.current);
@@ -129,7 +93,7 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
       naturalWidth: imageInfo.naturalWidth,
       naturalHeight: imageInfo.naturalHeight,
     });
-    console.log(calculatePosition());
+    console.log(calculatePosition(imageSize, circleRef, imageRef, scaleValue));
   };
   window.onresize = handleWindowResize;
 
