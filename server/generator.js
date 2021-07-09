@@ -46,6 +46,14 @@ const oliverId = "60cd0cbbebc58542d8e08edb";
 const bobId = "60cd0cebebc58542d8e08edc";
 const alexId = "60cd0cf9ebc58542d8e08edd";
 
+// const removeAllChats = async () => {
+//   await User.updateMany({
+//     $set: { chats: [] },
+//   });
+// };
+
+// removeAllChats();
+
 // OLIVER
 
 // sendFriendRequest(oliverId, alexId);
