@@ -1,18 +1,26 @@
 .auth-page {
   border-radius: 20px !important;
-  ion-button {
-    --background: var(--secondary-background);
+  button {
+    background: var(--secondary-background);
     height: 50px;
     margin: 8px;
-    --border-radius: 20px;
+    border-radius: 20px;
     width: 100%;
+    box-shadow: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+    }
   }
   .login-btn {
-    --background: var(--primary-cyan);
+    background: var(--primary-cyan);
     margin-top: 22px;
   }
   .small-btn {
-    --background: transparent;
+    background: transparent;
     height: 30px;
   }
 }

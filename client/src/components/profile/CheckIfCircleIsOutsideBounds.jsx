@@ -41,10 +41,6 @@ function CheckIfCircleIsOutsideBounds({
       const outsideRIGHT =
         circleRIGHT > imageRIGHT - imageNaturalLEFT * scaleValue;
 
-      // console.log(circleTOP - (imageTOP + imageNaturalTOP * scaleValue));
-      // console.log(imageTOP + imageNaturalTOP * scaleValue);
-      // console.log(circleTOP);
-
       const calculateSetOutsideBounds = () => {
         setOutsideBounds({
           y: outsideTOP ? maxY : -maxY,
@@ -66,7 +62,7 @@ function CheckIfCircleIsOutsideBounds({
 
       setIsOutsideBounds(false);
     };
-
+    if (typeof imageRef.current !== "undefined") return;
     checkIfOutsideBounds();
   }, [
     scaleValue,

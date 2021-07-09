@@ -22,6 +22,7 @@ function getRenderedSize(contains, cWidth, cHeight, width, height, pos) {
 }
 
 export function getImgSizeInfo(img) {
+  if (typeof img !== "undefined") return;
   var pos = window
     .getComputedStyle(img)
     .getPropertyValue("object-position")

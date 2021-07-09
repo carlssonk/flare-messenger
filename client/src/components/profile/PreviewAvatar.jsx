@@ -6,7 +6,7 @@ import { getImgSizeInfo, calculatePosition } from "../../utils/previewAvatar";
 
 import CheckifCircleIsOutsideBounds from "./CheckIfCircleIsOutsideBounds";
 
-function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
+function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
   const imageRef = useRef(null);
@@ -93,12 +93,47 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
       naturalWidth: imageInfo.naturalWidth,
       naturalHeight: imageInfo.naturalHeight,
     });
-    console.log(calculatePosition(imageSize, circleRef, imageRef, scaleValue));
+    // console.log(calculatePosition(imageSize, circleRef, imageRef, scaleValue));
   };
   window.onresize = handleWindowResize;
 
   // HOW TO SCALE IMAGE ACCORDINGLY USING CLOUDINARY API
   // https://res.cloudinary.com/plexeronthecloud/image/upload/ar_1,c_crop,w_${Zoom},x_${FindX},y_${FindY}/v1625506265/YelpCamp/boxes_mqd5wg.png
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (imageUrl.length === 0) return;
+
+    const formData = new FormData();
+    formData.append("avatar", image);
+    formData.append(
+      "resize",
+      JSON.stringify(
+        calculatePosition(imageSize, circleRef, imageRef, scaleValue)
+      )
+    );
+
+    const res = await fetch(`http://localhost:3000/api/avatar`, {
+      method: "POST",
+      body: formData,
+    });
+    const avatar = await res.json();
+    console.log(avatar.path);
+  };
+
+  // function dataURLtoFile(dataurl, filename) {
+  //   var arr = dataurl.split(","),
+  //     mime = arr[0].match(/:(.*?);/)[1],
+  //     bstr = atob(arr[1]),
+  //     n = bstr.length,
+  //     u8arr = new Uint8Array(n);
+
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+
+  //   return new File([u8arr], filename, { type: mime });
+  // }
 
   return (
     <>
@@ -224,6 +259,7 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl }) {
               </div>
             </div>
           </div>
+          <button onClick={handleSubmit}>SUBMIT</button>
         </div>
       </div>
       <div

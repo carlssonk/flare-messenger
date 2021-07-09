@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext, useMemo } from "react";
 import DeviceInfo from "../components/DeviceInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
@@ -38,6 +38,10 @@ function Chat() {
   // because the value itself is more responsive than the state.
   const [editorHeight, setEditorHeight] = useState(0);
   const [editorMaxWidth, setEditorMaxWidth] = useState(0);
+  useMemo(
+    () => ({ editorHeight, setEditorHeight }),
+    [editorHeight, setEditorHeight]
+  );
 
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
@@ -84,7 +88,7 @@ function Chat() {
     if (editorState.getCurrentContent().getPlainText().length === 0) return;
     resetInput();
 
-    // const res = await fetch(`/api/login`, {
+    // const res = await fetch(`/api/sendmessagfe`, {
     //   method: "POST",
     //   headers: {
     //     Accept: "application/json",

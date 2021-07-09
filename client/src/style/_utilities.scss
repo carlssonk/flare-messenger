@@ -101,23 +101,28 @@
 
 @keyframes createGroupShow {
   from {
-    transform: scale3d(0, 0, 0);
+    transform: scale3d(0.5, 0.5, 0.5);
+    opacity: 0;
   }
   to {
     transform: scale3d(1, 1, 1);
+    opacity: 1;
   }
 }
 
 .popup-hide {
+  pointer-events: none;
   animation: createGroupHide 250ms forwards;
 }
 
 @keyframes createGroupHide {
   from {
     transform: scale3d(1, 1, 1);
+    opacity: 1;
   }
   to {
-    transform: scale3d(0, 0, 0);
+    transform: scale3d(0.5, 0.5, 0.5);
+    opacity: 0;
   }
 }
 
