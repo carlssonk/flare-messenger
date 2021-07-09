@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-// import Ripple from "../components/effects/RippleButton";
 import { IonApp } from "@ionic/react";
-// import { motion } from "framer-motion";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Jeb_ from "../imgs/Jens-Bergensten.png";

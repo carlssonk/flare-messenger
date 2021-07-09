@@ -14,6 +14,7 @@ const Ripple = ({
   scale = 1,
   color = "white",
   opacity = 0.2,
+  disabled,
   element = "div",
 }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -113,6 +114,7 @@ const Ripple = ({
       key: 1,
       className: `ripple-effect ${className ? className : ""}`,
       style: style,
+      disabled,
       onClick: (e) => onClick && onClick(e),
       onMouseDown: (e) => {
         if (isMobile) return;
@@ -556,6 +558,7 @@ const Button = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  disabled,
 }) => (
   <Ripple
     children={children}
@@ -570,6 +573,7 @@ const Button = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    disabled={disabled}
     element="button"
   />
 );

@@ -1,18 +1,21 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
-import { IonPage, IonButton } from "@ionic/react";
+import { IonPage } from "@ionic/react";
 import FlareIcon from "../imgs/flare-icon.svg";
 import { passwordList } from "../utils/commonPasswords";
-
+import { NavContext } from "../context/NavContext";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faEye } from "@fortawesome/free-regular-svg-icons";
-import { motion } from "framer-motion";
+import Ripple from "../components/effects/Ripple";
 
 // Colors for form validation
 const formRed = "#ff0042";
 const formGreen = "#00b627";
 
 function Signup({ changePage }) {
+  const { setNav } = useContext(NavContext);
+  const history = useHistory();
   const { setUser } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
@@ -29,7 +32,6 @@ function Signup({ changePage }) {
   const [togglePassword, setTogglePassword] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [nextPage, setNextPage] = useState(false);
   // Client-Side Username validation
   useEffect(() => {
     setUsernameGood(false);
@@ -160,170 +162,131 @@ function Signup({ changePage }) {
       }),
     });
     const user = await res.json();
-    setIsSubmitting(false);
-    handleSwitchPage(user);
+    handleRedirect(user);
   };
 
-  const handleSwitchPage = (user) => {
-    setNextPage(true);
-    changePage("home"); // execute exit method from framer-motion
-    setTimeout(() => {
-      setUser(user);
-    }, 100);
-  };
-
-  const containerVariants = {
-    hidden: {
-      y: "100vh",
-    },
-    visible: {
-      y: "0",
-      transition: {
-        duration: 0.3,
-        type: "spring",
-        damping: 25,
-        stiffness: 250,
-      },
-    },
-    exit: {
-      y: nextPage ? "0" : "100vh",
-      transition: { ease: "easeInOut", duration: 0.2 },
-      scale: nextPage ? 2 : 0.7,
-      opacity: 0,
-    },
+  const handleRedirect = (user) => {
+    setNav("forward");
+    history.location.key = "Randomness"; // Change key to invoke animation
+    setTimeout(() => setUser(user), 10);
   };
 
   return (
-    <>
-      <motion.div
-        style={{ width: "100%", height: "100%" }}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <IonPage className="auth-page">
-          <img src={FlareIcon} className="flare-icon" alt="logo" />
-          <form onSubmit={handleSignup}>
-            <div className="input-box">
-              <div
-                style={{
-                  color: formRed,
-                  // height: usernameError ? "14px" : "0",
-                }}
-              >
-                {usernameError}
-              </div>
-              <input
-                className={
-                  usernameGood
-                    ? "input-good"
-                    : usernameError.length > 0
-                    ? "input-error"
-                    : null
-                }
-                onChange={(e) => setUsername(e.target.value)}
-                type="text"
-                placeholder="Username"
-                minLength="3"
-                maxLength="20"
-                required
-              />
-              {usernameGood ? (
-                <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
-              ) : null}
-            </div>
-
-            <div className="input-box">
-              <div
-                style={{
-                  color: formRed,
-                  // height: emailError ? "14px" : "0",
-                }}
-              >
-                {emailError}
-              </div>
-              <input
-                className={
-                  emailGood
-                    ? "input-good"
-                    : emailError.length > 0
-                    ? "input-error"
-                    : null
-                }
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                placeholder="Email"
-                maxLength="320"
-                required
-              />
-              {emailGood ? (
-                <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
-              ) : null}
-            </div>
-
-            <div className="input-box">
-              <div
-                style={{
-                  color: formRed,
-                  // height: passwordError ? "14px" : "0",
-                }}
-              >
-                {passwordError}
-              </div>
-              <input
-                className={
-                  passwordGood
-                    ? "input-good"
-                    : passwordError.length > 0
-                    ? "input-error"
-                    : null
-                }
-                onChange={(e) => setPassword(e.target.value)}
-                type={togglePassword ? "text" : "password"}
-                placeholder="Password"
-                minLength="6"
-                maxLength="128"
-                required
-              />
-
-              <FontAwesomeIcon
-                onClick={() =>
-                  setTogglePassword((togglePassword) => !togglePassword)
-                }
-                className={togglePassword ? "eye-select" : "eye"}
-                style={passwordGood ? { right: "26px" } : ""}
-                icon={faEye}
-              />
-
-              {passwordGood ? (
-                <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
-              ) : null}
-            </div>
-
-            <button
-              disabled={
-                isSubmitting || !passwordGood || !usernameGood || !emailGood
-              }
-              type="submit"
-              style={{ display: "none" }}
-            ></button>
-          </form>
-          <IonButton
-            disabled={
-              isSubmitting || !passwordGood || !usernameGood || !emailGood
-            }
-            onClick={handleSignup}
-            className="login-btn"
+    <IonPage className="page auth-page">
+      <img src={FlareIcon} className="flare-icon" alt="logo" />
+      <form onSubmit={handleSignup}>
+        <div className="input-box">
+          <div
+            style={{
+              color: formRed,
+            }}
           >
-            SIGN UP
-          </IonButton>
-          <IonButton className="small-btn" onClick={() => changePage("login")}>
-            ALREADY HAVE AN ACCOUNT?
-          </IonButton>
-        </IonPage>
-      </motion.div>
-    </>
+            {usernameError}
+          </div>
+          <input
+            className={
+              usernameGood
+                ? "input-good"
+                : usernameError.length > 0
+                ? "input-error"
+                : null
+            }
+            onChange={(e) => setUsername(e.target.value)}
+            type="text"
+            placeholder="Username"
+            minLength="3"
+            maxLength="20"
+            required
+          />
+          {usernameGood ? (
+            <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
+          ) : null}
+        </div>
+
+        <div className="input-box">
+          <div
+            style={{
+              color: formRed,
+            }}
+          >
+            {emailError}
+          </div>
+          <input
+            className={
+              emailGood
+                ? "input-good"
+                : emailError.length > 0
+                ? "input-error"
+                : null
+            }
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
+            maxLength="320"
+            required
+          />
+          {emailGood ? (
+            <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
+          ) : null}
+        </div>
+
+        <div className="input-box">
+          <div
+            style={{
+              color: formRed,
+            }}
+          >
+            {passwordError}
+          </div>
+          <input
+            className={
+              passwordGood
+                ? "input-good"
+                : passwordError.length > 0
+                ? "input-error"
+                : null
+            }
+            onChange={(e) => setPassword(e.target.value)}
+            type={togglePassword ? "text" : "password"}
+            placeholder="Password"
+            minLength="6"
+            maxLength="128"
+            required
+          />
+
+          <FontAwesomeIcon
+            onClick={() =>
+              setTogglePassword((togglePassword) => !togglePassword)
+            }
+            className={togglePassword ? "eye-select" : "eye"}
+            style={passwordGood ? { right: "26px" } : ""}
+            icon={faEye}
+          />
+
+          {passwordGood ? (
+            <FontAwesomeIcon icon={faCheckCircle} color={formGreen} />
+          ) : null}
+        </div>
+
+        <button
+          disabled={
+            isSubmitting || !passwordGood || !usernameGood || !emailGood
+          }
+          type="submit"
+          style={{ display: "none" }}
+        ></button>
+      </form>
+      <Ripple.Button
+        disabled={isSubmitting || !passwordGood || !usernameGood || !emailGood}
+        onClick={handleSignup}
+        className="login-btn"
+      >
+        SIGN UP
+      </Ripple.Button>
+      <Ripple.Button className="small-btn" onClick={() => changePage("login")}>
+        ALREADY HAVE AN ACCOUNT?
+      </Ripple.Button>
+    </IonPage>
   );
 }
 
