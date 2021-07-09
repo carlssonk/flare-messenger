@@ -20,6 +20,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const User = require("./models/user");
 
 const userRoutes = require("./routes/users");
+const friendRoutes = require("./routes/friends");
+const chatRoutes = require("./routes/chats");
 
 const MongoStore = require("connect-mongo");
 
@@ -84,6 +86,8 @@ passport.deserializeUser(User.deserializeUser());
 
 // Routes
 app.use("/api", userRoutes);
+app.use("/api/friends", friendRoutes);
+app.use("/api/chats", chatRoutes);
 
 // PAGE NOT FOUND
 // app.all("*", (req, res, next) => {

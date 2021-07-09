@@ -1,18 +1,83 @@
-.auth-wrapper {
+.auth-page {
   border-radius: 20px !important;
-  ion-button {
-    --background: var(--secondary-background);
+  button {
+    background: var(--secondary-background);
     height: 50px;
     margin: 8px;
-    --border-radius: 20px;
+    border-radius: 20px;
     width: 100%;
+    box-shadow: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+    }
   }
   .login-btn {
-    --background: var(--primary-cyan);
+    background: var(--primary-cyan);
     margin-top: 22px;
   }
   .small-btn {
-    --background: transparent;
+    background: transparent;
     height: 30px;
   }
+}
+
+// .new-page,
+.add-page {
+  ion-button {
+    --background: #4b4b4b;
+    height: 32px;
+    margin: 8px;
+    --border-radius: 40px;
+    text-transform: none !important;
+  }
+  ion-label {
+    text-transform: none !important;
+    color: rgb(220, 220, 220);
+  }
+  ion-segment {
+    padding: 0 60px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+  ion-segment-button {
+    min-height: 30px;
+    max-height: 30px;
+    font-size: 12px;
+    min-width: unset;
+    max-width: unset;
+    max-width: 100px;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    &::part(indicator) {
+      width: 60%;
+      margin: 2px auto;
+    }
+  }
+
+  .accept-btn {
+    --padding-start: 10px;
+    --padding-end: 5px;
+    svg {
+      font-size: 14px;
+      margin: 8px;
+    }
+  }
+
+  .switch-btn {
+    color: white;
+    --indicator-color: var(--primary-cyan);
+    --indicator-height: 1px;
+    --color-checked: white;
+    --color: white;
+  }
+
+  // ion-segment-button::part(indicator) {
+  //   width: 36px;
+  //   margin: auto;
+  // }
 }

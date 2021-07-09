@@ -15,7 +15,6 @@ module.exports.checkAvailability = async (req, res, next) => {
     const { email } = req.body;
     const foundEmail = await User.findOne({ email });
     if (foundEmail) {
-      console.log("found email");
       throw new ExpressError("Email adress already in use.", 400);
     }
   }

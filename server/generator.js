@@ -5,6 +5,7 @@ mongoose.connect("mongodb://localhost:27017/flare-chat", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const db = mongoose.connection;
@@ -32,4 +33,65 @@ const deleteAllUsers = async () => {
 
 // deleteAllUsers();
 
-// deleteUser("60c928b5f865404224348ba2");
+const {
+  sendFriendRequest,
+  acceptRequest,
+  rejectRequest,
+  cancelRequest,
+  removeFriend,
+  showFriends,
+} = require("./controllers/friends");
+
+const oliverId = "60cd0cbbebc58542d8e08edb";
+const bobId = "60cd0cebebc58542d8e08edc";
+const alexId = "60cd0cf9ebc58542d8e08edd";
+
+// const removeAllChats = async () => {
+//   await User.updateMany({
+//     $set: { chats: [] },
+//   });
+// };
+
+// removeAllChats();
+
+// OLIVER
+
+// sendFriendRequest(oliverId, alexId);
+// rejectRequest(alexId, oliverId);
+// acceptRequest(alexId, oliverId);
+// cancelRequest(oliverId, alexId);
+// removeFriend(oliverId, bobId);
+
+// BOB
+
+// const deleteAllFriends = async () => {
+//   await Friend.deleteMany();
+//   console.log("DELETED");
+// };
+
+// showFriends(oliverId);
+// showFriends(bobId);
+// showFriends(alexId);
+
+// deleteAllFriends();
+
+// const deleteAllFriends = async (myId, userId) => {
+//   // const { myId, userId } = req.body;
+
+//   const myDoc = await Friend.deleteMany({
+//     requester: myId,
+//     recipient: userId,
+//   });
+//   const userDoc = await Friend.findOneAndRemove({
+//     recipient: myId,
+//     requester: userId,
+//   });
+//   const updateUserA = await User.findOneAndUpdate(
+//     { _id: myId },
+//     { $pull: { friends: myDoc._id } }
+//   );
+//   const updateUserB = await User.findOneAndUpdate(
+//     { _id: userId },
+//     { $pull: { friends: userDoc._id } }
+//   );
+// };
