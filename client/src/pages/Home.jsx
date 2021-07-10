@@ -1,172 +1,39 @@
-import React, { useEffect } from "react";
-import { IonApp } from "@ionic/react";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Jeb_ from "../imgs/Jens-Bergensten.png";
-import Header from "../components/Header";
-import { faCamera } from "@fortawesome/free-solid-svg-icons";
-import Ripple from "../components/effects/Ripple";
-// import { Scroll } from "framer";
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Home() {
-  // const [chatList, setChatList] = useState([]);
-
-  useEffect(() => {
-    getChats();
-  }, []);
-
-  const getChats = async () => {
-    const res = await fetch("/api/chats");
-    const data = await res.json();
-    console.log(data);
+  const containerVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.7,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { ease: "easeInOut", duration: 0.2 },
+    },
+    exit: {
+      opacity: 0,
+      transition: { ease: "easeInOut", duration: 0.2 },
+      scale: 0.7,
+    },
   };
 
   return (
-    <IonApp className="home-page page">
-      <Header />
-      <div className="chat-list">
-        {/* <Scroll
-          style={{ height: "100%", width: "100%", position: "relative" }}
-          dragElastic={0.2}
-        > */}
-        <ul>
-          <Ripple.Li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </Ripple.Li>
-          <Ripple.Li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </Ripple.Li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <div className="bottom-space"></div>
-        </ul>
-        {/* </Scroll> */}
-      </div>
-
-      {/* <div className="bottom">HOasdasdME</div> */}
-      <div className="footer-wrapper">
-        <div className="footer">
-          <Ripple.Div className="camera-box">
-            {/* <div className="camera-box"> */}
-            <FontAwesomeIcon icon={faCamera} />
-            {/* </div> */}
-          </Ripple.Div>
-        </div>
-        <div className="blur"></div>
-      </div>
-    </IonApp>
+    <>
+      <motion.div
+        key="poggers"
+        style={{ width: "100%", height: "100%" }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <Link to="/profile">Profile</Link>
+        <div>HOME</div>
+      </motion.div>
+    </>
   );
 }
 

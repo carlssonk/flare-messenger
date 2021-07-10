@@ -1,37 +1,12 @@
 const User = require("../models/user");
 const passport = require("passport");
-const { cloudinary } = require("../cloudinary");
+const { validationResult } = require("express-validator");
 
 module.exports.user = (req, res) => {
+  console.log(req.isAuthenticated());
   if (!req.isAuthenticated()) return res.json(null);
-  const { _id, email, username, name } = req.user;
-  console.log(username);
-  res.json({ id: _id, email, username, name });
-};
-
-module.exports.newAvatar = async (req, res) => {
-  const myId = req.user._id;
-  const resize = JSON.parse(req.body.resize);
-
-  const path = req.file.path.replace(
-    "/upload",
-    `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`
-  );
-  const filename = req.file.filename;
-
-  const user = await User.findOneAndUpdate(
-    { _id: myId },
-    {
-      $set: { "avatar.filename": filename, "avatar.path": path },
-    }
-  );
-
-  console.log(user);
-
-  // Delete old avatar on cloudinary
-  cloudinary.uploader.destroy(user.avatar.filename);
-
-  res.json({ path });
+  const { _id, email, username } = req.user;
+  res.json({ id: _id, email, username });
 };
 
 module.exports.checkAvailability = async (req, res) => {
@@ -43,6 +18,7 @@ module.exports.checkAvailability = async (req, res) => {
   if (req.query["username"]) {
     const { username } = req.query;
     const foundUsername = await User.findOne({ username });
+    console.log(foundUsername);
     res.json({ foundUsername: foundUsername ? true : false });
   }
 };
@@ -50,7 +26,7 @@ module.exports.checkAvailability = async (req, res) => {
 module.exports.register = async (req, res) => {
   try {
     const { email, username, password } = req.body;
-    const user = new User({ email, username, name: username });
+    const user = new User({ email, username });
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
       if (err) return next(err);

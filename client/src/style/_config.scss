@@ -1,16 +1,8 @@
 :root {
-  --primary-gradient: linear-gradient(to bottom, #f64f59, #c471ed, #12c2e9);
+  --primary-gradient: linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
   --primary-cyan: #1bbbbb;
-  --secondary-cyan: #1aadad;
-  --cyan-gradient: linear-gradient(to right, #169c9c, #1bd8d8);
   --primary-background: #101218;
   --secondary-background: #1a1c20;
-  --scrollbar-size: 10px;
-  --ripple-scale: 0;
-  --ripple-color: white;
-  --ripple-opacity: 0.2;
-  --editor-padding: 4px 0;
-  --avatar-preview: "";
 }
 
 /* Change Autocomplete styles in Chrome*/
@@ -28,24 +20,3 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
 }
-
-// /* width */
-// ::-webkit-scrollbar {
-//   width: var(--scrollbar-size);
-//   height: var(--scrollbar-size);
-// }
-
-// /* Track */
-// ::-webkit-scrollbar-track {
-//   background: #f1f1f1;
-// }
-
-// /* Handle */
-// ::-webkit-scrollbar-thumb {
-//   background: #888;
-// }
-
-// /* Handle on hover */
-// ::-webkit-scrollbar-thumb:hover {
-//   background: #555;
-// }

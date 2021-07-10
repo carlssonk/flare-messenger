@@ -1,39 +1,23 @@
-import React, { useState, useContext } from "react";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 
-import { NavContext } from "../context/NavContext";
-
 function Authenticate() {
   const [page, setPage] = useState("login");
-  const { nav, setNav } = useContext(NavContext);
 
   const changePage = (page) => {
-    page === "signup" ? setNav("forward") : setNav("backward");
-    setTimeout(() => setPage(page), 10);
+    setPage(page);
   };
 
   return (
-    <TransitionGroup component={null}>
-      <CSSTransition
-        key={page}
-        timeout={400}
-        classNames={nav}
-        onEnter={() =>
-          document.documentElement.style.setProperty("--scrollbar-size", "0px")
-        }
-        onExited={() =>
-          document.documentElement.style.setProperty("--scrollbar-size", "10px")
-        }
-      >
-        <>
-          {page === "signup" ? <Signup changePage={changePage} /> : null}
-          {page === "login" ? <Login changePage={changePage} /> : null}
-        </>
-      </CSSTransition>
-    </TransitionGroup>
+    <>
+      <AnimatePresence exitBeforeEnter>
+        {page === "login" ? <Login key="1" changePage={changePage} /> : null}
+        {page === "signup" ? <Signup key="2" changePage={changePage} /> : null}
+      </AnimatePresence>
+    </>
   );
 }
 
