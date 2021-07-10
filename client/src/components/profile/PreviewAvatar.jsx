@@ -32,6 +32,8 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
   useEffect(() => {
     if (imageLoaded) {
       const imageInfo = getImgSizeInfo(imageRef.current);
+      console.log(imageRef.current);
+      console.log(imageInfo);
       setImageSize({
         width: imageInfo.width,
         height: imageInfo.height,
@@ -85,6 +87,7 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
   }, [windowIsResizing]);
 
   const handleWindowResize = () => {
+    if (imageRef.current === null) return;
     setWindowIsResizing((bool) => !bool);
     const imageInfo = getImgSizeInfo(imageRef.current);
     setImageSize({

@@ -3,6 +3,7 @@ import PreviewAvatar from "../components/profile/PreviewAvatar";
 import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
+import { v4 as uuidv4 } from "uuid";
 
 function Profile() {
   const { setUser, user } = useContext(UserContext);
@@ -29,8 +30,8 @@ function Profile() {
       },
     });
     setNav("backward");
-    history.location.key = "logged out!"; // Change key to invoke animation
-    setTimeout(() => setUser(null), 10);
+    history.location.key = uuidv4(); // Change key to invoke animation
+    setUser(null);
   };
 
   const handleTogglePopup = (bool) => {

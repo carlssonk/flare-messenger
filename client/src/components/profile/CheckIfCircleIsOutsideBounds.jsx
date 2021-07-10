@@ -62,7 +62,7 @@ function CheckIfCircleIsOutsideBounds({
 
       setIsOutsideBounds(false);
     };
-    if (typeof imageRef.current !== "undefined") return;
+    if (imageRef.current === null) return;
     checkIfOutsideBounds();
   }, [
     scaleValue,

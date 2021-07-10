@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faEye } from "@fortawesome/free-regular-svg-icons";
 import Ripple from "../components/effects/Ripple";
+import { v4 as uuidv4 } from "uuid";
 
 // Colors for form validation
 const formRed = "#ff0042";
@@ -167,8 +168,8 @@ function Signup({ changePage }) {
 
   const handleRedirect = (user) => {
     setNav("forward");
-    history.location.key = "Randomness"; // Change key to invoke animation
-    setTimeout(() => setUser(user), 10);
+    history.location.key = uuidv4(); // Change key to invoke animation
+    setUser(user);
   };
 
   return (
