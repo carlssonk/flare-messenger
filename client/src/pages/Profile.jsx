@@ -18,6 +18,16 @@ function Profile() {
   const [togglePopup, setTogglePopup] = useState(false);
   const [isFading, setIsFading] = useState(false);
 
+  const handleNavigation = (to) => {
+    if (to === "/") {
+      setNav("backward");
+    } else {
+      setNav("forward");
+    }
+    // we need to give a small delay so our transition class appends on the DOM before we redirect
+    setTimeout(() => history.push(to), 10);
+  };
+
   useEffect(() => {
     setIsFading(true);
     setTimeout(() => setIsFading(false), 250);
@@ -67,7 +77,10 @@ function Profile() {
         imageUrl={previewAvatarUrl}
         image={imageFile}
       />
-      <div className="profile-section">
+      <Ripple.Div
+        className="profile-section"
+        onClick={() => handleNavigation("/profile/edit")}
+      >
         <div
           className="img-box"
           style={
@@ -99,7 +112,7 @@ function Profile() {
         </div>
         <div className="name">{user && user.name}</div>
         <div className="username">{user && user.username}</div>
-      </div>
+      </Ripple.Div>
       <div className="settings-section">
         <button onClick={handleLogout}>LOG OUT</button>
       </div>

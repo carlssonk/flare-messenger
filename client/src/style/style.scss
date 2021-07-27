@@ -187,6 +187,37 @@ body {
   }
 }
 
+.edit-profile-page {
+  width: 100%;
+  height: 100%;
+  color: white;
+  .top-bar {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: white;
+    .back-arrow {
+      display: grid;
+      place-items: center;
+      height: 40px;
+      width: 40px;
+      margin: 0 4px;
+      border-radius: 100%;
+      font-size: 22px;
+    }
+    // button {
+    //   margin-left: 12px;
+    //   padding: 12px;
+    //   color: white;
+    //   background-color: transparent;
+    //   border: none;
+    //   outline: none;
+    // }
+  }
+}
+
 .add-page {
   width: 100%;
   height: 100%;

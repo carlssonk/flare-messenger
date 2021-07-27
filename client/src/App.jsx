@@ -13,6 +13,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import NewChat from "./pages/NewChat";
 import NewGroup from "./pages/NewGroup";
 import Chat from "./pages/Chat";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -63,6 +64,11 @@ function App() {
                       <Route exact path="/" component={Authenticate} />
                     ) : null}
                     <PrivateRoute user={user} exact path="/" component={Home} />
+                    <PrivateRoute
+                      user={user}
+                      path="/profile/edit"
+                      component={EditProfile}
+                    />
                     <PrivateRoute
                       user={user}
                       path="/profile"
