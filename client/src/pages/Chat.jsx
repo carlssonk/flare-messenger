@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useContext, useMemo } from "react";
-import DeviceInfo from "../components/DeviceInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
 import {
@@ -130,7 +129,6 @@ function Chat() {
     <div className="chat-page page">
       <div className="header-wrapper">
         <div className="header">
-          <DeviceInfo />
           <div className="top-bar">
             <div className="left-section">
               <Ripple.Div

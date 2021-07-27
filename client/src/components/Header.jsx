@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
+import { UserContext } from "../context/UserContext";
 
-import DeviceInfo from "./DeviceInfo";
 import ProfileImg from "../imgs/oliverhaha.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,6 +17,7 @@ function Header({ handleFindUsers }) {
   const location = useLocation();
   const history = useHistory();
   const { setNav } = useContext(NavContext);
+  const { setUser, user } = useContext(UserContext);
 
   const handleNavigation = (to) => {
     if (to === "/") {
@@ -31,13 +32,28 @@ function Header({ handleFindUsers }) {
   return (
     <div className="header">
       <div className="nav-wrapper">
-        <DeviceInfo />
         <div className="nav-container">
           <Ripple.Div
             className="profile-btn"
             onClick={() => handleNavigation("/profile")}
+            style={
+              user
+                ? user.avatar.path
+                  ? null
+                  : { backgroundColor: user.avatar.hexCode }
+                : null
+            }
           >
-            <img src={ProfileImg} alt="" />
+            <div className="avatar-label">
+              {user && user.username.substring(0, 1)}
+            </div>
+            <img
+              src={ProfileImg}
+              alt=""
+              style={
+                user ? (user.avatar.path ? null : { display: "none" }) : null
+              }
+            />
           </Ripple.Div>
           <div className="page-label">
             {location.pathname === "/" ? "Chats" : null}

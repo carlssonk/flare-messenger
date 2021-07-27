@@ -1,18 +1,38 @@
 .device-info-box {
   display: grid;
-  grid-template-columns: 11fr 1fr 1fr 1fr;
+  grid-template-columns: 11fr 1fr;
   place-items: center normal;
   height: 44px;
   padding: 0 14px;
   // background-color: black;
+  background-color: rgb(24, 24, 24);
+  // font-size: 40px;
   color: white;
   .device-info__time {
     padding-left: 20px;
   }
+  .device-info__status {
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+    align-items: center;
+    .battery-box {
+      display: flex;
+      position: relative;
+      .battery-level {
+        position: absolute;
+        width: 60%;
+        height: 20%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+      }
+    }
+  }
 }
 
 .header {
-  height: 156px;
   z-index: 1;
   .nav-wrapper {
     width: 100%;

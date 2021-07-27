@@ -14,6 +14,7 @@ import NewChat from "./pages/NewChat";
 import NewGroup from "./pages/NewGroup";
 import Chat from "./pages/Chat";
 import EditProfile from "./pages/EditProfile";
+import DeviceInfo from "./components/DeviceInfo";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -38,6 +39,7 @@ function App() {
   return (
     <NavContext.Provider value={navValue}>
       <UserContext.Provider value={userValue}>
+        <DeviceInfo />
         {!isLoading ? (
           <Route
             render={({ location }) => (

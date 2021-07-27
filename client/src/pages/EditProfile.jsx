@@ -4,7 +4,6 @@ import { NavContext } from "../context/NavContext";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import DeviceInfo from "../components/DeviceInfo";
 
 function EditProfile() {
   const { setNav } = useContext(NavContext);
@@ -21,7 +20,6 @@ function EditProfile() {
   };
   return (
     <div className="page edit-profile-page">
-      <DeviceInfo />
       <div className="top-bar">
         <Ripple.Div
           className="back-arrow"

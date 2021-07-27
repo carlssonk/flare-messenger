@@ -121,6 +121,7 @@
   background-color: var(--primary-background);
   position: absolute !important;
   inset: 0;
+  margin-top: 44px;
 }
 
 .forward-appear,
@@ -463,11 +464,12 @@
 .device-info-box {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 11fr 1fr 1fr 1fr;
-      grid-template-columns: 11fr 1fr 1fr 1fr;
+  -ms-grid-columns: 11fr 1fr;
+      grid-template-columns: 11fr 1fr;
   place-items: center normal;
   height: 44px;
   padding: 0 14px;
+  background-color: #181818;
   color: white;
 }
 
@@ -475,8 +477,38 @@
   padding-left: 20px;
 }
 
+.device-info-box .device-info__status {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.device-info-box .device-info__status .battery-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+}
+
+.device-info-box .device-info__status .battery-box .battery-level {
+  position: absolute;
+  width: 60%;
+  height: 20%;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: white;
+}
+
 .header {
-  height: 156px;
   z-index: 1;
 }
 
@@ -1015,8 +1047,6 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 100%;
-  height: 100%;
 }
 
 .home-page .chat-list {

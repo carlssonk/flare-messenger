@@ -4,7 +4,6 @@ import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
 import { v4 as uuidv4 } from "uuid";
-import DeviceInfo from "../components/DeviceInfo";
 import Ripple from "../components/Effects/Ripple";
 
 function Profile() {
@@ -67,7 +66,6 @@ function Profile() {
 
   return (
     <div className="page profile-page">
-      <DeviceInfo />
       <div className="top-bar">
         <Ripple.Button>Done</Ripple.Button>
       </div>
