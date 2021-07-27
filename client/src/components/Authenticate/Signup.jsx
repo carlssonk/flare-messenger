@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import { IonPage } from "@ionic/react";
-import FlareIcon from "../imgs/flare-icon.svg";
-import { passwordList } from "../utils/commonPasswords";
-import { NavContext } from "../context/NavContext";
+import FlareIcon from "../../imgs/flare-icon.svg";
+import { passwordList } from "../../utils/commonPasswords";
+import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faEye } from "@fortawesome/free-regular-svg-icons";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../Effects/Ripple";
 import { v4 as uuidv4 } from "uuid";
 
 // Colors for form validation

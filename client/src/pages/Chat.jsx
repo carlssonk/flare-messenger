@@ -14,7 +14,7 @@ import {
   faGrinSquintTears,
 } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";

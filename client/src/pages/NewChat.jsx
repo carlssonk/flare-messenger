@@ -5,7 +5,7 @@ import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import { useHistory } from "react-router-dom";
 import Header from "../components/Header";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../components/Effects/Ripple";
 // import { Link } from "react-router-dom";
 
 function NewChat() {

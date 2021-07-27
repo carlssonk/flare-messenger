@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
-import Login from "../components/Login";
-import Signup from "../components/Signup";
+import Login from "../components/Authenticate/Login";
+import Signup from "../components/Authenticate/Signup";
 
 import { NavContext } from "../context/NavContext";
 

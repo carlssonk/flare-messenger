@@ -29,6 +29,7 @@ function App() {
   const getUser = async () => {
     const res = await fetch(`/api/user`);
     const user = await res.json();
+    console.log(user);
     setUser(user);
     setIsLoading(false);
   };

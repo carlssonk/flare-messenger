@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import FindFriends from "../components/addFriends/FindFriends";
-import SentRequests from "../components/addFriends/SentRequests";
+import FindFriends from "../components/AddFriends/FindFriends";
+import SentRequests from "../components/AddFriends/SentRequests";
 import SwipeableViews from "react-swipeable-views";
-import UsersList from "../components/addFriends/UsersList";
+import UsersList from "../components/AddFriends/UsersList";
 import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
 import { findUserAndRemove } from "../utils/friends";
 

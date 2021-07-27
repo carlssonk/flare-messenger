@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import PreviewAvatar from "../components/profile/PreviewAvatar";
+import PreviewAvatar from "../components/Profile/PreviewAvatar";
 import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
 import { v4 as uuidv4 } from "uuid";
+import DeviceInfo from "../components/DeviceInfo";
+import Ripple from "../components/Effects/Ripple";
 
 function Profile() {
   const { setUser, user } = useContext(UserContext);
@@ -49,8 +51,16 @@ function Profile() {
     setTogglePopup(true);
   };
 
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
   return (
     <div className="page profile-page">
+      <DeviceInfo />
+      <div className="top-bar">
+        <Ripple.Button>Done</Ripple.Button>
+      </div>
       <PreviewAvatar
         togglePopup={togglePopup}
         handleTogglePopup={handleTogglePopup}
@@ -58,8 +68,27 @@ function Profile() {
         image={imageFile}
       />
       <div className="profile-section">
-        <div className="img-box" onClick={() => fileRef.current.click()}>
-          <img src="" alt="" />
+        <div
+          className="img-box"
+          style={
+            user
+              ? user.avatar.path
+                ? null
+                : { backgroundColor: user.avatar.hexCode }
+              : null
+          }
+          onClick={() => fileRef.current.click()}
+        >
+          <div className="avatar-label">
+            {user && user.username.substring(0, 1)}
+          </div>
+          <img
+            src=""
+            alt=""
+            style={
+              user ? (user.avatar.path ? null : { display: "none" }) : null
+            }
+          />
           <input
             type="file"
             ref={fileRef}
@@ -68,7 +97,8 @@ function Profile() {
             style={{ display: "none" }}
           />
         </div>
-        <div className="name">{user && user.username}</div>
+        <div className="name">{user && user.name}</div>
+        <div className="username">{user && user.username}</div>
       </div>
       <div className="settings-section">
         <button onClick={handleLogout}>LOG OUT</button>

@@ -4,8 +4,8 @@ import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { IonToast } from "@ionic/react";
-import Ripple from "../components/effects/Ripple";
-import CreateGroup from "../components/newGroup/CreateGroup";
+import Ripple from "../components/Effects/Ripple";
+import CreateGroup from "../components/NewGroup/CreateGroup";
 
 function NewGroup() {
   const [friends, setFriends] = useState([]);

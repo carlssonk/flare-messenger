@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../components/Effects/Ripple";
 // import { Scroll } from "framer";
 
 function Home() {

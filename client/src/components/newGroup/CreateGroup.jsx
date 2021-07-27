@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faPlus } from "@fortawesome/free-solid-svg-icons";
-import Ripple from "../../components/effects/Ripple";
+import Ripple from "../../components/Effects/Ripple";
 
 function CreateGroup({ togglePopup, handleTogglePopup }) {
   return (

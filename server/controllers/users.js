@@ -1,12 +1,19 @@
 const User = require("../models/user");
 const passport = require("passport");
 const { cloudinary } = require("../cloudinary");
+const { randomHexGenerator } = require("../utils/generateAvatar");
 
 module.exports.user = (req, res) => {
   if (!req.isAuthenticated()) return res.json(null);
-  const { _id, email, username, name } = req.user;
-  console.log(username);
-  res.json({ id: _id, email, username, name });
+  console.log(req.user);
+  const {
+    _id,
+    email,
+    username,
+    name,
+    avatar: { hexCode, path = null },
+  } = req.user;
+  res.json({ id: _id, email, username, name, avatar: { hexCode, path } });
 };
 
 module.exports.newAvatar = async (req, res) => {
@@ -50,12 +57,29 @@ module.exports.checkAvailability = async (req, res) => {
 module.exports.register = async (req, res) => {
   try {
     const { email, username, password } = req.body;
-    const user = new User({ email, username, name: username });
+    const hexCode = randomHexGenerator();
+    const user = new User({
+      email,
+      username,
+      name: username,
+      "avatar.hexCode": hexCode,
+    });
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
       if (err) return next(err);
-      const { _id, email, username } = registeredUser;
-      return res.json({ id: _id, email, username });
+      const {
+        _id,
+        email,
+        username,
+        avatar: { path = null },
+      } = registeredUser;
+      return res.json({
+        id: _id,
+        email,
+        username,
+        name: username,
+        avatar: { hexCode, path },
+      });
     });
   } catch (e) {
     console.log("ERROR " + e.message);
@@ -71,8 +95,20 @@ module.exports.login = (req, res, next) => {
 
     req.login(user, function (err) {
       if (err) return next(err);
-      const { _id, email, username } = user;
-      return res.json({ id: _id, email, username });
+      const {
+        _id,
+        email,
+        username,
+        name,
+        avatar: { hexCode, path = null },
+      } = user;
+      return res.json({
+        id: _id,
+        email,
+        username,
+        name,
+        avatar: { hexCode, path },
+      });
     });
   })(req, res, next);
 };

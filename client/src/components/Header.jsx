@@ -11,7 +11,7 @@ import {
   faUserPlus,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../components/Effects/Ripple";
 
 function Header({ handleFindUsers }) {
   const location = useLocation();

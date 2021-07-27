@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import { IonPage } from "@ionic/react";
-import FlareIcon from "../imgs/flare-icon.svg";
-import { NavContext } from "../context/NavContext";
+import FlareIcon from "../../imgs/flare-icon.svg";
+import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
-import Ripple from "../components/effects/Ripple";
+import Ripple from "../Effects/Ripple";
 import { v4 as uuidv4 } from "uuid";
 
 function Login({ changePage }) {
