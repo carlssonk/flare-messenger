@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 
 import Draggable from "react-draggable";
 
@@ -6,12 +6,23 @@ import { getImgSizeInfo, calculatePosition } from "../../utils/previewAvatar";
 
 import CheckifCircleIsOutsideBounds from "./CheckIfCircleIsOutsideBounds";
 
-function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
+import { UserContext } from "../../context/UserContext";
+
+function PreviewAvatar({
+  togglePopup,
+  handleTogglePopup,
+  imageUrl,
+  image,
+  setIsLoading,
+  setNewAvatarUrl,
+}) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
   const imageRef = useRef(null);
   const circleRef = useRef(null);
   const imageWrapperRef = useRef(null);
+
+  const { setUser, user } = useContext(UserContext);
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const [circleSize, setCircleSize] = useState();
@@ -105,6 +116,8 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    handleTogglePopup(false);
     if (imageUrl.length === 0) return;
 
     const formData = new FormData();
@@ -121,7 +134,14 @@ function PreviewAvatar({ togglePopup, handleTogglePopup, imageUrl, image }) {
       body: formData,
     });
     const avatar = await res.json();
-    console.log(avatar.path);
+    setIsLoading(false);
+    setNewAvatarUrl(avatar.path);
+    setUser({
+      ...user,
+      avatar: {
+        path: avatar.path,
+      },
+    });
   };
 
   // function dataURLtoFile(dataurl, filename) {

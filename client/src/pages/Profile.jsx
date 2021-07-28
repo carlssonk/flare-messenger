@@ -12,10 +12,6 @@ function Profile() {
 
   const history = useHistory();
   const { setNav } = useContext(NavContext);
-  const [previewAvatarUrl, setPreviewAvatarUrl] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [togglePopup, setTogglePopup] = useState(false);
-  const [isFading, setIsFading] = useState(false);
 
   const handleNavigation = (to) => {
     if (to === "/") {
@@ -26,11 +22,6 @@ function Profile() {
     // we need to give a small delay so our transition class appends on the DOM before we redirect
     setTimeout(() => history.push(to), 10);
   };
-
-  useEffect(() => {
-    setIsFading(true);
-    setTimeout(() => setIsFading(false), 250);
-  }, [togglePopup]);
 
   const handleLogout = async () => {
     await fetch(`/api/logout`, {
@@ -45,36 +36,13 @@ function Profile() {
     setUser(null);
   };
 
-  const handleTogglePopup = (bool) => {
-    if (isFading) return; // to avoid spam
-    setTogglePopup(bool);
-  };
-
-  const addFile = (e) => {
-    if (e.target.files[0].type.indexOf("image/") > -1) {
-      const file = e.target.files[0];
-      const fileURL = window.URL.createObjectURL(file);
-      setImageFile(file);
-      setPreviewAvatarUrl(fileURL);
-    }
-    setTogglePopup(true);
-  };
-
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
   return (
     <div className="page profile-page">
       <div className="top-bar">
-        <Ripple.Button>Done</Ripple.Button>
+        <Ripple.Button onClick={() => handleNavigation("/")}>
+          Done
+        </Ripple.Button>
       </div>
-      <PreviewAvatar
-        togglePopup={togglePopup}
-        handleTogglePopup={handleTogglePopup}
-        imageUrl={previewAvatarUrl}
-        image={imageFile}
-      />
       <Ripple.Div
         className="profile-section"
         onClick={() => handleNavigation("/profile/edit")}
@@ -90,24 +58,23 @@ function Profile() {
           }
           onClick={() => fileRef.current.click()}
         >
-          <div className="avatar-label">
-            {user && user.username.substring(0, 1)}
-          </div>
+          {user ? (
+            user.avatar.path ? null : (
+              <div className="avatar-label">
+                {user && user.username.substring(0, 1)}
+              </div>
+            )
+          ) : null}
+
           <img
-            src=""
+            src={user.avatar.path}
             alt=""
             style={
               user ? (user.avatar.path ? null : { display: "none" }) : null
             }
           />
-          <input
-            type="file"
-            ref={fileRef}
-            onChange={addFile}
-            accept="image/*"
-            style={{ display: "none" }}
-          />
         </div>
+
         <div className="name">{user && user.name}</div>
         <div className="username">{user && user.username}</div>
       </Ripple.Div>

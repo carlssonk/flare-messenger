@@ -17,6 +17,7 @@ module.exports.user = (req, res) => {
 };
 
 module.exports.newAvatar = async (req, res) => {
+  console.log("NEW AVATAR");
   const myId = req.user._id;
   const resize = JSON.parse(req.body.resize);
 
@@ -34,6 +35,7 @@ module.exports.newAvatar = async (req, res) => {
   );
 
   console.log(user);
+  console.log(path);
 
   // Delete old avatar on cloudinary
   cloudinary.uploader.destroy(user.avatar.filename);

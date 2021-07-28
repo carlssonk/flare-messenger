@@ -205,14 +205,52 @@ body {
       border-radius: 100%;
       font-size: 22px;
     }
-    // button {
-    //   margin-left: 12px;
-    //   padding: 12px;
-    //   color: white;
-    //   background-color: transparent;
-    //   border: none;
-    //   outline: none;
-    // }
+  }
+  .img-container {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    .img-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      .avatar-camera-box {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        background-color: white;
+        border-radius: 100%;
+        z-index: 1;
+        top: 3px;
+        right: 3px;
+        .avatar-camera {
+          color: black;
+          font-size: 18px;
+        }
+      }
+
+      .img-box {
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+        overflow: hidden;
+        margin-bottom: 8px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto;
+
+        .avatar-label {
+          font-size: 42px;
+        }
+        img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
   }
 }
 
@@ -270,8 +308,6 @@ body {
 }
 
 .new-page {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   .scroll-wrapper {

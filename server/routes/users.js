@@ -15,6 +15,7 @@ router.route("/user").get(users.user);
 router.route("/user/available").get(catchAsync(users.checkAvailability));
 
 router.route("/avatar").post(upload.single("avatar"), users.newAvatar);
+// router.route("/avatar").post(users.newAvatar);
 
 router
   .route("/register")
