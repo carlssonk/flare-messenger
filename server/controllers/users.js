@@ -43,6 +43,25 @@ module.exports.newAvatar = async (req, res) => {
   res.json({ path });
 };
 
+module.exports.deleteAvatar = async (req,res) => {
+  const  myId = req.user._id;
+
+  const hexCode = randomHexGenerator();
+
+  const user = await User.findOneAndUpdate(
+    {_id: myId},
+    {
+     $set: {"avatar.filename": "", "avatar.path": "", "avatar.hexCode": hexCode}
+    }
+  )
+
+  console.log(user)
+  // Delete old avatar on cloudinary
+  cloudinary.uploader.destroy(user.avatar.filename);
+
+  res.json({hexCode})
+}
+
 module.exports.checkAvailability = async (req, res) => {
   if (req.query["email"]) {
     const { email } = req.query;

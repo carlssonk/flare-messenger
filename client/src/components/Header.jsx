@@ -44,11 +44,15 @@ function Header({ handleFindUsers }) {
                 : null
             }
           >
-            <div className="avatar-label">
-              {user && user.username.substring(0, 1)}
-            </div>
+            {user ? (
+              user.avatar.path ? null : (
+                <div className="avatar-label">
+                  {user && user.username.substring(0, 1)}
+                </div>
+              )
+            ) : null}
             <img
-              src={ProfileImg}
+              src={user.avatar.path}
               alt=""
               style={
                 user ? (user.avatar.path ? null : { display: "none" }) : null
