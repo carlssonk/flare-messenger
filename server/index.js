@@ -22,6 +22,7 @@ const User = require("./models/user");
 const userRoutes = require("./routes/users");
 const friendRoutes = require("./routes/friends");
 const chatRoutes = require("./routes/chats");
+const messageRoutes = require("./routes/messages");
 
 const MongoStore = require("connect-mongo");
 
@@ -88,6 +89,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/api", userRoutes);
 app.use("/api/friends", friendRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 // PAGE NOT FOUND
 // app.all("*", (req, res, next) => {

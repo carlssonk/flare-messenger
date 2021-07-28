@@ -4,18 +4,16 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
     text: String,
-    author: String,
-    chatId: String,
-    // author: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: true
-    // },
-    // chat: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Chat",
-    //   required: true
-    // }
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    chat: {
+      type: Schema.Types.ObjectId,
+      ref: "Chat",
+      required: true,
+    },
   },
   { timestamps: true }
 );

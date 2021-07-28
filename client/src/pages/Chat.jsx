@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, useContext, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
+import { UserContext } from "../context/UserContext";
+
 import {
   faChevronLeft,
   faPhoneAlt,
@@ -22,10 +24,13 @@ import "draft-js/dist/Draft.css";
 const draftUtils = require("draftjs-utils");
 
 function Chat() {
+  const { setUser, user } = useContext(UserContext);
+
   const location = useLocation();
   const history = useHistory();
 
   const [friends, setFriends] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -84,23 +89,29 @@ function Chat() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    if (editorState.getCurrentContent().getPlainText().length === 0) return;
+    const text = editorState.getCurrentContent().getPlainText();
+    const chatId = location.pathname.replace("/chat/", "");
+    if (text.length === 0) return;
     resetInput();
 
-    // const res = await fetch(`/api/sendmessagfe`, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     username,
-    //     password,
-    //   }),
-    // });
-    // const user = await res.json();
+    console.log(history);
+    console.log(location);
 
-    setTimeout(() => setIsSubmitting(false), 200);
+    const res = await fetch(`/api/messages`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chatId,
+        text,
+      }),
+    });
+    const message = await res.json();
+    console.log(message.text);
+
+    setIsSubmitting(false);
   };
 
   const resetInput = () => {
@@ -119,7 +130,8 @@ function Chat() {
       const chatId = location.pathname.replace("/chat/", "");
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
-      // console.log(data);
+      console.log(data);
+      setMessages(data.messages.reverse());
       setFriends(data.friends);
     };
     getChatData();
@@ -169,7 +181,20 @@ function Chat() {
         <div className="blur"></div>
       </div>
       <div className="message-container">
-        <ul className="message-list"></ul>
+        <ul className="message-list">
+          {messages &&
+            messages.map((e) => {
+              return e.author._id === user.id ? (
+                <li key={e._id} className="my-message">
+                  {e.text}
+                </li>
+              ) : (
+                <li key={e._id} className="user-message">
+                  {e.text}
+                </li>
+              );
+            })}
+        </ul>
       </div>
       <div className="controller-container">
         <Ripple.Div className="icon-outside">

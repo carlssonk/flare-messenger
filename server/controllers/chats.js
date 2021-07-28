@@ -1,5 +1,6 @@
 const Chat = require("../models/chat");
 const User = require("../models/user");
+const { getMessages } = require("./messages");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -20,6 +21,15 @@ module.exports.showChats = async (req, res) => {
 module.exports.createChat = async (req, res) => {
   const { userId, isPrivate } = req.body;
   const myId = req.user._id;
+
+  // Check if chat already exists
+  const chatIsAlreadyMade = await Chat.find({
+    users: { $all: [myId, userId] },
+    isPrivate: true,
+  });
+
+  if (chatIsAlreadyMade.length > 0)
+    return res.json({ chatId: chatIsAlreadyMade[0]._id });
 
   const chat = await new Chat({
     author: myId,
@@ -53,5 +63,7 @@ module.exports.showChat = async (req, res) => {
     return e._id.toString() !== myId.toString();
   });
 
-  res.json({ friends });
+  const messages = await getMessages(id);
+
+  res.json({ friends, messages });
 };

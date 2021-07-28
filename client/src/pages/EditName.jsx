@@ -21,6 +21,16 @@ function EditName() {
   const [name, setName] = useState(user.name);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleNavigation = (to) => {
+    if (to === "/profile/edit") {
+      setNav("backward");
+    } else {
+      setNav("forward");
+    }
+    // we need to give a small delay so our transition class appends on the DOM before we redirect
+    setTimeout(() => history.push(to), 10);
+  };
+
   const handleSaveName = async () => {
     if (name.length === 0) return;
     setIsLoading(true);
@@ -33,23 +43,14 @@ function EditName() {
       body: JSON.stringify({ name }),
     });
     const data = await res.json();
-    setIsLoading(false);
-    handleNavigation("/profile/edit");
     setUser({
       ...user,
       name: data.name,
     });
+    handleNavigation("/profile/edit");
+    setTimeout(() => setIsLoading(false), 300);
   };
 
-  const handleNavigation = (to) => {
-    if (to === "/profile/edit") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
-  };
   return (
     <div className="page edit-name-page">
       <IonLoading isOpen={isLoading} message={"Updating..."} />
