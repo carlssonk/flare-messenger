@@ -12,6 +12,8 @@ const upload = multer({ storage });
 // USER
 router.route("/user").get(users.user);
 
+router.route("/user/name").post(users.updateName);
+
 router.route("/user/available").get(catchAsync(users.checkAvailability));
 
 router.route("/avatar").post(upload.single("avatar"), users.newAvatar);

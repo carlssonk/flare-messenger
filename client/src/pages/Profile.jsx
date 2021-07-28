@@ -67,7 +67,7 @@ function Profile() {
           ) : null}
 
           <img
-            src={user.avatar.path}
+            src={user && user.avatar.path}
             alt=""
             style={
               user ? (user.avatar.path ? null : { display: "none" }) : null
@@ -76,7 +76,7 @@ function Profile() {
         </div>
 
         <div className="name">{user && user.name}</div>
-        <div className="username">{user && user.username}</div>
+        <div className="username">@{user && user.username}</div>
       </Ripple.Div>
       <div className="settings-section">
         <button onClick={handleLogout}>LOG OUT</button>

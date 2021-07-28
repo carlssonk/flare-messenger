@@ -15,6 +15,7 @@ import NewGroup from "./pages/NewGroup";
 import Chat from "./pages/Chat";
 import EditProfile from "./pages/EditProfile";
 import DeviceInfo from "./components/DeviceInfo";
+import EditName from "./pages/EditName";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -66,6 +67,11 @@ function App() {
                       <Route exact path="/" component={Authenticate} />
                     ) : null}
                     <PrivateRoute user={user} exact path="/" component={Home} />
+                    <PrivateRoute
+                      user={user}
+                      path="/profile/edit/name"
+                      component={EditName}
+                    />
                     <PrivateRoute
                       user={user}
                       path="/profile/edit"

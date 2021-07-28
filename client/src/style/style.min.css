@@ -1318,6 +1318,37 @@ body {
   height: 100%;
 }
 
+.edit-profile-page .edit-name-box {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  padding: 12px;
+  font-size: 18px;
+}
+
+.edit-profile-page .edit-name-box svg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+  font-size: 18px;
+  color: gray;
+}
+
+.edit-profile-page .edit-name-box .value {
+  font-size: 18px;
+  color: gray;
+}
+
 .edit-profile-page .avatar-options-popup {
   position: fixed;
   bottom: 0;
@@ -1342,6 +1373,52 @@ body {
 
 .edit-profile-page .avatar-options-popup div div {
   margin-left: 12px;
+}
+
+.edit-name-page {
+  color: white;
+}
+
+.edit-name-page .top-bar {
+  width: 100%;
+  height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  color: white;
+}
+
+.edit-name-page .top-bar .back-arrow {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  height: 40px;
+  width: 40px;
+  margin: 0 4px;
+  border-radius: 100%;
+  font-size: 22px;
+}
+
+.edit-name-page input {
+  color: white;
+}
+
+.edit-name-page .save-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  border-radius: 40px;
+  color: white;
+  background: var(--primary-cyan);
+  padding: 18px 32px;
+  outline: none;
+  border: none;
 }
 
 .add-page {

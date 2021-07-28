@@ -16,6 +16,13 @@ module.exports.user = (req, res) => {
   res.json({ id: _id, email, username, name, avatar: { hexCode, path } });
 };
 
+module.exports.updateName = async (req, res) => {
+  const myId = req.user._id;
+  const { name } = req.body;
+  await User.findOneAndUpdate({ _id: myId }, { $set: { name } });
+  res.json({ name });
+};
+
 module.exports.newAvatar = async (req, res) => {
   console.log("NEW AVATAR");
   const myId = req.user._id;
@@ -43,24 +50,28 @@ module.exports.newAvatar = async (req, res) => {
   res.json({ path });
 };
 
-module.exports.deleteAvatar = async (req,res) => {
-  const  myId = req.user._id;
+module.exports.deleteAvatar = async (req, res) => {
+  const myId = req.user._id;
 
   const hexCode = randomHexGenerator();
 
   const user = await User.findOneAndUpdate(
-    {_id: myId},
+    { _id: myId },
     {
-     $set: {"avatar.filename": "", "avatar.path": "", "avatar.hexCode": hexCode}
+      $set: {
+        "avatar.filename": "",
+        "avatar.path": "",
+        "avatar.hexCode": hexCode,
+      },
     }
-  )
+  );
 
-  console.log(user)
+  console.log(user);
   // Delete old avatar on cloudinary
   cloudinary.uploader.destroy(user.avatar.filename);
 
-  res.json({hexCode})
-}
+  res.json({ hexCode });
+};
 
 module.exports.checkAvailability = async (req, res) => {
   if (req.query["email"]) {

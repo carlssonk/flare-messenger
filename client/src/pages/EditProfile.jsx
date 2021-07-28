@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faCamera,
-  faTemperatureHigh,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../context/UserContext";
 
@@ -158,6 +158,20 @@ function EditProfile() {
               />
             </Ripple.Div>
           </div>
+        </div>
+        <div>
+          <Ripple.Div
+            className="edit-name-box"
+            onClick={() => handleNavigation("/profile/edit/name")}
+          >
+            <div className="label">Name</div>
+            <div className="value">{user && user.name}</div>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Ripple.Div>
+          <Ripple.Div className="edit-name-box">
+            <div className="label">Username</div>
+            <div className="value">@{user && user.username}</div>
+          </Ripple.Div>
         </div>
         <div
           className="avatar-options-popup"
