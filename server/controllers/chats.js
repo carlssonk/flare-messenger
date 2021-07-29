@@ -1,6 +1,6 @@
 const Chat = require("../models/chat");
 const User = require("../models/user");
-const { getMessages } = require("./messages");
+const { getMessages, getLastMessages } = require("./messages");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -10,12 +10,13 @@ module.exports.showChats = async (req, res) => {
     "-friends -__v -username -email -updatedAt -_id"
   ).populate("chats", "-__v -createdAt -updatedAt");
 
-  // Filter chats that user has created or that is visible
-  const chats = user.chats.filter(
-    (e) => e.author.toString() === myId.toString() || e.isVisible
-  );
+  // Filter chats that are visible
+  const chats = user.chats.filter((e) => e.isVisible);
 
-  res.json({ chats });
+  // Fetch last messages of each chat
+  const chatsWithMessages = await getLastMessages(chats);
+
+  res.json({ chats: chatsWithMessages });
 };
 
 module.exports.createChat = async (req, res) => {
@@ -66,4 +67,17 @@ module.exports.showChat = async (req, res) => {
   const messages = await getMessages(id);
 
   res.json({ friends, messages });
+};
+
+module.exports.enableChat = async (req, res) => {
+  const { chatId } = req.body;
+
+  await Chat.findOneAndUpdate(
+    { _id: chatId },
+    {
+      $set: { isVisible: true },
+    }
+  );
+
+  res.send("ok");
 };

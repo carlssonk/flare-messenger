@@ -88,6 +88,7 @@ function Chat() {
   };
 
   const handleSubmit = async () => {
+    if (messages.length === 0) enableChat();
     setIsSubmitting(true);
     const text = editorState.getCurrentContent().getPlainText();
     const chatId = location.pathname.replace("/chat/", "");
@@ -112,6 +113,20 @@ function Chat() {
     console.log(message.text);
 
     setIsSubmitting(false);
+  };
+
+  const enableChat = async () => {
+    const chatId = location.pathname.replace("/chat/", "");
+    await fetch("/api/chats/enable", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chatId,
+      }),
+    });
   };
 
   const resetInput = () => {
