@@ -66,6 +66,22 @@ function NewGroup() {
     setTogglePopup(bool);
   };
 
+  // const handleCreateChat = async (userId) => {
+  //   const res = await fetch(`/api/chats/new`, {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       userId,
+  //       isPrivate: true,
+  //     }),
+  //   });
+  //   const data = await res.json();
+  //   handleNavigation(`/chat/${data.chatId}`);
+  // };
+
   return (
     <div className="new-page page">
       <CreateGroup

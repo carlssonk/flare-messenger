@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { IonApp } from "@ionic/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,11 +6,25 @@ import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
+import { NavContext } from "../context/NavContext";
+import { useHistory } from "react-router-dom";
 
 // import { Scroll } from "framer";
 
 function Home() {
-  // const [chatList, setChatList] = useState([]);
+  const [chats, setChats] = useState([]);
+  const { setNav } = useContext(NavContext);
+  const history = useHistory();
+
+  const handleNavigation = (to) => {
+    if (to === "/") {
+      setNav("backward");
+    } else {
+      setNav("forward");
+    }
+    // we need to give a small delay so our transition class appends on the DOM before we redirect
+    setTimeout(() => history.push(to), 10);
+  };
 
   useEffect(() => {
     getChats();
@@ -20,6 +34,7 @@ function Home() {
     const res = await fetch("/api/chats");
     const data = await res.json();
     console.log(data);
+    setChats(data.chats);
   };
 
   return (
@@ -31,126 +46,43 @@ function Home() {
           dragElastic={0.2}
         > */}
         <ul>
-          <Ripple.Li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </Ripple.Li>
-          <Ripple.Li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </Ripple.Li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
-          <li>
-            <div className="img-box">
-              <img src={Jeb_} alt="" />
-            </div>
-            <div className="text-box">
-              <div className="friend">Jens Bergensten</div>
-              <div className="message">The business plan looking goo...</div>
-            </div>
-            <div className="time-box">9:40 AM</div>
-          </li>
+          {chats &&
+            chats.map((e) => {
+              return (
+                <Ripple.Li
+                  key={e._id}
+                  onClick={() => handleNavigation(`/chat/${e._id}`)}
+                >
+                  <div
+                    className="img-box"
+                    style={
+                      e.users[0].avatar.path
+                        ? null
+                        : { backgroundColor: e.users[0].avatar.hexCode }
+                    }
+                  >
+                    {e.users[0].avatar.path ? null : (
+                      <div className="avatar-label">
+                        {e.users[0].username.substring(0, 1)}
+                      </div>
+                    )}
+                    <img
+                      src={e.users[0].avatar.path}
+                      alt=""
+                      style={
+                        e.users[0].avatar.path ? null : { display: "none" }
+                      }
+                    />
+                  </div>
+                  <div className="text-box">
+                    <div className="friend">{e.users[0].name}</div>
+                    <div className="message">{e.text}</div>
+                  </div>
+                  <div className="time-box">{e.createdAt}</div>
+                </Ripple.Li>
+              );
+            })}
+
           <div className="bottom-space"></div>
         </ul>
         {/* </Scroll> */}

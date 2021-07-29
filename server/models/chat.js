@@ -11,6 +11,7 @@ const ChatSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "User" }],
       required: true,
     },
+    image: String,
     isVisible: {
       type: Boolean,
       required: true,

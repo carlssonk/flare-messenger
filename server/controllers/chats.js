@@ -1,6 +1,7 @@
 const Chat = require("../models/chat");
 const User = require("../models/user");
 const { getMessages, getLastMessages } = require("./messages");
+const moment = require("moment");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -8,7 +9,16 @@ module.exports.showChats = async (req, res) => {
   const user = await User.findById(
     myId,
     "-friends -__v -username -email -updatedAt -_id"
-  ).populate("chats", "-__v -createdAt -updatedAt");
+  ).populate({
+    path: "chats",
+    select: "-__v -createdAt -updatedAt -author",
+    populate: {
+      path: "users",
+      model: "User",
+      match: { _id: { $ne: myId } },
+      select: "-_id -__v -friends -createdAt -updatedAt -email -chats",
+    },
+  });
 
   // Filter chats that are visible
   const chats = user.chats.filter((e) => e.isVisible);
@@ -16,7 +26,12 @@ module.exports.showChats = async (req, res) => {
   // Fetch last messages of each chat
   const chatsWithMessages = await getLastMessages(chats);
 
-  res.json({ chats: chatsWithMessages });
+  const chatsWithMessagesFormatTime = chatsWithMessages.map((e) => ({
+    ...e,
+    createdAt: moment(e.createdAt).fromNow(true),
+  }));
+
+  res.json({ chats: chatsWithMessagesFormatTime });
 };
 
 module.exports.createChat = async (req, res) => {
