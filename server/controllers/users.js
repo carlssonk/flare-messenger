@@ -5,15 +5,22 @@ const { randomHexGenerator } = require("../utils/generateAvatar");
 
 module.exports.user = (req, res) => {
   if (!req.isAuthenticated()) return res.json(null);
-  console.log(req.user);
   const {
     _id,
     email,
     username,
     name,
+    chats,
     avatar: { hexCode, path = null },
   } = req.user;
-  res.json({ id: _id, email, username, name, avatar: { hexCode, path } });
+  res.json({
+    id: _id,
+    email,
+    username,
+    name,
+    avatar: { hexCode, path },
+    chats,
+  });
 };
 
 module.exports.updateName = async (req, res) => {
@@ -24,7 +31,6 @@ module.exports.updateName = async (req, res) => {
 };
 
 module.exports.newAvatar = async (req, res) => {
-  console.log("NEW AVATAR");
   const myId = req.user._id;
   const resize = JSON.parse(req.body.resize);
 
@@ -40,9 +46,6 @@ module.exports.newAvatar = async (req, res) => {
       $set: { "avatar.filename": filename, "avatar.path": path },
     }
   );
-
-  console.log(user);
-  console.log(path);
 
   // Delete old avatar on cloudinary
   cloudinary.uploader.destroy(user.avatar.filename);
@@ -66,7 +69,6 @@ module.exports.deleteAvatar = async (req, res) => {
     }
   );
 
-  console.log(user);
   // Delete old avatar on cloudinary
   cloudinary.uploader.destroy(user.avatar.filename);
 

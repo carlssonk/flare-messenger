@@ -207,6 +207,7 @@ function EditProfile() {
         className={`click-catcher ${
           toggleOptions ? "show-fade-half" : "hide-fade-half"
         }`}
+        style={{ height: "calc(100% - 44px)" }}
       ></div>
     </>
   );

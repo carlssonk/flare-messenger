@@ -2,14 +2,11 @@ import React, { useEffect, useContext, useState } from "react";
 import { IonApp } from "@ionic/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { NavContext } from "../context/NavContext";
 import { useHistory } from "react-router-dom";
-
-// import { Scroll } from "framer";
 
 function Home() {
   const [chats, setChats] = useState([]);

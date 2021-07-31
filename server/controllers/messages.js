@@ -2,6 +2,7 @@ const Chat = require("../models/chat");
 const User = require("../models/user");
 const Message = require("../models/message");
 const _ = require("lodash");
+// const socket = require("../socket");
 // const { showChats } = require("./chats");
 
 module.exports.getMessages = async (chatId) => {
@@ -13,22 +14,19 @@ module.exports.getMessages = async (chatId) => {
     "-__v -createdAt -updatedAt -friends -email -chats -name"
   );
 
-  console.log(chatId);
-  console.log("messages");
-  console.log(messages);
-  console.log("messages");
-
   return messages;
 };
 
-module.exports.sendMessage = async (req, res) => {
-  const { chatId, text } = req.body;
-  const myId = req.user._id;
+module.exports.sendMessage = async (message, chatId, myId) => {
+  console.log("message");
+  const messageDoc = await new Message({
+    text: message,
+    chat: chatId,
+    author: myId,
+  });
+  await messageDoc.save();
 
-  const message = await new Message({ text, chat: chatId, author: myId });
-  await message.save();
-
-  res.json({ text });
+  return messageDoc;
 };
 
 module.exports.getLastMessages = async (chats) => {

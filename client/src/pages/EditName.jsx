@@ -48,12 +48,12 @@ function EditName() {
       name: data.name,
     });
     handleNavigation("/profile/edit");
-    setTimeout(() => setIsLoading(false), 300);
   };
 
   return (
     <div className="page edit-name-page">
       <IonLoading isOpen={isLoading} message={"Updating..."} />
+      {/* <IonLoading isOpen={true} message={"Updating..."} /> */}
       <div className="top-bar">
         <Ripple.Div
           className="back-arrow"

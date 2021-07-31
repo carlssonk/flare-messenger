@@ -14,7 +14,6 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const flash = require("connect-flash");
 const bodyParser = require("body-parser");
-
 const mongoSanitize = require("express-mongo-sanitize");
 
 const User = require("./models/user");
@@ -40,6 +39,24 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Database connected");
 });
+
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+// const io = require("socket.io")(server);
+
+// io.on("connection", (socket) => {
+//   console.log(`Connected: ${socket.id}`);
+//   socket.on("disconnect", () => console.log(`Disconnected: ${socket.id}`));
+//   socket.on("join", (room) => {
+//     console.log(`Socket ${socket.id} joining ${room}`);
+//     socket.join(room);
+//   });
+//   socket.on("chat", (data) => {
+//     const { message, room } = data;
+//     console.log(`msg: ${message}, room: ${room}`);
+//     io.to(room).emit("chat", message);
+//   });
+// });
 
 app.use(cors());
 app.use(express.json());
@@ -75,11 +92,28 @@ const sessionOptions = {
   },
 };
 
-app.use(session(sessionOptions));
+const sessionMiddleware = session(sessionOptions);
+const passportInit = passport.initialize();
+const passportSession = passport.session();
+
+app.use(sessionMiddleware);
+
+// Socket
+io.use(function (socket, next) {
+  sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+io.use(function (socket, next) {
+  passportInit(socket.client.request, socket.client.request.res, next);
+});
+
+io.use(function (socket, next) {
+  passportSession(socket.client.request, socket.client.request.res, next);
+});
 
 // Passport
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passportInit);
+app.use(passportSession);
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
@@ -90,6 +124,16 @@ app.use("/api", userRoutes);
 app.use("/api/friends", friendRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
+
+require("./socket")(io);
+
+// io.on("connection", (socket) => {
+//   console.log(`Connected: ${socket.id}`);
+
+//   console.log("###################");
+//   console.log(socket.request.user.name);
+//   console.log("###################");
+// });
 
 // PAGE NOT FOUND
 // app.all("*", (req, res, next) => {
@@ -102,6 +146,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send(err.message);
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });

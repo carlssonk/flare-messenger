@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
+import { SocketContext } from "../context/SocketContext";
 
 import {
   faChevronLeft,
@@ -18,6 +19,16 @@ import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 
+import socket, {
+  initiateSocket,
+  joinChat,
+  leaveChat,
+  sendMessage,
+  recieveMessage,
+} from "../utils/socket";
+
+// import { socket } from "../utils/socket";
+
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
 
@@ -25,6 +36,7 @@ const draftUtils = require("draftjs-utils");
 
 function Chat() {
   const { setUser, user } = useContext(UserContext);
+  // const socket = useContext(SocketContext);
 
   const location = useLocation();
   const history = useHistory();
@@ -37,6 +49,7 @@ function Chat() {
   const editorContainer = useRef(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [files, setFiles] = useState([]);
 
   // Keep this state even if its not used, we use the value from the state but not the state itself,
   // because the value itself is more responsive than the state.
@@ -66,6 +79,14 @@ function Chat() {
   };
 
   useEffect(() => {
+    socket.on("message", (message) => {
+      console.log(message);
+      console.log(user.id);
+      setMessages((messages) => [message, ...messages]);
+    });
+  }, [socket]);
+
+  useEffect(() => {
     setEditorHeight(
       editorContainer.current && editorContainer.current.offsetHeight
     );
@@ -89,34 +110,35 @@ function Chat() {
 
   const handleSubmit = async () => {
     if (messages.length === 0) enableChat();
-    setIsSubmitting(true);
     const text = editorState.getCurrentContent().getPlainText();
     const chatId = location.pathname.replace("/chat/", "");
     if (text.length === 0) return;
+
     resetInput();
 
-    console.log(history);
-    console.log(location);
+    // console.log(history);
+    // console.log(location);
 
-    const res = await fetch(`/api/messages`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatId,
-        text,
-      }),
-    });
-    const message = await res.json();
-    console.log(message.text);
+    sendMessage({ text, files }, chatId);
 
-    setIsSubmitting(false);
+    // const res = await fetch(`/api/messages`, {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     chatId,
+    //     text,
+    //   }),
+    // });
+    // const message = await res.json();
+    // console.log(message.text);
   };
 
   const enableChat = async () => {
     const chatId = location.pathname.replace("/chat/", "");
+    if (!user.chats.includes(chatId)) return;
     await fetch("/api/chats/enable", {
       method: "POST",
       headers: {
@@ -143,6 +165,7 @@ function Chat() {
   useEffect(() => {
     const getChatData = async () => {
       const chatId = location.pathname.replace("/chat/", "");
+      if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
       console.log(data);
@@ -167,15 +190,37 @@ function Chat() {
 
               <div className="user-box">
                 <div className="img-box-wrapper">
-                  <div className="img-box">
-                    <img src={Jeb_} alt="" />
+                  <div
+                    className="img-box"
+                    style={
+                      friends[0]
+                        ? friends[0].avatar.path
+                          ? null
+                          : { backgroundColor: friends[0].avatar.hexCode }
+                        : null
+                    }
+                  >
+                    {friends[0] ? (
+                      friends[0].avatar.path ? null : (
+                        <div className="avatar-label">
+                          {friends[0] && friends[0].username.substring(0, 1)}
+                        </div>
+                      )
+                    ) : null}
+                    <img
+                      src={friends[0] && friends[0].avatar.path}
+                      alt=""
+                      style={
+                        friends[0] && friends[0].avatar.path
+                          ? null
+                          : { display: "none" }
+                      }
+                    />
                   </div>
                 </div>
 
                 <div className="text-box">
-                  <div className="name">
-                    {friends[0] && friends[0].username}
-                  </div>
+                  <div className="name">{friends[0] && friends[0].name}</div>
                   <div className="status">Currently Active</div>
                 </div>
               </div>

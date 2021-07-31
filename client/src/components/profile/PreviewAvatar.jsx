@@ -285,7 +285,7 @@ function PreviewAvatar({
           <button onClick={handleSubmit}>SUBMIT</button>
         </div>
       </div>
-      
+
       <div
         onClick={() => handleTogglePopup(false)}
         className={`click-catcher ${
