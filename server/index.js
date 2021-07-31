@@ -42,21 +42,6 @@ db.once("open", () => {
 
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-// const io = require("socket.io")(server);
-
-// io.on("connection", (socket) => {
-//   console.log(`Connected: ${socket.id}`);
-//   socket.on("disconnect", () => console.log(`Disconnected: ${socket.id}`));
-//   socket.on("join", (room) => {
-//     console.log(`Socket ${socket.id} joining ${room}`);
-//     socket.join(room);
-//   });
-//   socket.on("chat", (data) => {
-//     const { message, room } = data;
-//     console.log(`msg: ${message}, room: ${room}`);
-//     io.to(room).emit("chat", message);
-//   });
-// });
 
 app.use(cors());
 app.use(express.json());
@@ -126,14 +111,6 @@ app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
 
 require("./socket")(io);
-
-// io.on("connection", (socket) => {
-//   console.log(`Connected: ${socket.id}`);
-
-//   console.log("###################");
-//   console.log(socket.request.user.name);
-//   console.log("###################");
-// });
 
 // PAGE NOT FOUND
 // app.all("*", (req, res, next) => {

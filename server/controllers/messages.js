@@ -2,8 +2,6 @@ const Chat = require("../models/chat");
 const User = require("../models/user");
 const Message = require("../models/message");
 const _ = require("lodash");
-// const socket = require("../socket");
-// const { showChats } = require("./chats");
 
 module.exports.getMessages = async (chatId) => {
   const messages = await Message.find(
@@ -20,6 +18,13 @@ module.exports.getMessages = async (chatId) => {
 module.exports.sendMessage = async (message, user) => {
   const { text, file, chatId } = message;
 
+  const messageDoc = await new Message({
+    text,
+    author: user._id,
+    chat: chatId,
+  });
+  await messageDoc.save();
+
   const author = {
     _id: user._id,
     username: user.username,
@@ -30,21 +35,12 @@ module.exports.sendMessage = async (message, user) => {
     },
   };
 
-  const messageDoc = await new Message({
-    chat: chatId,
-    text,
-    author,
-  });
-  await messageDoc.save();
-
   const formatMessage = {
     _id: messageDoc._id,
     createdAt: messageDoc.createdAt,
     text: messageDoc.text,
     author,
   };
-
-  console.log(formatMessage);
 
   return formatMessage;
 };
