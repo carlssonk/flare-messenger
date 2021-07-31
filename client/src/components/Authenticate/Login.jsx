@@ -45,6 +45,7 @@ function Login({ changePage }) {
   const handleRedirect = (user) => {
     setNav("forward");
     history.location.key = uuidv4(); // Change key to invoke animation
+    console.log(user);
     setUser(user);
   };
 

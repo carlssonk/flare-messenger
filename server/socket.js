@@ -16,15 +16,16 @@ module.exports = (io) => {
       console.log(`Socket ${socket.id} leaving ${roomId}`);
       socket.leave(roomId);
     });
-    socket.on("message", ({ message, chatId, myId }) => {
-      console.log(`msg: ${message}, room: ${chatId}`);
-      emitMessage(message, chatId, myId);
+    socket.on("message", (message) => {
+      // console.log(`msg: ${message}, room: ${chatId}`);
+      console.log("MESSAGE BRO");
+      emitMessage(message, socket.request);
     });
   });
 
-  const emitMessage = async (message, chatId, myId) => {
-    const messageDoc = await sendMessage(message, chatId, myId);
-    io.to(chatId).emit("message", messageDoc);
+  const emitMessage = async (message, req) => {
+    const messageDoc = await sendMessage(message, req.user);
+    io.to(message.chatId).emit("message", messageDoc);
   };
 
   // module.exports.emitMessage = (message, roomId) => {

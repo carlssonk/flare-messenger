@@ -16,11 +16,8 @@ export const joinChat = (chatId) => {
 export const leaveChat = (chatId) => {
   if (socket && chatId) socket.emit("leave", chatId);
 };
-export const sendMessage = (message, chatId, myId) => {
-  console.log(message);
-  console.log(chatId);
-  console.log(myId);
-  if (socket && chatId) socket.emit("message", { message, chatId, myId });
+export const sendMessage = (message) => {
+  if (socket && message.chatId) socket.emit("message", message);
 };
 
 // export const recieveMessage = (data) => {

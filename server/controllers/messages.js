@@ -17,16 +17,36 @@ module.exports.getMessages = async (chatId) => {
   return messages;
 };
 
-module.exports.sendMessage = async (message, chatId, myId) => {
-  console.log("message");
+module.exports.sendMessage = async (message, user) => {
+  const { text, file, chatId } = message;
+
+  const author = {
+    _id: user._id,
+    username: user.username,
+    avatar: {
+      filename: user.avatar.filename,
+      hexCode: user.avatar.hexCode,
+      path: user.avatar.path,
+    },
+  };
+
   const messageDoc = await new Message({
-    text: message,
     chat: chatId,
-    author: myId,
+    text,
+    author,
   });
   await messageDoc.save();
 
-  return messageDoc;
+  const formatMessage = {
+    _id: messageDoc._id,
+    createdAt: messageDoc.createdAt,
+    text: messageDoc.text,
+    author,
+  };
+
+  console.log(formatMessage);
+
+  return formatMessage;
 };
 
 module.exports.getLastMessages = async (chats) => {

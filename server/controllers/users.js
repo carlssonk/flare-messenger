@@ -134,6 +134,7 @@ module.exports.login = (req, res, next) => {
         email,
         username,
         name,
+        chats,
         avatar: { hexCode, path = null },
       } = user;
       return res.json({
@@ -141,6 +142,7 @@ module.exports.login = (req, res, next) => {
         email,
         username,
         name,
+        chats,
         avatar: { hexCode, path },
       });
     });

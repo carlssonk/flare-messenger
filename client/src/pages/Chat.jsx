@@ -119,7 +119,7 @@ function Chat() {
     // console.log(history);
     // console.log(location);
 
-    sendMessage({ text, files }, chatId);
+    sendMessage({ text, files, chatId });
 
     // const res = await fetch(`/api/messages`, {
     //   method: "POST",
@@ -164,6 +164,7 @@ function Chat() {
 
   useEffect(() => {
     const getChatData = async () => {
+      console.log(user);
       const chatId = location.pathname.replace("/chat/", "");
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
@@ -173,7 +174,7 @@ function Chat() {
       setFriends(data.friends);
     };
     getChatData();
-  }, [location]);
+  }, []);
 
   return (
     <div className="chat-page page">
