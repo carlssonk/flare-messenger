@@ -3,12 +3,7 @@ import Ripple from "../components/Effects/Ripple";
 import { NavContext } from "../context/NavContext";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faTimes,
-  faCamera,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../context/UserContext";
 
 import { IonLoading } from "@ionic/react";

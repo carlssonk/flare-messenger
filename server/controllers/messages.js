@@ -42,6 +42,9 @@ module.exports.sendMessage = async (message, user) => {
     author,
   };
 
+  console.log("format message");
+  // console.log(formatMessage);
+
   return formatMessage;
 };
 

@@ -15,19 +15,11 @@ import {
   faMicrophone,
   faGrinSquintTears,
 } from "@fortawesome/free-solid-svg-icons";
-import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 
-import socket, {
-  initiateSocket,
-  joinChat,
-  leaveChat,
-  sendMessage,
-  recieveMessage,
-} from "../utils/socket";
-
-// import { socket } from "../utils/socket";
+import { sendMessage } from "../utils/socket";
+// import Socket, { sendMessage } from "../components/Socket";
 
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
@@ -35,8 +27,8 @@ import "draft-js/dist/Draft.css";
 const draftUtils = require("draftjs-utils");
 
 function Chat() {
-  const { setUser, user } = useContext(UserContext);
-  // const socket = useContext(SocketContext);
+  const { user } = useContext(UserContext);
+  const { socket } = useContext(SocketContext);
 
   const location = useLocation();
   const history = useHistory();
@@ -48,7 +40,6 @@ function Chat() {
   const editorWrapper = useRef(null);
   const editorContainer = useRef(null);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState([]);
 
   // Keep this state even if its not used, we use the value from the state but not the state itself,
@@ -80,8 +71,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      console.log(message);
-      console.log(user.id);
       setMessages((messages) => [message, ...messages]);
     });
   }, [socket]);
@@ -116,24 +105,7 @@ function Chat() {
 
     resetInput();
 
-    // console.log(history);
-    // console.log(location);
-
-    sendMessage({ text, files, chatId });
-
-    // const res = await fetch(`/api/messages`, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     chatId,
-    //     text,
-    //   }),
-    // });
-    // const message = await res.json();
-    // console.log(message.text);
+    sendMessage(socket, { text, files, chatId });
   };
 
   const enableChat = async () => {
@@ -164,17 +136,15 @@ function Chat() {
 
   useEffect(() => {
     const getChatData = async () => {
-      console.log(user);
       const chatId = location.pathname.replace("/chat/", "");
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
-      console.log(data);
       setMessages(data.messages.reverse());
       setFriends(data.friends);
     };
     getChatData();
-  }, []);
+  }, [location.pathname, user]);
 
   return (
     <div className="chat-page page">

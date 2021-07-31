@@ -3,7 +3,6 @@ import { useLocation, useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
 
-import ProfileImg from "../imgs/oliverhaha.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -17,7 +16,7 @@ function Header({ handleFindUsers }) {
   const location = useLocation();
   const history = useHistory();
   const { setNav } = useContext(NavContext);
-  const { setUser, user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const handleNavigation = (to) => {
     if (to === "/") {

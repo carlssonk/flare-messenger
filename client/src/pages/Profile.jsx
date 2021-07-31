@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import PreviewAvatar from "../components/Profile/PreviewAvatar";
+import React, { useContext, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";

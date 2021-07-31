@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { IonPage } from "@ionic/react";
 import FlareIcon from "../../imgs/flare-icon.svg";
@@ -45,7 +45,6 @@ function Login({ changePage }) {
   const handleRedirect = (user) => {
     setNav("forward");
     history.location.key = uuidv4(); // Change key to invoke animation
-    console.log(user);
     setUser(user);
   };
 
