@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
 import { v4 as uuidv4 } from "uuid";
 import Ripple from "../components/Effects/Ripple";
+import Avatar from "../components/Avatar";
 
 function Profile() {
   const { setUser, user } = useContext(UserContext);
@@ -46,33 +47,12 @@ function Profile() {
         className="profile-section"
         onClick={() => handleNavigation("/profile/edit")}
       >
-        <div
-          className="img-box"
-          style={
-            user
-              ? user.avatar.path
-                ? null
-                : { backgroundColor: user.avatar.hexCode }
-              : null
-          }
-          onClick={() => fileRef.current.click()}
-        >
-          {user ? (
-            user.avatar.path ? null : (
-              <div className="avatar-label">
-                {user && user.username.substring(0, 1)}
-              </div>
-            )
-          ) : null}
-
-          <img
-            src={user && user.avatar.path}
-            alt=""
-            style={
-              user ? (user.avatar.path ? null : { display: "none" }) : null
-            }
-          />
-        </div>
+        <Avatar
+          page="profile"
+          user={user}
+          fileRef={fileRef}
+          style={{ width: "100px", height: "100px", fontSize: "45px" }}
+        />
 
         <div className="name">{user && user.name}</div>
         <div className="username">@{user && user.username}</div>

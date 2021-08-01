@@ -97,6 +97,7 @@ module.exports.register = async (req, res) => {
       username,
       name: username,
       "avatar.hexCode": hexCode,
+      chats: [],
     });
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
@@ -105,6 +106,7 @@ module.exports.register = async (req, res) => {
         _id,
         email,
         username,
+        chats,
         avatar: { path = null },
       } = registeredUser;
       return res.json({
@@ -112,6 +114,7 @@ module.exports.register = async (req, res) => {
         email,
         username,
         name: username,
+        chats,
         avatar: { hexCode, path },
       });
     });

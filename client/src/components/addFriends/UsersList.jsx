@@ -2,7 +2,7 @@ import React from "react";
 import { IonButton } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import Jeb_ from "../../imgs/Jens-Bergensten.png";
+import Avatar from "../Avatar";
 
 function UsersList({ users, handleAddUser, friendsAndPending }) {
   const isDuplicate = (id) => {
@@ -20,13 +20,15 @@ function UsersList({ users, handleAddUser, friendsAndPending }) {
           <React.Fragment key={e._id}>
             {isDuplicate(e._id) ? null : (
               <li>
-                <div>
-                  <div className="img-box">
-                    <img src={Jeb_} alt="" />
-                  </div>
+                <div className="section">
+                  <Avatar
+                    page="add-friends"
+                    user={e}
+                    style={{ width: "40px", height: "40px", fontSize: "18px" }}
+                  />
                   <div className="name">{e.username}</div>
                 </div>
-                <div>
+                <div className="section">
                   <IonButton
                     className="accept-btn"
                     onClick={() => handleAddUser(e._id)}

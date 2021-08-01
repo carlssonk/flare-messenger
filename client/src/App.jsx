@@ -22,13 +22,14 @@ import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
 
 function App() {
+  const location = useLocation();
+
   const [nav, setNav] = useState("forward");
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
   const [socketIsActive, setSocketIsActive] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lastLocation, setLastLocation] = useState("");
-  const location = useLocation();
 
   const navValue = useMemo(() => ({ nav, setNav }), [nav, setNav]);
   const userValue = useMemo(() => ({ user, setUser }), [user, setUser]);
@@ -48,6 +49,7 @@ function App() {
     setIsLoading(false);
   };
 
+  // add & remove socket
   useEffect(() => {
     if (!socketIsActive && user) {
       setSocket(io("http://localhost:3000"));
@@ -60,6 +62,7 @@ function App() {
     }
   }, [user, socket, socketIsActive]);
 
+  // join & leave room
   useEffect(() => {
     setLastLocation(location.pathname);
     if (user && socket) {

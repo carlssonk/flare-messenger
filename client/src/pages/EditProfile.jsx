@@ -12,6 +12,7 @@ import {
 import { UserContext } from "../context/UserContext";
 
 import { IonLoading, IonAlert } from "@ionic/react";
+import Avatar from "../components/Avatar";
 
 function EditProfile() {
   const { setUser, user } = useContext(UserContext);
@@ -24,7 +25,7 @@ function EditProfile() {
   const [togglePopup, setTogglePopup] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [newAvatarUrl, setNewAvatarUrl] = useState("");
+  // const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [toggleOptions, setToggleOptions] = useState(false);
   const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
 
@@ -67,6 +68,7 @@ function EditProfile() {
   };
 
   const handleAvatarClick = () => {
+    console.log("AVATAR CLKICK");
     setToggleOptions(true);
   };
 
@@ -87,7 +89,7 @@ function EditProfile() {
     });
     const data = await res.json();
     setIsLoading(false);
-    setNewAvatarUrl("");
+    // setNewAvatarUrl("");
     setUser({
       ...user,
       avatar: {
@@ -103,7 +105,7 @@ function EditProfile() {
         <IonLoading isOpen={isLoading} message={"Updating..."} />
         <PreviewAvatar
           setIsLoading={setIsLoading}
-          setNewAvatarUrl={setNewAvatarUrl}
+          // setNewAvatarUrl={setNewAvatarUrl}
           togglePopup={togglePopup}
           handleTogglePopup={handleTogglePopup}
           imageUrl={previewAvatarUrl}
@@ -124,39 +126,20 @@ function EditProfile() {
               <FontAwesomeIcon className="avatar-camera" icon={faCamera} />
             </div>
 
-            <Ripple.Div
-              className="img-box"
-              style={
-                user
-                  ? user.avatar.path
-                    ? null
-                    : { backgroundColor: user.avatar.hexCode }
-                  : null
-              }
-              onClick={() => handleAvatarClick()}
-            >
-              {user ? (
-                user.avatar.path ? null : (
-                  <div className="avatar-label">
-                    {user && user.username.substring(0, 1)}
-                  </div>
-                )
-              ) : null}
-              <img
-                src={newAvatarUrl.length > 0 ? newAvatarUrl : user.avatar.path}
-                alt=""
-                style={
-                  user ? (user.avatar.path ? null : { display: "none" }) : null
-                }
-              />
-              <input
-                type="file"
-                ref={fileRef}
-                onChange={addFile}
-                accept="image/*"
-                style={{ display: "none" }}
-              />
-            </Ripple.Div>
+            <Avatar
+              page="edit"
+              user={user}
+              handleAvatarClick={handleAvatarClick}
+              style={{ fontSize: "45px" }}
+            />
+
+            <input
+              type="file"
+              ref={fileRef}
+              onChange={addFile}
+              accept="image/*"
+              style={{ display: "none" }}
+            />
           </div>
         </div>
         <div>

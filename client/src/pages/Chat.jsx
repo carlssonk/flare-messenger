@@ -19,10 +19,10 @@ import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 
 import { sendMessage } from "../utils/socket";
-// import Socket, { sendMessage } from "../components/Socket";
 
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
+import Avatar from "../components/Avatar";
 
 const draftUtils = require("draftjs-utils");
 
@@ -161,33 +161,7 @@ function Chat() {
 
               <div className="user-box">
                 <div className="img-box-wrapper">
-                  <div
-                    className="img-box"
-                    style={
-                      friends[0]
-                        ? friends[0].avatar.path
-                          ? null
-                          : { backgroundColor: friends[0].avatar.hexCode }
-                        : null
-                    }
-                  >
-                    {friends[0] ? (
-                      friends[0].avatar.path ? null : (
-                        <div className="avatar-label">
-                          {friends[0] && friends[0].username.substring(0, 1)}
-                        </div>
-                      )
-                    ) : null}
-                    <img
-                      src={friends[0] && friends[0].avatar.path}
-                      alt=""
-                      style={
-                        friends[0] && friends[0].avatar.path
-                          ? null
-                          : { display: "none" }
-                      }
-                    />
-                  </div>
+                  <Avatar user={friends[0]} style={{ fontSize: "16.2px" }} />
                 </div>
 
                 <div className="text-box">

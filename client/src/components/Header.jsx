@@ -11,6 +11,7 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
+import Avatar from "./Avatar";
 
 function Header({ handleFindUsers }) {
   const location = useLocation();
@@ -32,32 +33,12 @@ function Header({ handleFindUsers }) {
     <div className="header">
       <div className="nav-wrapper">
         <div className="nav-container">
-          <Ripple.Div
-            className="profile-btn"
-            onClick={() => handleNavigation("/profile")}
-            style={
-              user
-                ? user.avatar.path
-                  ? null
-                  : { backgroundColor: user.avatar.hexCode }
-                : null
-            }
-          >
-            {user ? (
-              user.avatar.path ? null : (
-                <div className="avatar-label">
-                  {user && user.username.substring(0, 1)}
-                </div>
-              )
-            ) : null}
-            <img
-              src={user.avatar.path}
-              alt=""
-              style={
-                user ? (user.avatar.path ? null : { display: "none" }) : null
-              }
-            />
-          </Ripple.Div>
+          <Avatar
+            page="header"
+            handleNavigation={handleNavigation}
+            user={user}
+            style={{ width: "40px", height: "40px", fontSize: "18px" }}
+          />
           <div className="page-label">
             {location.pathname === "/" ? "Chats" : null}
             {location.pathname === "/add" ? "Add Friends" : null}

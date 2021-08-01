@@ -44,22 +44,8 @@
       place-items: center;
       padding: 0 14px;
 
-      .profile-btn {
-        display: grid;
-        place-items: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 100%;
-        overflow: hidden;
-        img {
-          object-fit: cover;
-          width: 100%;
-          height: 100%;
-        }
-      }
       .page-label {
         display: flex;
-        // width: 100%;
         font-size: 30px;
         align-items: center;
         padding-left: 12px;
@@ -122,20 +108,9 @@
     justify-content: space-between;
     padding: 0 14px;
     color: white;
-    div {
+    .section {
       display: flex;
       align-items: center;
-      .img-box {
-        height: 40px;
-        width: 40px;
-        overflow: hidden;
-        border-radius: 100%;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
       .name {
         font-size: 16px;
         padding-left: 10px;
@@ -398,5 +373,21 @@
     h2 {
       color: white !important;
     }
+  }
+}
+
+.avatar-img-box {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  border-radius: 100%;
+  overflow: hidden;
+  color: white;
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
 }
