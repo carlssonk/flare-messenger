@@ -948,6 +948,34 @@
   height: 100%;
 }
 
+.avatar-options-popup {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #323232;
+  -webkit-transform: translate3d(0, 100%, 0);
+          transform: translate3d(0, 100%, 0);
+  -webkit-transition: 200ms;
+  transition: 200ms;
+  z-index: 25;
+  visibility: visible;
+  color: white;
+}
+
+.avatar-options-popup div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 60px;
+}
+
+.avatar-options-popup div div {
+  margin-left: 12px;
+}
+
 :root {
   --primary-gradient: linear-gradient(to bottom, #f64f59, #c471ed, #12c2e9);
   --primary-cyan: #1bbbbb;
@@ -1275,32 +1303,6 @@ body {
 .edit-profile-page .edit-name-box .value {
   font-size: 18px;
   color: gray;
-}
-
-.edit-profile-page .avatar-options-popup {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #323232;
-  -webkit-transform: translate3d(0, 100%, 0);
-          transform: translate3d(0, 100%, 0);
-  -webkit-transition: 200ms;
-  transition: 200ms;
-  z-index: 11;
-}
-
-.edit-profile-page .avatar-options-popup div {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  height: 60px;
-}
-
-.edit-profile-page .avatar-options-popup div div {
-  margin-left: 12px;
 }
 
 .edit-name-page {

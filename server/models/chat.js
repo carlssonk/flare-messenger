@@ -3,15 +3,13 @@ const Schema = mongoose.Schema;
 
 const ChatSchema = new Schema(
   {
-    name: {
-      type: String,
-    },
+    name: String,
+    image: String,
     author: { type: Schema.Types.ObjectId, ref: "User" },
     users: {
       type: [{ type: Schema.Types.ObjectId, ref: "User" }],
       required: true,
     },
-    image: String,
     isVisible: {
       type: Boolean,
       required: true,

@@ -66,22 +66,6 @@ function NewGroup() {
     setTogglePopup(bool);
   };
 
-  // const handleCreateChat = async (userId) => {
-  //   const res = await fetch(`/api/chats/new`, {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       userId,
-  //       isPrivate: true,
-  //     }),
-  //   });
-  //   const data = await res.json();
-  //   handleNavigation(`/chat/${data.chatId}`);
-  // };
-
   return (
     <div className="new-page page">
       <CreateGroup
@@ -101,7 +85,10 @@ function NewGroup() {
               className={`${isInArray(e._id) ? "" : "remove-user"}`}
             >
               <div className="img-wrapper">
-                <Avatar user={e} style={{ width: "50px", height: "50px" }} />
+                <Avatar
+                  user={e}
+                  style={{ width: "50px", height: "50px", fontSize: "22.5px" }}
+                />
                 <div
                   className="remove-btn"
                   onClick={() => handleSelectFriend(e)}
@@ -127,10 +114,14 @@ function NewGroup() {
                 onClick={() => (isRemoving ? null : handleSelectFriend(e))}
               >
                 <div className="section">
-                  <Avatar user={e} style={{ width: "50px", height: "50px" }} />
-                  {/* <div className="img-box">
-                    <img src={Jeb_} alt="" />
-                  </div> */}
+                  <Avatar
+                    user={e}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      fontSize: "22.5px",
+                    }}
+                  />
                   <div className="name">{e.username}</div>
                 </div>
                 <div>

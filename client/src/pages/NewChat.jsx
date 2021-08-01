@@ -66,7 +66,14 @@ function NewChat() {
             return (
               <Ripple.Li key={e._id} onClick={() => handleCreateChat(e._id)}>
                 <div className="section">
-                  <Avatar user={e} style={{ width: "50px", height: "50px" }} />
+                  <Avatar
+                    user={e}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      fontSize: "22.5px",
+                    }}
+                  />
                   <div className="name">{e.username}</div>
                 </div>
               </Ripple.Li>

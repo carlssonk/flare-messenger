@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
-import PreviewAvatar from "../components/Profile/PreviewAvatar";
+import PreviewAvatar from "../components/PreviewAvatar";
 import Ripple from "../components/Effects/Ripple";
 import { NavContext } from "../context/NavContext";
 import { useHistory } from "react-router-dom";
@@ -68,7 +68,6 @@ function EditProfile() {
   };
 
   const handleAvatarClick = () => {
-    console.log("AVATAR CLKICK");
     setToggleOptions(true);
   };
 
@@ -103,14 +102,16 @@ function EditProfile() {
     <>
       <div className="page edit-profile-page">
         <IonLoading isOpen={isLoading} message={"Updating..."} />
-        <PreviewAvatar
-          setIsLoading={setIsLoading}
-          // setNewAvatarUrl={setNewAvatarUrl}
-          togglePopup={togglePopup}
-          handleTogglePopup={handleTogglePopup}
-          imageUrl={previewAvatarUrl}
-          image={imageFile}
-        />
+        {togglePopup ? (
+          <PreviewAvatar
+            type="profile"
+            setIsLoading={setIsLoading}
+            handleTogglePopup={handleTogglePopup}
+            imageUrl={previewAvatarUrl}
+            image={imageFile}
+          />
+        ) : null}
+
         <div className="top-bar">
           <Ripple.Div
             className="back-arrow"

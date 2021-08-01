@@ -224,24 +224,6 @@ body {
       color: gray;
     }
   }
-
-  .avatar-options-popup {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: rgb(50, 50, 50);
-    transform: translate3d(0, 100%, 0);
-    transition: 200ms;
-    z-index: 11;
-    div {
-      display: flex;
-      align-items: center;
-      height: 60px;
-      div {
-        margin-left: 12px;
-      }
-    }
-  }
 }
 
 .edit-name-page {

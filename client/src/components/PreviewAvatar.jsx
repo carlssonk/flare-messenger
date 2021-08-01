@@ -2,19 +2,18 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 
 import Draggable from "react-draggable";
 
-import { getImgSizeInfo, calculatePosition } from "../../utils/previewAvatar";
+import { getImgSizeInfo, calculatePosition } from "../utils/previewAvatar";
 
-import CheckifCircleIsOutsideBounds from "./CheckIfCircleIsOutsideBounds";
+import CheckifCircleIsOutsideBounds from "./Profile/CheckIfCircleIsOutsideBounds";
 
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../context/UserContext";
 
 function PreviewAvatar({
-  togglePopup,
+  type,
   handleTogglePopup,
   imageUrl,
   image,
   setIsLoading,
-  // setNewAvatarUrl,
 }) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
@@ -25,7 +24,7 @@ function PreviewAvatar({
   const { setUser, user } = useContext(UserContext);
 
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [circleSize, setCircleSize] = useState();
+  const [circleSize, setCircleSize] = useState(0);
   const [maxX, setMaxX] = useState(0);
   const [maxY, setMaxY] = useState(0);
   const [isHolding, setIsHolding] = useState(false);
@@ -39,6 +38,8 @@ function PreviewAvatar({
 
   const [inputValue, setInputValue] = useState(0);
   const [scaleValue, setScaleValue] = useState(0);
+
+  const [togglePopupWait, setTogglePopupWait] = useState(true);
 
   useEffect(() => {
     if (imageLoaded) {
@@ -114,10 +115,11 @@ function PreviewAvatar({
   // HOW TO SCALE IMAGE ACCORDINGLY USING CLOUDINARY API
   // https://res.cloudinary.com/plexeronthecloud/image/upload/ar_1,c_crop,w_${Zoom},x_${FindX},y_${FindY}/v1625506265/YelpCamp/boxes_mqd5wg.png
 
-  const handleSubmit = async (e) => {
+  const handleSubmitProfile = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    handleTogglePopup(false);
+    // handleTogglePopup(false);
+    setTogglePopupWait(false);
     if (imageUrl.length === 0) return;
 
     const formData = new FormData();
@@ -144,6 +146,14 @@ function PreviewAvatar({
     });
   };
 
+  const handleSubmitGroup = () => {
+    console.log("SUBMIT GROUP IMG");
+  };
+
+  useEffect(() => {
+    if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
+  }, [togglePopupWait]);
+
   return (
     <>
       <CheckifCircleIsOutsideBounds
@@ -158,10 +168,10 @@ function PreviewAvatar({
         lastX={lastX}
         lastY={lastY}
       />
-      <div className="popup-wrapper">
+      <div className="popup-wrapper" style={{ zIndex: "16" }}>
         <div
           className={`popup-container ${
-            togglePopup ? "popup-show" : "popup-hide"
+            togglePopupWait ? "popup-show" : "popup-hide"
           }`}
         >
           <div className="popup-img-box-wrapper">
@@ -268,15 +278,22 @@ function PreviewAvatar({
               </div>
             </div>
           </div>
-          <button onClick={handleSubmit}>SUBMIT</button>
+          <button
+            onClick={
+              type === "profile" ? handleSubmitProfile : handleSubmitGroup
+            }
+          >
+            SUBMIT
+          </button>
         </div>
       </div>
 
       <div
-        onClick={() => handleTogglePopup(false)}
+        onClick={() => setTogglePopupWait(false)}
         className={`click-catcher ${
-          togglePopup ? "show-fade-half" : "hide-fade-half"
+          togglePopupWait ? "show-fade-half" : "hide-fade-half"
         }`}
+        style={{ zIndex: "15" }}
       ></div>
     </>
   );
