@@ -19,7 +19,7 @@ function UsersList({ users, handleAddUser, friendsAndPending }) {
         return (
           <React.Fragment key={e._id}>
             {isDuplicate(e._id) ? null : (
-              <li>
+              <li className="list-item">
                 <div className="section">
                   <Avatar
                     page="add-friends"

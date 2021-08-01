@@ -2,10 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { NavContext } from "../context/NavContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import Jeb_ from "../imgs/Jens-Bergensten.png";
 import { useHistory } from "react-router-dom";
 import Header from "../components/Header";
 import Ripple from "../components/Effects/Ripple";
+import Avatar from "../components/Avatar";
 // import { Link } from "react-router-dom";
 
 function NewChat() {
@@ -65,10 +65,8 @@ function NewChat() {
           {friends.map((e) => {
             return (
               <Ripple.Li key={e._id} onClick={() => handleCreateChat(e._id)}>
-                <div>
-                  <div className="img-box">
-                    <img src={Jeb_} alt="" />
-                  </div>
+                <div className="section">
+                  <Avatar user={e} style={{ width: "50px", height: "50px" }} />
                   <div className="name">{e.username}</div>
                 </div>
               </Ripple.Li>

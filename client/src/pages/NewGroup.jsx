@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
-import Jeb_ from "../imgs/Jens-Bergensten.png";
 import Header from "../components/Header";
 import { IonToast } from "@ionic/react";
 import Ripple from "../components/Effects/Ripple";
 import CreateGroup from "../components/NewGroup/CreateGroup";
+import Avatar from "../components/Avatar";
 
 function NewGroup() {
   const [friends, setFriends] = useState([]);
@@ -31,11 +31,14 @@ function NewGroup() {
     setFriends(data.friends);
   };
 
-  const handleSelectFriend = (username, id) => {
-    if (selectedFriends.some((e) => e.id === id)) {
+  const handleSelectFriend = (user) => {
+    console.log(user);
+    if (selectedFriends.some((e) => e._id === user._id)) {
       setIsRemoving(true);
       const selectedFriendsCopy = [...selectedFriends];
-      const updatedArray = selectedFriendsCopy.filter((e) => e.id !== id);
+      const updatedArray = selectedFriendsCopy.filter(
+        (e) => e._id !== user._id
+      );
 
       setSelectedFriends(updatedArray);
       setTimeout(() => {
@@ -43,19 +46,16 @@ function NewGroup() {
         setIsRemoving(false);
       }, 250);
     } else {
-      setSelectedFriends((selectedFriends) => [
-        ...selectedFriends,
-        { username, id },
-      ]);
+      setSelectedFriends((selectedFriends) => [...selectedFriends, user]);
       setSelectedFriendsList((selectedFriendsList) => [
         ...selectedFriendsList,
-        { username, id },
+        user,
       ]);
     }
   };
 
   const isInArray = (id) => {
-    if (selectedFriends.some((e) => e.id === id)) {
+    if (selectedFriends.some((e) => e._id === id)) {
       return true;
     }
     return false;
@@ -97,16 +97,14 @@ function NewGroup() {
         {selectedFriendsList.map((e) => {
           return (
             <li
-              key={e.id}
-              className={`${isInArray(e.id) ? "" : "remove-user"}`}
+              key={e._id}
+              className={`${isInArray(e._id) ? "" : "remove-user"}`}
             >
               <div className="img-wrapper">
-                <div className="img-box">
-                  <img src={Jeb_} alt="" />
-                </div>
+                <Avatar user={e} style={{ width: "50px", height: "50px" }} />
                 <div
                   className="remove-btn"
-                  onClick={() => handleSelectFriend(e.username, e.id)}
+                  onClick={() => handleSelectFriend(e)}
                 >
                   <FontAwesomeIcon icon={faTimes} />
                 </div>
@@ -121,19 +119,18 @@ function NewGroup() {
         <ul className="users-list">
           {friends.map((e) => {
             return (
-              <li
+              <Ripple.Li
                 key={e._id}
                 className={`mouse-active ${
                   isInArray(e._id) ? "users-selected" : ""
                 }`}
-                onClick={() =>
-                  isRemoving ? null : handleSelectFriend(e.username, e._id)
-                }
+                onClick={() => (isRemoving ? null : handleSelectFriend(e))}
               >
-                <div>
-                  <div className="img-box">
+                <div className="section">
+                  <Avatar user={e} style={{ width: "50px", height: "50px" }} />
+                  {/* <div className="img-box">
                     <img src={Jeb_} alt="" />
-                  </div>
+                  </div> */}
                   <div className="name">{e.username}</div>
                 </div>
                 <div>
@@ -141,7 +138,7 @@ function NewGroup() {
                     <FontAwesomeIcon icon={faCheck} className="check-icon" />
                   ) : null}
                 </div>
-              </li>
+              </Ripple.Li>
             );
           })}
         </ul>
