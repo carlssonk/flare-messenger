@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faPlus, faYenSign } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faPlus,
+  faTemperatureHigh,
+  faYenSign,
+} from "@fortawesome/free-solid-svg-icons";
 import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
 import Ripple from "../../components/Effects/Ripple";
@@ -26,12 +31,15 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   const [togglePreview, setTogglePreview] = useState(false);
   const [toggleOptions, setToggleOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
+  // const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
   const [isFading, setIsFading] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   const [previewScale, setPreviewScale] = useState(0);
   const [previewX, setPreviewX] = useState(0);
   const [previewY, setPreviewY] = useState(0);
+
+  const [togglePopupWait, setTogglePopupWait] = useState(true);
 
   const handleNavigation = (to) => {
     if (to === "/") {
@@ -43,9 +51,9 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
     setTimeout(() => history.push(to), 10);
   };
 
-  useEffect(() => {
-    if (!togglePopup) setError("");
-  }, [togglePopup]);
+  // useEffect(() => {
+  //   if (!togglePopup) setError("");
+  // }, [togglePopup]);
 
   const handleCreateChat = async (userId) => {
     if (name.length === 0) return setError("Choose a name for the group.");
@@ -73,7 +81,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
 
   const handleTogglePreview = (bool) => {
     console.log(isFading);
-    if (isFading) return; // to avoid spam
+    // if (isFading) return; // to avoid spam
     setTogglePreview(bool);
   };
 
@@ -105,11 +113,14 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   };
 
   const handleToggleRemoveAvatar = () => {
-    setToggleRemoveAvatar(true);
+    // setToggleRemoveAvatar(true);
+    setShowImage(false);
     setToggleOptions(false);
   };
 
   const getPreviewTransform = (circleSize, scale, x, y) => {
+    setShowImage(true);
+
     const SIZE_INFO = getImgSizeInfo(imageRef.current);
 
     const addScaleY = imageRef.current.offsetHeight / SIZE_INFO.height;
@@ -128,12 +139,12 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   };
 
   useEffect(() => {
-    // console.log(previewScale);
-    console.log(previewX);
-  }, [previewScale]);
+    if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
+  }, [togglePopupWait]);
 
-  const toggleImageStyle =
-    previewAvatarUrl.length === 0 ? { display: "none" } : null;
+  const toggleImageStyle = !showImage
+    ? { visibility: "hidden", position: "absolute", width: "0", height: "0" }
+    : null;
 
   return (
     <>
@@ -152,14 +163,14 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
 
         <div
           className={`popup-container ${
-            togglePopup ? "popup-show" : "popup-hide"
+            togglePopupWait ? "popup-show" : "popup-hide"
           }`}
         >
           <div
             className="camera-box"
             onClick={() => handleAvatarClick()}
             style={
-              previewAvatarUrl.length === 0
+              !showImage
                 ? null
                 : { overflow: "hidden", border: "none", display: "block" }
             }
@@ -171,7 +182,12 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
               nodeRef={nodeRef}
             >
               <div
-                style={{ ...toggleImageStyle, width: "100%", height: "100%" }}
+                style={{
+                  ...toggleImageStyle,
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "none",
+                }}
               >
                 <div
                   className="image-wrapper"
@@ -186,9 +202,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
                 </div>
               </div>
             </Draggable>
-            <div
-              style={previewAvatarUrl.length === 0 ? null : { display: "none" }}
-            >
+            <div style={!showImage ? null : { display: "none" }}>
               <FontAwesomeIcon icon={faCamera} />
               <div className="plus-icon-box">
                 <FontAwesomeIcon className="plus-icon" icon={faPlus} />
@@ -232,7 +246,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
           <Ripple.Div onClick={() => handleToggleChooseAvatar()}>
             <div>Choose From Gallery</div>
           </Ripple.Div>
-          {groupAvatar.length > 0 ? (
+          {showImage ? (
             <Ripple.Div onClick={() => handleToggleRemoveAvatar()}>
               <div>Remove Image</div>
             </Ripple.Div>
@@ -247,9 +261,9 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
         style={{ zIndex: "20" }}
       ></div>
       <div
-        onClick={() => handleTogglePopup(false)}
+        onClick={() => setTogglePopupWait(false)}
         className={`click-catcher ${
-          togglePopup ? "show-fade-half" : "hide-fade-half"
+          togglePopupWait ? "show-fade-half" : "hide-fade-half"
         }`}
       ></div>
     </>

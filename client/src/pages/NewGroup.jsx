@@ -62,16 +62,19 @@ function NewGroup() {
   };
 
   const handleTogglePopup = (bool) => {
-    if (isFading) return; // to avoid spam
+    // if (isFading) return; // to avoid spam
     setTogglePopup(bool);
   };
 
   return (
     <div className="new-page page">
-      <CreateGroup
-        togglePopup={togglePopup}
-        handleTogglePopup={handleTogglePopup}
-      />
+      {togglePopup ? (
+        <CreateGroup
+          togglePopup={togglePopup}
+          handleTogglePopup={handleTogglePopup}
+        />
+      ) : null}
+
       <Header />
       <ul
         className={`selected-friends-list ${
