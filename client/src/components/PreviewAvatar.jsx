@@ -14,6 +14,7 @@ function PreviewAvatar({
   imageUrl,
   image,
   setIsLoading,
+  getPreviewTransform,
 }) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
@@ -118,7 +119,6 @@ function PreviewAvatar({
   const handleSubmitProfile = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // handleTogglePopup(false);
     setTogglePopupWait(false);
     if (imageUrl.length === 0) return;
 
@@ -137,7 +137,6 @@ function PreviewAvatar({
     });
     const avatar = await res.json();
     setIsLoading(false);
-    // setNewAvatarUrl(avatar.path);
     setUser({
       ...user,
       avatar: {
@@ -146,9 +145,33 @@ function PreviewAvatar({
     });
   };
 
-  const handleSubmitGroup = () => {
-    console.log("SUBMIT GROUP IMG");
+  const handleSubmitGroup = async (e) => {
+    setTogglePopupWait(false);
+
+    getPreviewTransform(circleSize, scaleValue, lastX, lastY);
+    // e.preventDefault();
+    // setIsLoading(true);
+    // setTogglePopupWait(false);
+    // if (imageUrl.length === 0) return;
+    // const formData = new FormData();
+    // formData.append("avatar", image);
+    // formData.append(
+    //   "resize",
+    //   JSON.stringify(
+    //     calculatePosition(imageSize, circleRef, imageRef, scaleValue)
+    //   )
+    // );
+    // const res = await fetch(`http://localhost:3000/api/chats/avatar`, {
+    //   method: "POST",
+    //   body: formData,
+    // });
+    // const avatar = await res.json();
+    // console.log(avatar);
   };
+
+  useEffect(() => {
+    console.log(outsideBounds);
+  }, [outsideBounds]);
 
   useEffect(() => {
     if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
@@ -156,23 +179,27 @@ function PreviewAvatar({
 
   return (
     <>
-      <CheckifCircleIsOutsideBounds
-        imageSize={imageSize}
-        scaleValue={scaleValue}
-        circleRef={circleRef}
-        imageRef={imageRef}
-        maxY={maxY}
-        maxX={maxX}
-        setOutsideBounds={setOutsideBounds}
-        setIsOutsideBounds={setIsOutsideBounds}
-        lastX={lastX}
-        lastY={lastY}
-      />
+      {imageLoaded ? (
+        <CheckifCircleIsOutsideBounds
+          imageSize={imageSize}
+          scaleValue={scaleValue}
+          circleRef={circleRef}
+          imageRef={imageRef}
+          maxY={maxY}
+          maxX={maxX}
+          setOutsideBounds={setOutsideBounds}
+          setIsOutsideBounds={setIsOutsideBounds}
+          lastX={lastX}
+          lastY={lastY}
+        />
+      ) : null}
+
       <div className="popup-wrapper" style={{ zIndex: "16" }}>
         <div
           className={`popup-container ${
             togglePopupWait ? "popup-show" : "popup-hide"
           }`}
+          style={imageLoaded ? null : { pointerEvents: "none" }}
         >
           <div className="popup-img-box-wrapper">
             <div className="popup-img-box" ref={boxRef}>
@@ -229,7 +256,8 @@ function PreviewAvatar({
                       ref={imageRef}
                       src={imageUrl}
                       alt=""
-                      onLoad={() => setImageLoaded(true)}
+                      style={imageLoaded ? { opacity: "1" } : null}
+                      onLoad={() => setTimeout(() => setImageLoaded(true), 50)}
                     />
                   </div>
                 </div>

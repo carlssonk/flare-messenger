@@ -96,3 +96,26 @@ module.exports.enableChat = async (req, res) => {
 
   res.send("ok");
 };
+
+module.exports.newAvatar = async (req, res) => {
+  // const myId = req.user._id;
+  const resize = JSON.parse(req.body.resize);
+
+  const path = req.file.path.replace(
+    "/upload",
+    `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`
+  );
+  // const filename = req.file.filename;
+
+  // const user = await User.findOneAndUpdate(
+  //   { _id: myId },
+  //   {
+  //     $set: { "avatar.filename": filename, "avatar.path": path },
+  //   }
+  // );
+
+  // // Delete old avatar on cloudinary
+  // cloudinary.uploader.destroy(user.avatar.filename);
+
+  res.json({ path });
+};

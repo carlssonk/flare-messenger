@@ -4,7 +4,11 @@ const Schema = mongoose.Schema;
 const ChatSchema = new Schema(
   {
     name: String,
-    image: String,
+    image: {
+      path: String,
+      filename: String,
+      hexCode: String,
+    },
     author: { type: Schema.Types.ObjectId, ref: "User" },
     users: {
       type: [{ type: Schema.Types.ObjectId, ref: "User" }],

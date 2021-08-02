@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faPlus, faYenSign } from "@fortawesome/free-solid-svg-icons";
 import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
 import Ripple from "../../components/Effects/Ripple";
 import { IonLoading } from "@ionic/react";
 import PreviewAvatar from "../PreviewAvatar";
+import Draggable from "react-draggable";
+import { getImgSizeInfo } from "../../utils/previewAvatar";
 
 const formRed = "#ff0042";
 
@@ -13,6 +15,8 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   const { setNav } = useContext(NavContext);
   const history = useHistory();
   const fileRef = useRef(null);
+  const nodeRef = useRef(null);
+  const imageRef = useRef(null);
 
   const [imageFile, setImageFile] = useState(null);
   const [name, setName] = useState("");
@@ -25,6 +29,10 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
   const [isFading, setIsFading] = useState(false);
 
+  const [previewScale, setPreviewScale] = useState(0);
+  const [previewX, setPreviewX] = useState(0);
+  const [previewY, setPreviewY] = useState(0);
+
   const handleNavigation = (to) => {
     if (to === "/") {
       setNav("backward");
@@ -34,6 +42,10 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
     // we need to give a small delay so our transition class appends on the DOM before we redirect
     setTimeout(() => history.push(to), 10);
   };
+
+  useEffect(() => {
+    if (!togglePopup) setError("");
+  }, [togglePopup]);
 
   const handleCreateChat = async (userId) => {
     if (name.length === 0) return setError("Choose a name for the group.");
@@ -78,7 +90,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
 
   const resetAvatarState = () => {
     console.log("RESET AVATAR STATE");
-    setPreviewAvatarUrl("");
+    // setPreviewAvatarUrl("");
     setImageFile(null);
     fileRef.current.value = "";
   };
@@ -97,6 +109,32 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
     setToggleOptions(false);
   };
 
+  const getPreviewTransform = (circleSize, scale, x, y) => {
+    const SIZE_INFO = getImgSizeInfo(imageRef.current);
+
+    const addScaleY = imageRef.current.offsetHeight / SIZE_INFO.height;
+    const addScaleX = imageRef.current.offsetWidth / SIZE_INFO.width;
+
+    if (SIZE_INFO.width > SIZE_INFO.height) {
+      setPreviewScale(scale * addScaleY);
+    } else {
+      setPreviewScale(scale * addScaleX);
+    }
+
+    const CAMERABOX_SIZE = 100;
+    const reScale = CAMERABOX_SIZE / circleSize;
+    setPreviewX(x * reScale);
+    setPreviewY(y * reScale);
+  };
+
+  useEffect(() => {
+    // console.log(previewScale);
+    console.log(previewX);
+  }, [previewScale]);
+
+  const toggleImageStyle =
+    previewAvatarUrl.length === 0 ? { display: "none" } : null;
+
   return (
     <>
       <div className="popup-wrapper">
@@ -108,6 +146,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
             handleTogglePopup={handleTogglePreview}
             imageUrl={previewAvatarUrl}
             image={imageFile}
+            getPreviewTransform={getPreviewTransform}
           />
         ) : null}
 
@@ -116,11 +155,46 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
             togglePopup ? "popup-show" : "popup-hide"
           }`}
         >
-          <div className="camera-box" onClick={() => handleAvatarClick()}>
-            <FontAwesomeIcon icon={faCamera} />
-            <div className="plus-icon-box">
-              <FontAwesomeIcon className="plus-icon" icon={faPlus} />
+          <div
+            className="camera-box"
+            onClick={() => handleAvatarClick()}
+            style={
+              previewAvatarUrl.length === 0
+                ? null
+                : { overflow: "hidden", border: "none", display: "block" }
+            }
+          >
+            <Draggable
+              disabled={true}
+              // defaultPosition={{ x: 0, y: 0 }}
+              position={{ x: previewX, y: previewY }}
+              nodeRef={nodeRef}
+            >
+              <div
+                style={{ ...toggleImageStyle, width: "100%", height: "100%" }}
+              >
+                <div
+                  className="image-wrapper"
+                  style={{
+                    transform: `scale(${previewScale})`,
+                    width: "100%",
+                    height: "100%",
+                    // transform: `scale3d(${previewScale},${previewScale},${previewScale})`,
+                  }}
+                >
+                  <img src={previewAvatarUrl} ref={imageRef} />
+                </div>
+              </div>
+            </Draggable>
+            <div
+              style={previewAvatarUrl.length === 0 ? null : { display: "none" }}
+            >
+              <FontAwesomeIcon icon={faCamera} />
+              <div className="plus-icon-box">
+                <FontAwesomeIcon className="plus-icon" icon={faPlus} />
+              </div>
             </div>
+
             <input
               type="file"
               ref={fileRef}
