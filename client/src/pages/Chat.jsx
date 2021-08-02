@@ -23,6 +23,7 @@ import { sendMessage } from "../utils/socket";
 import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
+import GroupAvatar from "../components/GroupAvatar";
 
 const draftUtils = require("draftjs-utils");
 
@@ -35,6 +36,7 @@ function Chat() {
 
   const [friends, setFriends] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [chat, setChat] = useState({});
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -142,6 +144,7 @@ function Chat() {
       const data = await res.json();
       setMessages(data.messages.reverse());
       setFriends(data.friends);
+      setChat(data.chat);
     };
     getChatData();
   }, [location.pathname, user]);
@@ -160,13 +163,27 @@ function Chat() {
               </Ripple.Div>
 
               <div className="user-box">
-                <div className="img-box-wrapper">
-                  <Avatar user={friends[0]} style={{ fontSize: "16.2px" }} />
+                <div
+                  className={`${
+                    chat.isPrivate ? "img-box-wrapper" : "img-box-wrapper-group"
+                  } `}
+                >
+                  {chat.isPrivate ? (
+                    <Avatar user={friends[0]} style={{ fontSize: "16.2px" }} />
+                  ) : (
+                    <GroupAvatar chat={chat} style={{ fontSize: "16.2px" }} />
+                  )}
                 </div>
 
                 <div className="text-box">
-                  <div className="name">{friends[0] && friends[0].name}</div>
-                  <div className="status">Currently Active</div>
+                  {chat.isPrivate ? (
+                    <div className="name">{friends[0] && friends[0].name}</div>
+                  ) : (
+                    <div className="name">{chat && chat.name}</div>
+                  )}
+                  {chat.isPrivate ? (
+                    <div className="status">Currently Active</div>
+                  ) : null}
                 </div>
               </div>
             </div>

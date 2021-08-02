@@ -16,7 +16,7 @@ import { getImgSizeInfo } from "../../utils/previewAvatar";
 
 const formRed = "#ff0042";
 
-function CreateGroup({ togglePopup, handleTogglePopup }) {
+function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
   const { setNav } = useContext(NavContext);
   const history = useHistory();
   const fileRef = useRef(null);
@@ -31,13 +31,13 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   const [togglePreview, setTogglePreview] = useState(false);
   const [toggleOptions, setToggleOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
-  const [isFading, setIsFading] = useState(false);
   const [showImage, setShowImage] = useState(false);
 
   const [previewScale, setPreviewScale] = useState(0);
   const [previewX, setPreviewX] = useState(0);
   const [previewY, setPreviewY] = useState(0);
+
+  const [imageTransform, setImageTransform] = useState({});
 
   const [togglePopupWait, setTogglePopupWait] = useState(true);
 
@@ -51,37 +51,31 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
     setTimeout(() => history.push(to), 10);
   };
 
-  // useEffect(() => {
-  //   if (!togglePopup) setError("");
-  // }, [togglePopup]);
-
-  const handleCreateChat = async (userId) => {
+  const handleCreateChat = async () => {
     if (name.length === 0) return setError("Choose a name for the group.");
     setError("");
-    const res = await fetch(`/api/chats/new`, {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    if (showImage) {
+      formData.append("avatar", imageFile);
+      formData.append("resize", JSON.stringify(imageTransform));
+    }
+
+    const users = selectedFriends.map((e) => e._id);
+    formData.append("users", users);
+    formData.append("name", name);
+
+    const res = await fetch(`http://localhost:3000/api/chats/group`, {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        isPrivate: true,
-      }),
+      body: formData,
     });
     const data = await res.json();
+    setIsLoading(false);
     handleNavigation(`/chat/${data.chatId}`);
   };
 
-  useEffect(() => {
-    setIsFading(true);
-    setTimeout(() => setIsFading(false), 250);
-    if (!togglePreview) resetAvatarState();
-  }, [togglePreview]);
-
   const handleTogglePreview = (bool) => {
-    console.log(isFading);
-    // if (isFading) return; // to avoid spam
     setTogglePreview(bool);
   };
 
@@ -96,13 +90,6 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
     setTogglePreview(true);
   };
 
-  const resetAvatarState = () => {
-    console.log("RESET AVATAR STATE");
-    // setPreviewAvatarUrl("");
-    setImageFile(null);
-    fileRef.current.value = "";
-  };
-
   const handleAvatarClick = () => {
     setToggleOptions(true);
   };
@@ -113,9 +100,10 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   };
 
   const handleToggleRemoveAvatar = () => {
-    // setToggleRemoveAvatar(true);
     setShowImage(false);
     setToggleOptions(false);
+    setImageFile(null);
+    fileRef.current.value = "";
   };
 
   const getPreviewTransform = (circleSize, scale, x, y) => {
@@ -149,7 +137,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
   return (
     <>
       <div className="popup-wrapper">
-        <IonLoading isOpen={isLoading} message={"Updating..."} />
+        <IonLoading isOpen={isLoading} message={"Creating group..."} />
         {togglePreview ? (
           <PreviewAvatar
             type="group"
@@ -158,6 +146,7 @@ function CreateGroup({ togglePopup, handleTogglePopup }) {
             imageUrl={previewAvatarUrl}
             image={imageFile}
             getPreviewTransform={getPreviewTransform}
+            setImageTransform={setImageTransform}
           />
         ) : null}
 

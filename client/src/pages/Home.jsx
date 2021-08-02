@@ -15,6 +15,7 @@ function Home() {
     const res = await fetch("/api/chats");
     const data = await res.json();
     setChats(data.chats);
+    console.log(data.chats);
   };
 
   return (

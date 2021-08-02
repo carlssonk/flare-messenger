@@ -13,17 +13,11 @@ function NewGroup() {
   const [selectedFriendsList, setSelectedFriendsList] = useState([]);
   const [isRemoving, setIsRemoving] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
-  const [isFading, setIsFading] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     getFriends();
   }, []);
-
-  useEffect(() => {
-    setIsFading(true);
-    setTimeout(() => setIsFading(false), 250);
-  }, [togglePopup]);
 
   const getFriends = async () => {
     const res = await fetch(`/api/friends/friends`);
@@ -62,7 +56,6 @@ function NewGroup() {
   };
 
   const handleTogglePopup = (bool) => {
-    // if (isFading) return; // to avoid spam
     setTogglePopup(bool);
   };
 
@@ -72,6 +65,7 @@ function NewGroup() {
         <CreateGroup
           togglePopup={togglePopup}
           handleTogglePopup={handleTogglePopup}
+          selectedFriends={selectedFriends}
         />
       ) : null}
 

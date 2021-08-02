@@ -81,7 +81,7 @@ module.exports.showChat = async (req, res) => {
 
   const messages = await getMessages(id);
 
-  res.json({ friends, messages });
+  res.json({ friends, messages, chat });
 };
 
 module.exports.enableChat = async (req, res) => {
@@ -97,25 +97,46 @@ module.exports.enableChat = async (req, res) => {
   res.send("ok");
 };
 
-module.exports.newAvatar = async (req, res) => {
-  // const myId = req.user._id;
-  const resize = JSON.parse(req.body.resize);
+module.exports.createGroup = async (req, res) => {
+  const myId = req.user._id;
+  const { name } = req.body;
 
-  const path = req.file.path.replace(
-    "/upload",
-    `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`
+  const users = req.body.users.split(",");
+  // console.log(users);
+  // console.log()
+
+  let path = null;
+  let filename = null;
+  let resize = {};
+  if (req.file) {
+    resize = JSON.parse(req.body.resize);
+    path = req.file.path.replace(
+      "/upload",
+      `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`
+    );
+    filename = req.file.filename;
+  }
+
+  const chat = await new Chat({
+    name,
+    image: {
+      path,
+      filename,
+    },
+    author: myId,
+    users: [myId, ...users],
+    isPrivate: false,
+    isVisible: true,
+  });
+  await chat.save();
+
+  // Add chat to users
+  await User.updateMany(
+    { _id: { $in: [myId, ...users] } },
+    {
+      $addToSet: { chats: chat._id },
+    }
   );
-  // const filename = req.file.filename;
 
-  // const user = await User.findOneAndUpdate(
-  //   { _id: myId },
-  //   {
-  //     $set: { "avatar.filename": filename, "avatar.path": path },
-  //   }
-  // );
-
-  // // Delete old avatar on cloudinary
-  // cloudinary.uploader.destroy(user.avatar.filename);
-
-  res.json({ path });
+  res.json({ chatId: chat._id });
 };

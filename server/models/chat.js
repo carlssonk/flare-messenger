@@ -7,7 +7,6 @@ const ChatSchema = new Schema(
     image: {
       path: String,
       filename: String,
-      hexCode: String,
     },
     author: { type: Schema.Types.ObjectId, ref: "User" },
     users: {

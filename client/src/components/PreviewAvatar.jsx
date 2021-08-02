@@ -15,6 +15,7 @@ function PreviewAvatar({
   image,
   setIsLoading,
   getPreviewTransform,
+  setImageTransform,
 }) {
   const boxRef = useRef(null);
   const nodeRef = useRef(null);
@@ -146,27 +147,12 @@ function PreviewAvatar({
   };
 
   const handleSubmitGroup = async (e) => {
+    e.preventDefault();
     setTogglePopupWait(false);
-
     getPreviewTransform(circleSize, scaleValue, lastX, lastY);
-    // e.preventDefault();
-    // setIsLoading(true);
-    // setTogglePopupWait(false);
-    // if (imageUrl.length === 0) return;
-    // const formData = new FormData();
-    // formData.append("avatar", image);
-    // formData.append(
-    //   "resize",
-    //   JSON.stringify(
-    //     calculatePosition(imageSize, circleRef, imageRef, scaleValue)
-    //   )
-    // );
-    // const res = await fetch(`http://localhost:3000/api/chats/avatar`, {
-    //   method: "POST",
-    //   body: formData,
-    // });
-    // const avatar = await res.json();
-    // console.log(avatar);
+    setImageTransform(
+      calculatePosition(imageSize, circleRef, imageRef, scaleValue)
+    );
   };
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
 import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
+import GroupAvatar from "../GroupAvatar";
 
 function ChatList({ chats }) {
   const { setNav } = useContext(NavContext);
@@ -29,17 +30,37 @@ function ChatList({ chats }) {
                 key={e._id}
                 onClick={() => handleNavigation(`/chat/${e._id}`)}
               >
-                <Avatar
-                  style={{
-                    marginLeft: "14px",
-                    width: "60px",
-                    height: "60px",
-                    fontSize: "27px",
-                  }}
-                  user={e.users[0]}
-                />
+                {e.isPrivate ? (
+                  <Avatar
+                    style={{
+                      marginLeft: "14px",
+                      width: "60px",
+                      height: "60px",
+                      fontSize: "27px",
+                    }}
+                    user={e.users[0]}
+                  />
+                ) : (
+                  <GroupAvatar
+                    style={{
+                      marginLeft: "14px",
+                      width: "60px",
+                      height: "60px",
+                      fontSize: "27px",
+                    }}
+                    chat={e}
+                  />
+                )}
+
                 <div className="text-box">
-                  <div className="friend">{e.users[0].name}</div>
+                  {e.isPrivate ? (
+                    <div className="friend">{e.users[0].name}</div>
+                  ) : (
+                    <>
+                      <div className="chat-people">{`${e.users.length} People`}</div>
+                      <div className="chat">{e.name}</div>
+                    </>
+                  )}
                   <div className="message">{e.text}</div>
                 </div>
                 <div className="time-box">{e.createdAt}</div>
