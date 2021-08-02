@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { NavContext } from "../context/NavContext";
+import { UserContext } from "../context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom";
@@ -12,6 +13,7 @@ function NewChat() {
   const [friends, setFriends] = useState([]);
   const history = useHistory();
   const { setNav } = useContext(NavContext);
+  const { setUser, user } = useContext(UserContext);
 
   useEffect(() => {
     getFriends();
@@ -46,6 +48,10 @@ function NewChat() {
       }),
     });
     const data = await res.json();
+    setUser({
+      ...user,
+      chats: [...user.chats, data.chatId],
+    });
     handleNavigation(`/chat/${data.chatId}`);
   };
 

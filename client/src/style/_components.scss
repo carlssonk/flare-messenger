@@ -385,14 +385,21 @@
 }
 
 .avatar-img-box {
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: black;
   border-radius: 100%;
   overflow: hidden;
   color: white;
+  .avatar-box-multiple {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   img {
     object-fit: cover;
     width: 100%;

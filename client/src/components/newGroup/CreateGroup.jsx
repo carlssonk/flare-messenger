@@ -7,6 +7,7 @@ import {
   faYenSign,
 } from "@fortawesome/free-solid-svg-icons";
 import { NavContext } from "../../context/NavContext";
+import { UserContext } from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 import Ripple from "../../components/Effects/Ripple";
 import { IonLoading } from "@ionic/react";
@@ -18,6 +19,7 @@ const formRed = "#ff0042";
 
 function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
   const { setNav } = useContext(NavContext);
+  const { user, setUser } = useContext(UserContext);
   const history = useHistory();
   const fileRef = useRef(null);
   const nodeRef = useRef(null);
@@ -72,6 +74,11 @@ function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
     });
     const data = await res.json();
     setIsLoading(false);
+    console.log(data.chatId);
+    setUser({
+      ...user,
+      chats: [...user.chats, data.chatId],
+    });
     handleNavigation(`/chat/${data.chatId}`);
   };
 

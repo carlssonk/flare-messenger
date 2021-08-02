@@ -139,6 +139,8 @@ function Chat() {
   useEffect(() => {
     const getChatData = async () => {
       const chatId = location.pathname.replace("/chat/", "");
+      console.log(user.chats);
+      console.log(chatId);
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
@@ -171,7 +173,11 @@ function Chat() {
                   {chat.isPrivate ? (
                     <Avatar user={friends[0]} style={{ fontSize: "16.2px" }} />
                   ) : (
-                    <GroupAvatar chat={chat} style={{ fontSize: "16.2px" }} />
+                    <GroupAvatar
+                      chat={chat}
+                      style={{ fontSize: "16.2px" }}
+                      scale={0.6}
+                    />
                   )}
                 </div>
 

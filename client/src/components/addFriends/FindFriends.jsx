@@ -3,6 +3,7 @@ import { IonButton } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Jeb_ from "../../imgs/Jens-Bergensten.png";
+import Avatar from "../Avatar";
 // import { Scroll } from "framer";
 
 function FindFriends({ toggleScroll, incomingRequests, handleRequest }) {
@@ -20,10 +21,11 @@ function FindFriends({ toggleScroll, incomingRequests, handleRequest }) {
           incomingRequests.map((e) => {
             return (
               <li key={e._id}>
-                <div>
-                  <div className="img-box">
-                    <img src={Jeb_} alt="" />
-                  </div>
+                <div className="section">
+                  <Avatar
+                    user={e}
+                    style={{ width: "40px", height: "40px", fontSize: "18px" }}
+                  />
                   <div className="name">{e.username}</div>
                 </div>
                 <div>
