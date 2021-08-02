@@ -25,11 +25,14 @@ module.exports.showChats = async (req, res) => {
 
   // Fetch last messages of each chat
   const chatsWithMessages = await getLastMessages(chats);
+  console.log(chatsWithMessages);
 
   const chatsWithMessagesFormatTime = chatsWithMessages.map((e) => ({
     ...e,
-    createdAt: moment(e.createdAt).fromNow(true),
+    lastMessageTime: e.createdAt ? moment(e.createdAt).fromNow(true) : "",
   }));
+
+  console.log(moment(undefined).fromNow(true));
 
   res.json({ chats: chatsWithMessagesFormatTime });
 };

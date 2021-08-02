@@ -14,8 +14,17 @@ function Home() {
   const getChats = async () => {
     const res = await fetch("/api/chats");
     const data = await res.json();
-    setChats(data.chats);
-    console.log(data.chats);
+    handleSortChat(data.chats);
+  };
+
+  const handleSortChat = (chat) => {
+    const sortedChat = chat.sort(function (a, b) {
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    // console.log(sortedChat);
+    setChats(sortedChat);
   };
 
   return (

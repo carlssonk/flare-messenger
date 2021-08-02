@@ -63,7 +63,7 @@ function ChatList({ chats }) {
                   )}
                   <div className="message">{e.text}</div>
                 </div>
-                <div className="time-box">{e.createdAt}</div>
+                <div className="time-box">{e.lastMessageTime}</div>
               </Ripple.Li>
             );
           })}

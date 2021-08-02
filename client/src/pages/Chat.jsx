@@ -139,8 +139,6 @@ function Chat() {
   useEffect(() => {
     const getChatData = async () => {
       const chatId = location.pathname.replace("/chat/", "");
-      console.log(user.chats);
-      console.log(chatId);
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
