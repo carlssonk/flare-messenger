@@ -10,7 +10,7 @@ module.exports.showChats = async (req, res) => {
     myId,
     "-friends -__v -username -email -updatedAt -_id"
   ).populate({
-    path: "chats",
+    path: "chats.chat",
     select: "-__v -createdAt -updatedAt -author",
     populate: {
       path: "users",
@@ -21,18 +21,22 @@ module.exports.showChats = async (req, res) => {
   });
 
   // Filter chats that are visible
-  const chats = user.chats.filter((e) => e.isVisible);
+  const chats = user.chats.filter((e) => e.chat.isVisible);
+
+  // Convert BSON to JSON
+  const chatToJSON = JSON.parse(JSON.stringify(chats));
+
+  const formatChats = chatToJSON.map(({ chat, ...rest }) => {
+    return { ...chat, ...rest };
+  });
 
   // Fetch last messages of each chat
-  const chatsWithMessages = await getLastMessages(chats);
-  console.log(chatsWithMessages);
+  const chatsWithMessages = await getLastMessages(formatChats);
 
   const chatsWithMessagesFormatTime = chatsWithMessages.map((e) => ({
     ...e,
     lastMessageTime: e.createdAt ? moment(e.createdAt).fromNow(true) : "",
   }));
-
-  console.log(moment(undefined).fromNow(true));
 
   res.json({ chats: chatsWithMessagesFormatTime });
 };
@@ -62,7 +66,14 @@ module.exports.createChat = async (req, res) => {
   await User.updateMany(
     { _id: { $in: [myId, userId] } },
     {
-      $addToSet: { chats: chat._id },
+      $addToSet: {
+        chats: [
+          {
+            chat: chat._id,
+            status: 0,
+          },
+        ],
+      },
     }
   );
 
@@ -105,8 +116,6 @@ module.exports.createGroup = async (req, res) => {
   const { name } = req.body;
 
   const users = req.body.users.split(",");
-  // console.log(users);
-  // console.log()
 
   let path = null;
   let filename = null;
@@ -137,7 +146,14 @@ module.exports.createGroup = async (req, res) => {
   await User.updateMany(
     { _id: { $in: [myId, ...users] } },
     {
-      $addToSet: { chats: chat._id },
+      $addToSet: {
+        chats: [
+          {
+            chat: chat._id,
+            status: 0,
+          },
+        ],
+      },
     }
   );
 

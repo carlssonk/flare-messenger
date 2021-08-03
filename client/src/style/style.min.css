@@ -557,6 +557,50 @@
   color: white;
 }
 
+.header .nav-wrapper .edit-chat-container {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: white;
+  height: 64px;
+  width: 100%;
+  place-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0 14px;
+  background-color: #181818;
+  opacity: 0;
+  -webkit-transition: 250ms;
+  transition: 250ms;
+  z-index: 1;
+  visibility: hidden;
+  font-size: 18px;
+}
+
+.header .nav-wrapper .edit-chat-container .section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.header .nav-wrapper .edit-chat-container .section div {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  margin: 0 4px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
 .header .search-box {
   position: relative;
   width: 100%;
@@ -1143,7 +1187,7 @@ body {
 .home-page .chat-list li .text-box .chat-people {
   font-size: 11px;
   color: gray;
-  line-height: 0.8;
+  margin-bottom: -2px;
 }
 
 .home-page .chat-list li .text-box .message {
@@ -1151,6 +1195,7 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin-top: -2px;
 }
 
 .home-page .chat-list li .time-box {

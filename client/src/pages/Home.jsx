@@ -6,6 +6,8 @@ import ChatList from "../components/Home/ChatList";
 
 function Home() {
   const [chats, setChats] = useState([]);
+  const [toggleEditChat, setToggleEditChat] = useState(false);
+  const [selectedChats, setSelectedChats] = useState([]);
 
   useEffect(() => {
     getChats();
@@ -19,18 +21,66 @@ function Home() {
 
   const handleSortChat = (chat) => {
     const sortedChat = chat.sort(function (a, b) {
-      // Turn your strings into dates, and then subtract them
-      // to get a value that is either negative, positive, or zero.
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     // console.log(sortedChat);
+    console.log(sortedChat);
     setChats(sortedChat);
   };
 
+  // useEffect(() => {
+  //   document.addEventListener(
+  //     "contextmenu",
+  //     function (e) {
+  //       alert("You've tried to open context menu"); //here you draw your own menu
+  //       e.preventDefault();
+  //     },
+  //     false
+  //   );
+  // }, []);
+
+  const handleEditChat = (e, chatId, action) => {
+    e.preventDefault();
+    setToggleEditChat(true);
+
+    console.log(action);
+
+    if (action === "add") {
+      setSelectedChats((selectedChats) => [...selectedChats, chatId]);
+    }
+
+    if (action === "remove") {
+      const selectedChatsCopy = [...selectedChats];
+      const updatedArray = selectedChatsCopy.filter((e) => e !== chatId);
+      // console.log();
+      console.log(updatedArray);
+      setSelectedChats(updatedArray);
+      // setSelectedChats((selectedChats) => [...selectedChats, chatId]);
+    }
+    console.log("EDIT CHAT " + chatId);
+  };
+
+  useEffect(() => {
+    if (selectedChats.length === 0) setToggleEditChat(false);
+  }, [selectedChats]);
+
+  useEffect(() => {
+    if (!toggleEditChat) setSelectedChats([]);
+  }, [toggleEditChat]);
+
   return (
     <div className="home-page page">
-      <Header />
-      <ChatList chats={chats} />
+      <Header
+        toggleEditChat={toggleEditChat}
+        setToggleEditChat={setToggleEditChat}
+      />
+      <ChatList
+        chats={chats}
+        handleEditChat={handleEditChat}
+        selectedChats={selectedChats}
+        toggleEditChat={toggleEditChat}
+        setToggleEditChat={setToggleEditChat}
+      />
       <Footer />
     </div>
   );

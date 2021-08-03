@@ -73,7 +73,8 @@ body {
           // position: absolute;
           font-size: 11px;
           color: gray;
-          line-height: 0.8;
+          // line-height: 0.8;
+          margin-bottom: -2px;
         }
         .message {
           color: rgb(170, 170, 170);
@@ -81,6 +82,7 @@ body {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          margin-top: -2px;
         }
       }
       .time-box {

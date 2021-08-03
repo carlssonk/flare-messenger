@@ -48,6 +48,7 @@ function NewChat() {
       }),
     });
     const data = await res.json();
+    console.log(data);
     setUser({
       ...user,
       chats: [...user.chats, data.chatId],

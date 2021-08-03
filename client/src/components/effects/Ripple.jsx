@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 const Ripple = ({
   children,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -116,6 +117,7 @@ const Ripple = ({
       style: style,
       disabled,
       onClick: (e) => onClick && onClick(e),
+      onContextMenu: (e) => onContextMenu && onContextMenu(e),
       onMouseDown: (e) => {
         if (isMobile) return;
         setPause(true);
@@ -169,6 +171,7 @@ const Article = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -183,6 +186,7 @@ const Article = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -201,6 +205,7 @@ const Aside = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -215,6 +220,7 @@ const Aside = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -233,6 +239,7 @@ const Header = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -247,6 +254,7 @@ const Header = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -265,6 +273,7 @@ const Footer = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -279,6 +288,7 @@ const Footer = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -297,6 +307,7 @@ const Main = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -311,6 +322,7 @@ const Main = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -329,6 +341,7 @@ const Nav = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -343,6 +356,7 @@ const Nav = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -361,6 +375,7 @@ const Section = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -375,6 +390,7 @@ const Section = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -393,6 +409,7 @@ const Div = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -407,6 +424,7 @@ const Div = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -425,6 +443,7 @@ const Span = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -439,6 +458,7 @@ const Span = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -457,6 +477,7 @@ const Li = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -471,6 +492,7 @@ const Li = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -489,6 +511,7 @@ const Ul = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -503,6 +526,7 @@ const Ul = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -521,6 +545,7 @@ const Ol = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -535,6 +560,7 @@ const Ol = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}
@@ -553,6 +579,7 @@ const Button = ({
   color,
   opacity,
   onClick,
+  onContextMenu,
   onMouseDown,
   onMouseUp,
   onMouseLeave,
@@ -568,6 +595,7 @@ const Button = ({
     color={color}
     opacity={opacity}
     onClick={onClick}
+    onContextMenu={onContextMenu}
     onMouseDown={onMouseDown}
     onMouseUp={onMouseUp}
     onMouseLeave={onMouseLeave}

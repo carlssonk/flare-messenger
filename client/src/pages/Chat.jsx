@@ -139,12 +139,14 @@ function Chat() {
   useEffect(() => {
     const getChatData = async () => {
       const chatId = location.pathname.replace("/chat/", "");
+      console.log(user);
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
       setMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
+      console.log(data.chat);
     };
     getChatData();
   }, [location.pathname, user]);

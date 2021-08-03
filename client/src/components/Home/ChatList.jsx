@@ -6,7 +6,13 @@ import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
 import GroupAvatar from "../GroupAvatar";
 
-function ChatList({ chats }) {
+function ChatList({
+  chats,
+  handleEditChat,
+  selectedChats,
+  toggleEditChat,
+  setToggleEditChat,
+}) {
   const { setNav } = useContext(NavContext);
   const history = useHistory();
 
@@ -20,6 +26,16 @@ function ChatList({ chats }) {
     setTimeout(() => history.push(to), 10);
   };
 
+  const handleSelectChat = (e, chatId) => {
+    e.preventDefault();
+    console.log("SELECT CHAT");
+    if (selectedChats.includes(chatId)) {
+      handleEditChat(e, chatId, "remove");
+    } else {
+      handleEditChat(e, chatId, "add");
+    }
+  };
+
   return (
     <div className="chat-list">
       <ul>
@@ -28,7 +44,18 @@ function ChatList({ chats }) {
             return (
               <Ripple.Li
                 key={e._id}
-                onClick={() => handleNavigation(`/chat/${e._id}`)}
+                {...(!toggleEditChat && {
+                  onClick: () => handleNavigation(`/chat/${e._id}`),
+                })}
+                {...(toggleEditChat && {
+                  onClick: (event) => handleSelectChat(event, e._id),
+                })}
+                onContextMenu={(event) => handleSelectChat(event, e._id)}
+                style={
+                  selectedChats.includes(e._id)
+                    ? { backgroundColor: "#1a1c20" }
+                    : null
+                }
               >
                 {e.isPrivate ? (
                   <Avatar

@@ -20,7 +20,19 @@ const UserSchema = new Schema(
       incomingRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
       friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },
-    chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
+    chats: [
+      {
+        _id: false,
+        chat: {
+          type: Schema.Types.ObjectId,
+          ref: "Chat",
+        },
+        status: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

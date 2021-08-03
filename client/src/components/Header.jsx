@@ -9,11 +9,16 @@ import {
   faSearch,
   faUserPlus,
   faTimes,
+  faTrash,
+  faArchive,
+  faThumbtack,
+  faChevronLeft,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import Avatar from "./Avatar";
 
-function Header({ handleFindUsers }) {
+function Header({ handleFindUsers, toggleEditChat, setToggleEditChat }) {
   const location = useLocation();
   const history = useHistory();
   const { setNav } = useContext(NavContext);
@@ -32,6 +37,29 @@ function Header({ handleFindUsers }) {
   return (
     <div className="header">
       <div className="nav-wrapper">
+        <div
+          className="edit-chat-container"
+          style={
+            toggleEditChat ? { opacity: "1", visibility: "visible" } : null
+          }
+        >
+          <div className="section">
+            <Ripple.Div onClick={() => setToggleEditChat(false)}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Ripple.Div>
+          </div>
+          <div className="section">
+            <Ripple.Div>
+              <FontAwesomeIcon icon={faThumbtack} />
+            </Ripple.Div>
+            <Ripple.Div>
+              <FontAwesomeIcon icon={faArchive} />
+            </Ripple.Div>
+            <Ripple.Div>
+              <FontAwesomeIcon icon={faTrash} />
+            </Ripple.Div>
+          </div>
+        </div>
         <div className="nav-container">
           <Avatar
             page="header"

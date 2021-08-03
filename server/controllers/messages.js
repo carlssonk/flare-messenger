@@ -2,6 +2,7 @@ const Chat = require("../models/chat");
 const User = require("../models/user");
 const Message = require("../models/message");
 const _ = require("lodash");
+const mongoose = require("mongoose");
 
 module.exports.getMessages = async (chatId) => {
   const messages = await Message.find(
@@ -17,6 +18,8 @@ module.exports.getMessages = async (chatId) => {
 
 module.exports.sendMessage = async (message, user) => {
   const { text, file, chatId } = message;
+
+  console.log(chatId);
 
   const messageDoc = await new Message({
     text,
@@ -49,7 +52,7 @@ module.exports.sendMessage = async (message, user) => {
 };
 
 module.exports.getLastMessages = async (chats) => {
-  const list = chats.map((e) => e._id);
+  const list = chats.map((e) => mongoose.Types.ObjectId(e._id));
 
   let chatMessages = await Message.aggregate([
     { $match: { chat: { $in: list } } },
@@ -71,8 +74,7 @@ module.exports.getLastMessages = async (chats) => {
     },
   ]);
 
-  // Stringify so _id works
-  chats = JSON.parse(JSON.stringify(chats));
+  // Convert BSON to JSON
   chatMessages = JSON.parse(JSON.stringify(chatMessages));
 
   // Merge matching arrays
