@@ -76,7 +76,7 @@ function Header({
     const chatsCopy = [...chats];
     const chatsUpdate = chatsCopy.map((e) => {
       if (dataChats.some((item) => item._id === e._id)) {
-        e.status = status;
+        return { ...e, status };
       }
       return e;
     });

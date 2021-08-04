@@ -21,10 +21,10 @@ module.exports.showChats = async (req, res) => {
   });
 
   // Filter chats that are visible
-  const chats = user.chats.filter((e) => e.chat.isVisible);
+  const visibleChats = user.chats.filter((e) => e.chat.isVisible);
 
   // Convert BSON to JSON
-  const chatToJSON = JSON.parse(JSON.stringify(chats));
+  const chatToJSON = JSON.parse(JSON.stringify(visibleChats));
 
   const formatChats = chatToJSON.map(({ chat, ...rest }) => {
     return { ...chat, ...rest };
@@ -33,12 +33,46 @@ module.exports.showChats = async (req, res) => {
   // Fetch last messages of each chat
   const chatsWithMessages = await getLastMessages(formatChats);
 
-  const chatsWithMessagesFormatTime = chatsWithMessages.map((e) => ({
+  const chats = chatsWithMessages.map((e) => ({
     ...e,
-    lastMessageTime: e.createdAt ? moment(e.createdAt).fromNow(true) : "",
+    lastMessageTime: e.lastMessageAt
+      ? moment(e.lastMessageAt).fromNow(true)
+      : "",
   }));
 
-  res.json({ chats: chatsWithMessagesFormatTime });
+  console.log(chats);
+
+  if (hasTrashedChatGottenMessage(chats)) {
+    return unTrashChats(res, myId, chats);
+  }
+
+  res.json({ chats });
+};
+
+const hasTrashedChatGottenMessage = (chats) => {
+  return chats.some((e) => e.status === 3 && e.lastMessageAt > e.trashedAt);
+};
+
+const unTrashChats = async (res, myId, chats) => {
+  let chatIdList = [];
+
+  const updatedChats = chats.map((e) => {
+    if (e.status === 3 && e.lastMessageAt > e.trashedAt) {
+      chatIdList.push(e._id);
+      return { ...e, status: 0 };
+    }
+    return e;
+  });
+
+  await User.findOneAndUpdate(
+    { _id: myId },
+    {
+      $set: { "chats.$[elem].status": 0 },
+    },
+    { arrayFilters: [{ "elem.chat": { $in: chatIdList } }] }
+  );
+
+  res.json({ chats: updatedChats });
 };
 
 module.exports.createChat = async (req, res) => {
@@ -81,6 +115,7 @@ module.exports.createChat = async (req, res) => {
 };
 
 module.exports.showChat = async (req, res) => {
+  const user = req.user;
   const myId = req.user._id;
   const { id } = req.params;
 
@@ -93,7 +128,9 @@ module.exports.showChat = async (req, res) => {
     return e._id.toString() !== myId.toString();
   });
 
-  const messages = await getMessages(id);
+  const trashedAt = user.chats.find((e) => e.chat.toString() === id).trashedAt;
+
+  const messages = await getMessages(id, trashedAt);
 
   res.json({ friends, messages, chat });
 };
@@ -166,11 +203,26 @@ module.exports.editChatStatus = async (req, res) => {
 
   const chatIdList = chats.map((e) => e._id);
 
-  await User.findOneAndUpdate(
-    { _id: myId },
-    { $set: { "chats.$[elem].status": status } },
-    { arrayFilters: [{ "elem.chat": { $in: chatIdList } }] }
-  );
+  if (status === 3) {
+    await User.findOneAndUpdate(
+      { _id: myId },
+      {
+        $set: {
+          "chats.$[elem].status": status,
+          "chats.$[elem].trashedAt": new Date(),
+        },
+      },
+      { arrayFilters: [{ "elem.chat": { $in: chatIdList } }] }
+    );
+  } else {
+    await User.findOneAndUpdate(
+      { _id: myId },
+      {
+        $set: { "chats.$[elem].status": status },
+      },
+      { arrayFilters: [{ "elem.chat": { $in: chatIdList } }] }
+    );
+  }
 
   res.json({ chats, status });
 };

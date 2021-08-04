@@ -4,22 +4,32 @@ const Message = require("../models/message");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 
-module.exports.getMessages = async (chatId) => {
-  const messages = await Message.find(
-    { chat: chatId },
-    "-chat -__v -updatedAt"
-  ).populate(
-    "author",
-    "-__v -createdAt -updatedAt -friends -email -chats -name"
-  );
+module.exports.getMessages = async (chatId, trashedAt) => {
+  let messages;
+
+  if (trashedAt) {
+    messages = await Message.find(
+      { chat: chatId, createdAt: { $gt: trashedAt } },
+      "-chat -__v -updatedAt"
+    ).populate(
+      "author",
+      "-__v -createdAt -updatedAt -friends -email -chats -name"
+    );
+  } else {
+    messages = await Message.find(
+      { chat: chatId },
+      "-chat -__v -updatedAt"
+    ).populate(
+      "author",
+      "-__v -createdAt -updatedAt -friends -email -chats -name"
+    );
+  }
 
   return messages;
 };
 
 module.exports.sendMessage = async (message, user) => {
   const { text, file, chatId } = message;
-
-  console.log(chatId);
 
   const messageDoc = await new Message({
     text,
@@ -45,9 +55,6 @@ module.exports.sendMessage = async (message, user) => {
     author,
   };
 
-  console.log("format message");
-  // console.log(formatMessage);
-
   return formatMessage;
 };
 
@@ -67,7 +74,7 @@ module.exports.getLastMessages = async (chats) => {
         text: {
           $first: "$text",
         },
-        createdAt: {
+        lastMessageAt: {
           $first: "$createdAt",
         },
       },

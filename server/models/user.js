@@ -31,6 +31,7 @@ const UserSchema = new Schema(
           type: Number,
           required: true,
         },
+        trashedAt: Date,
         // Status:
         //  0 = Default,
         //  1 = Pinned,
