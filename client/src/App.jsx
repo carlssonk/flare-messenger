@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import { joinChat, leaveChat } from "./utils/socket";
 import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
+import Archived from "./pages/Archived";
 
 function App() {
   const location = useLocation();
@@ -143,6 +144,11 @@ function App() {
                         user={user}
                         path="/chat/:id"
                         component={Chat}
+                      />
+                      <PrivateRoute
+                        user={user}
+                        path="/archived"
+                        component={Archived}
                       />
                     </Switch>
                   </CSSTransition>

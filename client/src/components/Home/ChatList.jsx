@@ -5,13 +5,16 @@ import { useHistory } from "react-router-dom";
 import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
 import GroupAvatar from "../GroupAvatar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faArchive } from "@fortawesome/free-solid-svg-icons";
+import ListItem from "./ListItem";
 
 function ChatList({
   chats,
   handleEditChat,
   selectedChats,
   toggleEditChat,
-  setToggleEditChat,
+  page,
 }) {
   const { setNav } = useContext(NavContext);
   const history = useHistory();
@@ -26,75 +29,73 @@ function ChatList({
     setTimeout(() => history.push(to), 10);
   };
 
-  const handleSelectChat = (e, chatId) => {
+  const handleSelectChat = (e, chat) => {
     e.preventDefault();
-    console.log("SELECT CHAT");
-    if (selectedChats.includes(chatId)) {
-      handleEditChat(e, chatId, "remove");
+
+    if (selectedChats.some((e) => e._id === chat._id)) {
+      handleEditChat(e, chat, "remove");
     } else {
-      handleEditChat(e, chatId, "add");
+      handleEditChat(e, chat, "add");
     }
   };
 
   return (
     <div className="chat-list">
       <ul>
-        {chats &&
-          chats.map((e) => {
-            return (
-              <Ripple.Li
+        {page === "archived" ? (
+          chats &&
+          chats
+            .filter((e) => e.status === 2)
+            .map((e) => (
+              <ListItem
                 key={e._id}
-                {...(!toggleEditChat && {
-                  onClick: () => handleNavigation(`/chat/${e._id}`),
-                })}
-                {...(toggleEditChat && {
-                  onClick: (event) => handleSelectChat(event, e._id),
-                })}
-                onContextMenu={(event) => handleSelectChat(event, e._id)}
-                style={
-                  selectedChats.includes(e._id)
-                    ? { backgroundColor: "#1a1c20" }
-                    : null
-                }
-              >
-                {e.isPrivate ? (
-                  <Avatar
-                    style={{
-                      marginLeft: "14px",
-                      width: "60px",
-                      height: "60px",
-                      fontSize: "27px",
-                    }}
-                    user={e.users[0]}
+                e={e}
+                handleSelectChat={handleSelectChat}
+                toggleEditChat={toggleEditChat}
+                selectedChats={selectedChats}
+                handleNavigation={handleNavigation}
+              />
+            ))
+        ) : (
+          <>
+            {chats &&
+              chats
+                .filter((e) => e.status === 1)
+                .map((e) => (
+                  <ListItem
+                    key={e._id}
+                    e={e}
+                    handleSelectChat={handleSelectChat}
+                    toggleEditChat={toggleEditChat}
+                    selectedChats={selectedChats}
+                    handleNavigation={handleNavigation}
                   />
-                ) : (
-                  <GroupAvatar
-                    style={{
-                      marginLeft: "14px",
-                      width: "60px",
-                      height: "60px",
-                      fontSize: "27px",
-                    }}
-                    chat={e}
+                ))}
+            {chats &&
+              chats
+                .filter((e) => e.status === 0)
+                .map((e) => (
+                  <ListItem
+                    key={e._id}
+                    e={e}
+                    handleSelectChat={handleSelectChat}
+                    toggleEditChat={toggleEditChat}
+                    selectedChats={selectedChats}
+                    handleNavigation={handleNavigation}
                   />
-                )}
+                ))}
+          </>
+        )}
 
-                <div className="text-box">
-                  {e.isPrivate ? (
-                    <div className="friend">{e.users[0].name}</div>
-                  ) : (
-                    <>
-                      <div className="chat-people">{`${e.users.length} People`}</div>
-                      <div className="chat">{e.name}</div>
-                    </>
-                  )}
-                  <div className="message">{e.text}</div>
-                </div>
-                <div className="time-box">{e.lastMessageTime}</div>
-              </Ripple.Li>
-            );
-          })}
-
+        {chats && chats.some((e) => e.status === 2) && page !== "archived" ? (
+          <Ripple.Li
+            className="archived-box"
+            onClick={() => handleNavigation("/archived")}
+          >
+            <FontAwesomeIcon icon={faArchive} />
+            <div>Archived</div>
+          </Ripple.Li>
+        ) : null}
         <div className="bottom-space"></div>
       </ul>
     </div>

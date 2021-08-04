@@ -159,3 +159,18 @@ module.exports.createGroup = async (req, res) => {
 
   res.json({ chatId: chat._id });
 };
+
+module.exports.editChatStatus = async (req, res) => {
+  const { chats, status } = req.body;
+  const myId = req.user._id;
+
+  const chatIdList = chats.map((e) => e._id);
+
+  await User.findOneAndUpdate(
+    { _id: myId },
+    { $set: { "chats.$[elem].status": status } },
+    { arrayFilters: [{ "elem.chat": { $in: chatIdList } }] }
+  );
+
+  res.json({ chats, status });
+};

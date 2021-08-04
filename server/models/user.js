@@ -31,6 +31,11 @@ const UserSchema = new Schema(
           type: Number,
           required: true,
         },
+        // Status:
+        //  0 = Default,
+        //  1 = Pinned,
+        //  2 = Archived,
+        //  3 = Trashed
       },
     ],
   },

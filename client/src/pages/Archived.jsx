@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import Footer from "../components/Home/Footer";
 import ChatList from "../components/Home/ChatList";
+import Footer from "../components/Home/Footer";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faEdit,
+//   faSearch,
+//   faUserPlus,
+//   faTimes,
+//   faTrash,
+//   faArchive,
+//   faThumbtack,
+//   faArrowLeft,
+// } from "@fortawesome/free-solid-svg-icons";
 
-function Home() {
+function Archived() {
   const [chats, setChats] = useState([]);
   const [toggleEditChat, setToggleEditChat] = useState(false);
   const [selectedChats, setSelectedChats] = useState([]);
@@ -51,23 +61,45 @@ function Home() {
 
   return (
     <div className="home-page page">
+      {/* <div
+        className="edit-chat-container"
+        style={toggleEditChat ? { opacity: "1", visibility: "visible" } : null}
+      >
+        <div className="section">
+          <Ripple.Div onClick={() => setToggleEditChat(false)}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Ripple.Div>
+        </div>
+        <div className="section">
+          <Ripple.Div onClick={() => editChatStatus(2)}>
+            <FontAwesomeIcon icon={faArchive} />
+          </Ripple.Div>
+          <Ripple.Div onClick={() => editChatStatus(3)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Ripple.Div>
+        </div>
+      </div> */}
       <Header
+        page="archived"
         chats={chats}
         setChats={setChats}
         toggleEditChat={toggleEditChat}
         setToggleEditChat={setToggleEditChat}
         selectedChats={selectedChats}
       />
+
       <ChatList
         chats={chats}
+        page="archived"
         handleEditChat={handleEditChat}
         selectedChats={selectedChats}
         toggleEditChat={toggleEditChat}
         setToggleEditChat={setToggleEditChat}
+        // toggleEditChat={toggleEditChat}
+        // setToggleEditChat={setToggleEditChat}
       />
-      <Footer />
     </div>
   );
 }
 
-export default Home;
+export default Archived;

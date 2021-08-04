@@ -10,5 +10,6 @@ router.route("/new").post(chats.createChat);
 router.route("/:id").get(chats.showChat);
 router.route("/enable").post(chats.enableChat);
 router.route("/group").post(upload.single("avatar"), chats.createGroup);
+router.route("/status").post(chats.editChatStatus);
 
 module.exports = router;

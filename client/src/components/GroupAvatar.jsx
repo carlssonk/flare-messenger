@@ -12,8 +12,11 @@ function GroupAvatar({ style, chat: chatObj, scale = 1 }) {
     const users = chatObj.users.filter((e) => e.username !== user.username);
     chatObj.users = users;
     setChat(chatObj);
-    console.log(chatObj);
   }, [chatObj.users]);
+
+  useEffect(() => {
+    console.log(chat.users);
+  }, [chat]);
 
   let multipleUsersStyle = {};
   let avatarBoxStyle = {};
@@ -81,7 +84,7 @@ function GroupAvatar({ style, chat: chatObj, scale = 1 }) {
             chat.users.map((e) => {
               return (
                 <Avatar
-                  key={e._id}
+                  key={e.name}
                   user={e}
                   style={
                     e.username === chat.users[chat.users.length - 1].username
