@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import Avatar from "./Avatar";
+import { IonAlert } from "@ionic/react";
 
 function Header({
   handleFindUsers,
@@ -32,6 +33,7 @@ function Header({
   const { user } = useContext(UserContext);
   const [removeThumbtack, setRemoveThumbtack] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toggleTrashChat, setToggleTrashChat] = useState(false);
 
   const handleNavigation = (to) => {
     if (to === "/") {
@@ -134,7 +136,7 @@ function Header({
               <FontAwesomeIcon icon={faArchive} />
             </Ripple.Div>
             <Ripple.Div
-              onClick={() => editChatStatus(3)}
+              onClick={() => setToggleTrashChat(true)}
               className="archived-icon"
               style={
                 toggleEditChat ? { opacity: "1", visibility: "visible" } : null
@@ -202,6 +204,17 @@ function Header({
           ) : null}
         </div>
       )}
+      <IonAlert
+        isOpen={toggleTrashChat}
+        onDidDismiss={() => setToggleTrashChat(false)}
+        cssClass="remove-avatar-alert"
+        header={"Do you want to remove the chat?"}
+        message={"This is permanent and cannot be undone"}
+        buttons={[
+          "Cancel",
+          { text: "Remove", handler: () => editChatStatus(3) },
+        ]}
+      />
     </div>
   );
 }

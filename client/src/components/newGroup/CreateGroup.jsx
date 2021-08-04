@@ -228,7 +228,6 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
         <div
           className="avatar-options-popup"
           style={toggleOptions ? { transform: "translate3d(0, 0%, 0)" } : null}
-          // style={{ transform: "translate3d(0, 0%, 0)" }}
         >
           <Ripple.Div>
             <div>Take Photo</div>

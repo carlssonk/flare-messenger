@@ -54,6 +54,7 @@ const hasTrashedChatGottenMessage = (chats) => {
 };
 
 const unTrashChats = async (res, myId, chats) => {
+  console.log("trash");
   let chatIdList = [];
 
   const updatedChats = chats.map((e) => {

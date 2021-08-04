@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Jeb_ from "../../imgs/Jens-Bergensten.png";
+import Avatar from "../Avatar";
 
 function SentRequests({ sentRequests, handleRequest }) {
   return (
@@ -11,10 +11,12 @@ function SentRequests({ sentRequests, handleRequest }) {
           sentRequests.map((e) => {
             return (
               <li key={e._id}>
-                <div>
-                  <div className="img-box">
-                    <img src={Jeb_} alt="" />
-                  </div>
+                <div className="section">
+                  <Avatar
+                    page="add-friends"
+                    user={e}
+                    style={{ width: "40px", height: "40px", fontSize: "18px" }}
+                  />
                   <div className="name">{e.username}</div>
                 </div>
                 <button onClick={() => handleRequest("cancel", e._id)}>

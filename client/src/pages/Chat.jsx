@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
 import { SocketContext } from "../context/SocketContext";
+import _Jeb from "../imgs/Jens-Bergensten.png";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   faChevronLeft,
@@ -14,9 +16,11 @@ import {
   faPaperPlane,
   faMicrophone,
   faGrinSquintTears,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
+import { IonAlert } from "@ionic/react";
 
 import { sendMessage } from "../utils/socket";
 
@@ -41,8 +45,10 @@ function Chat() {
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
   const editorContainer = useRef(null);
+  const fileRef = useRef(null);
 
   const [files, setFiles] = useState([]);
+  const [maximumFilesAlert, setMaximumFilesAlert] = useState(false);
 
   // Keep this state even if its not used, we use the value from the state but not the state itself,
   // because the value itself is more responsive than the state.
@@ -103,7 +109,7 @@ function Chat() {
     if (messages.length === 0) enableChat();
     const text = editorState.getCurrentContent().getPlainText();
     const chatId = location.pathname.replace("/chat/", "");
-    if (text.length === 0) return;
+    if (text.length === 0 && files.length === 0) return;
 
     resetInput();
 
@@ -148,6 +154,32 @@ function Chat() {
     };
     getChatData();
   }, [location.pathname, user]);
+
+  const addFile = (e) => {
+    if (!e.target.files[0]) return;
+    if (e.target.files[0].type.indexOf("image/") > -1) {
+      if (e.target.files.length > 10) return setMaximumFilesAlert(true);
+
+      const filesArr = [...e.target.files];
+
+      const filesObjArr = filesArr.map((file) => {
+        return { file, url: window.URL.createObjectURL(file), id: uuidv4() };
+      });
+
+      setFiles((items) => [...items, ...filesObjArr]);
+    }
+  };
+
+  const handleRemoveFile = (id) => {
+    const filesCopy = [...files];
+    const updatedArr = filesCopy.filter((e) => e.id !== id);
+
+    setFiles(updatedArr);
+  };
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   return (
     <div className="chat-page page">
@@ -226,17 +258,28 @@ function Chat() {
         <Ripple.Div className="icon-outside">
           <FontAwesomeIcon icon={faCamera} />
         </Ripple.Div>
-        <Ripple.Div className="icon-outside">
+        <Ripple.Div
+          className="icon-outside"
+          onClick={() => fileRef.current.click()}
+        >
           <FontAwesomeIcon icon={faImages} />
+          <input
+            type="file"
+            ref={fileRef}
+            onChange={addFile}
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+          />
         </Ripple.Div>
         <div
           className="input-box"
           style={{
-            height: `${
-              editorContainer.current && editorContainer.current.offsetHeight
-            }px`,
+            // height: `${
+            //   editorContainer.current && editorContainer.current.offsetHeight
+            // }px`,
             minHeight: "40px",
-            marginRight: text.length > 0 ? "56px" : "",
+            marginRight: text.length > 0 || files.length > 0 ? "56px" : "",
             transition: text.length <= 1 ? "100ms" : "0ms",
           }}
           ref={inputRef}
@@ -245,6 +288,22 @@ function Chat() {
             <FontAwesomeIcon icon={faGrinSquintTears} />
           </Ripple.Div>
           <div className="editor-wrapper" ref={editorWrapper}>
+            <ul className="file-preview-list">
+              {files &&
+                files.map((e) => {
+                  return (
+                    <li className="preview-item-wrapper" key={e.id}>
+                      <div className="preview-item">
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          onClick={() => handleRemoveFile(e.id)}
+                        />
+                        <img src={e.url} alt="" />
+                      </div>
+                    </li>
+                  );
+                })}
+            </ul>
             <div
               className="editor-container"
               style={{
@@ -260,7 +319,7 @@ function Chat() {
               />
             </div>
           </div>
-          {text.length > 0 ? null : (
+          {text.length > 0 || files.length > 0 ? null : (
             <Ripple.Div className="icon-inside">
               <FontAwesomeIcon icon={faMicrophone} />
             </Ripple.Div>
@@ -269,11 +328,19 @@ function Chat() {
         <Ripple.Div
           onClick={handleSubmit}
           className="send-btn"
-          style={{ right: text.length > 0 ? "0" : "" }}
+          style={{ right: text.length > 0 || files.length > 0 ? "0" : "" }}
         >
           <FontAwesomeIcon icon={faPaperPlane} />
         </Ripple.Div>
       </div>
+      <IonAlert
+        isOpen={maximumFilesAlert}
+        onDidDismiss={() => setMaximumFilesAlert(false)}
+        cssClass="remove-avatar-alert"
+        header={"The limit for attachments has been reached"}
+        message={"Maxmimum number of attatchments is 10."}
+        buttons={[{ text: "OK", handler: () => setMaximumFilesAlert(false) }]}
+      />
     </div>
   );
 }
