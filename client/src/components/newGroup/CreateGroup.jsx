@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCamera,
-  faPlus,
-  faTemperatureHigh,
-  faYenSign,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { NavContext } from "../../context/NavContext";
 import { UserContext } from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
@@ -17,7 +12,7 @@ import { getImgSizeInfo } from "../../utils/previewAvatar";
 
 const formRed = "#ff0042";
 
-function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
+function CreateGroup({ handleTogglePopup, selectedFriends }) {
   const { setNav } = useContext(NavContext);
   const { user, setUser } = useContext(UserContext);
   const history = useHistory();
@@ -29,7 +24,6 @@ function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [previewAvatarUrl, setPreviewAvatarUrl] = useState("");
-  const [groupAvatar, setGroupAvatar] = useState("");
   const [togglePreview, setTogglePreview] = useState(false);
   const [toggleOptions, setToggleOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -135,7 +129,7 @@ function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
 
   useEffect(() => {
     if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
-  }, [togglePopupWait]);
+  }, [togglePopupWait, handleTogglePopup]);
 
   const toggleImageStyle = !showImage
     ? { visibility: "hidden", position: "absolute", width: "0", height: "0" }
@@ -194,7 +188,7 @@ function CreateGroup({ togglePopup, handleTogglePopup, selectedFriends }) {
                     // transform: `scale3d(${previewScale},${previewScale},${previewScale})`,
                   }}
                 >
-                  <img src={previewAvatarUrl} ref={imageRef} />
+                  <img src={previewAvatarUrl} ref={imageRef} alt="" />
                 </div>
               </div>
             </Draggable>

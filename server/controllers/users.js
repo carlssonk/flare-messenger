@@ -141,12 +141,13 @@ module.exports.login = (req, res, next) => {
         chats,
         avatar: { hexCode, path = null },
       } = user;
+      const chatIdList = chats.map((e) => e.chat);
       return res.json({
         id: _id,
         email,
         username,
         name,
-        chats,
+        chats: chatIdList,
         avatar: { hexCode, path },
       });
     });

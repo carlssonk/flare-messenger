@@ -51,6 +51,7 @@ function LoginForm() {
   const handleRedirect = (user) => {
     setNav("forward");
     history.location.key = uuidv4(); // Change key to invoke animation
+    console.log(user.chats);
     setUser(user);
   };
   return (

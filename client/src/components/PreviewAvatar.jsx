@@ -161,7 +161,7 @@ function PreviewAvatar({
 
   useEffect(() => {
     if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
-  }, [togglePopupWait]);
+  }, [togglePopupWait, handleTogglePopup]);
 
   return (
     <>

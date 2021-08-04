@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ChatList from "../components/Home/ChatList";
-import Footer from "../components/Home/Footer";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faEdit,
-//   faSearch,
-//   faUserPlus,
-//   faTimes,
-//   faTrash,
-//   faArchive,
-//   faThumbtack,
-//   faArrowLeft,
-// } from "@fortawesome/free-solid-svg-icons";
 
 function Archived() {
   const [chats, setChats] = useState([]);
@@ -20,14 +8,13 @@ function Archived() {
   const [selectedChats, setSelectedChats] = useState([]);
 
   useEffect(() => {
+    const getChats = async () => {
+      const res = await fetch("/api/chats");
+      const data = await res.json();
+      handleSortChat(data.chats);
+    };
     getChats();
   }, []);
-
-  const getChats = async () => {
-    const res = await fetch("/api/chats");
-    const data = await res.json();
-    handleSortChat(data.chats);
-  };
 
   const handleSortChat = (chat) => {
     const sortedChat = chat.sort(function (a, b) {
@@ -61,24 +48,6 @@ function Archived() {
 
   return (
     <div className="home-page page">
-      {/* <div
-        className="edit-chat-container"
-        style={toggleEditChat ? { opacity: "1", visibility: "visible" } : null}
-      >
-        <div className="section">
-          <Ripple.Div onClick={() => setToggleEditChat(false)}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </Ripple.Div>
-        </div>
-        <div className="section">
-          <Ripple.Div onClick={() => editChatStatus(2)}>
-            <FontAwesomeIcon icon={faArchive} />
-          </Ripple.Div>
-          <Ripple.Div onClick={() => editChatStatus(3)}>
-            <FontAwesomeIcon icon={faTrash} />
-          </Ripple.Div>
-        </div>
-      </div> */}
       <Header
         page="archived"
         chats={chats}
@@ -95,8 +64,6 @@ function Archived() {
         selectedChats={selectedChats}
         toggleEditChat={toggleEditChat}
         setToggleEditChat={setToggleEditChat}
-        // toggleEditChat={toggleEditChat}
-        // setToggleEditChat={setToggleEditChat}
       />
     </div>
   );

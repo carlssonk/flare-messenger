@@ -46,6 +46,7 @@ function App() {
   const getUser = async () => {
     const res = await fetch(`/api/user`);
     const getUser = await res.json();
+    console.log(getUser.chats);
     setUser(getUser);
     setIsLoading(false);
   };

@@ -63,7 +63,6 @@ function NewGroup() {
     <div className="new-page page">
       {togglePopup ? (
         <CreateGroup
-          togglePopup={togglePopup}
           handleTogglePopup={handleTogglePopup}
           selectedFriends={selectedFriends}
         />

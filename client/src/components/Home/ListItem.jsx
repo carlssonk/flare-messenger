@@ -1,6 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
-import { NavContext } from "../../context/NavContext";
-import { useHistory } from "react-router-dom";
+import React from "react";
 import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
 import GroupAvatar from "../GroupAvatar";

@@ -12,7 +12,7 @@ function GroupAvatar({ style, chat: chatObj, scale = 1 }) {
     const users = chatObj.users.filter((e) => e.username !== user.username);
     chatObj.users = users;
     setChat(chatObj);
-  }, [chatObj.users]);
+  }, [chatObj, user.username]);
 
   useEffect(() => {
     console.log(chat.users);

@@ -10,14 +10,13 @@ function Home() {
   const [selectedChats, setSelectedChats] = useState([]);
 
   useEffect(() => {
+    const getChats = async () => {
+      const res = await fetch("/api/chats");
+      const data = await res.json();
+      handleSortChat(data.chats);
+    };
     getChats();
   }, []);
-
-  const getChats = async () => {
-    const res = await fetch("/api/chats");
-    const data = await res.json();
-    handleSortChat(data.chats);
-  };
 
   const handleSortChat = (chat) => {
     const sortedChat = chat.sort(function (a, b) {

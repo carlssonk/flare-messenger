@@ -3,10 +3,8 @@ import React, { useContext } from "react";
 import { NavContext } from "../../context/NavContext";
 import { useHistory } from "react-router-dom";
 import Ripple from "../Effects/Ripple";
-import Avatar from "../Avatar";
-import GroupAvatar from "../GroupAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faArchive } from "@fortawesome/free-solid-svg-icons";
+import { faArchive } from "@fortawesome/free-solid-svg-icons";
 import ListItem from "./ListItem";
 
 function ChatList({
