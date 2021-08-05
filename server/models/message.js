@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
     text: String,
+    files: {
+      type: Array,
+      required: true,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

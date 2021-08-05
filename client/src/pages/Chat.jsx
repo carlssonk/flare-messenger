@@ -79,6 +79,7 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
+      console.log(message);
       setMessages((messages) => [message, ...messages]);
     });
   }, [socket]);
@@ -106,14 +107,35 @@ function Chat() {
   };
 
   const handleSubmit = async () => {
-    if (messages.length === 0) enableChat();
     const text = editorState.getCurrentContent().getPlainText();
     const chatId = location.pathname.replace("/chat/", "");
+    if (!user.chats.includes(chatId)) return;
     if (text.length === 0 && files.length === 0) return;
+    if (messages.length === 0) enableChat();
+
+    let formData = new FormData();
+
+    console.log(files);
+    if (files.length > 0) {
+      const filesArr = files.map(({ file }) => {
+        return file;
+      });
+      filesArr.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+
+    if (text.length > 0) {
+      formData.append("text", text);
+    }
 
     resetInput();
+    const res = await fetch(`/api/messages/${chatId}`, {
+      method: "POST",
+      body: formData,
+    });
 
-    sendMessage(socket, { text, files, chatId });
+    const data = await res.json();
   };
 
   const enableChat = async () => {
@@ -133,6 +155,7 @@ function Chat() {
 
   const resetInput = () => {
     setEditorState(draftUtils.clearEditorContent(editorState));
+    setFiles([]);
   };
 
   const reportWindowSize = () => {
@@ -243,9 +266,20 @@ function Chat() {
           {messages &&
             messages.map((e) => {
               return e.author._id === user.id ? (
-                <li key={e._id} className="my-message">
-                  {e.text}
-                </li>
+                e.files.length > 0 ? (
+                  <React.Fragment key={e._id}>
+                    {e.text ? <li className="my-message">{e.text}</li> : null}
+                    {e.files.map((img) => (
+                      <li className="my-message file" key={() => uuidv4()}>
+                        <img src={img.path} alt="" />
+                      </li>
+                    ))}
+                  </React.Fragment>
+                ) : (
+                  <li key={e._id} className="my-message">
+                    {e.text}
+                  </li>
+                )
               ) : (
                 <li key={e._id} className="user-message">
                   {e.text}

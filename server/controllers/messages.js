@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Message = require("../models/message");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const socket = require("../socket");
 
 module.exports.getMessages = async (chatId, trashedAt) => {
   let messages;
@@ -28,34 +29,37 @@ module.exports.getMessages = async (chatId, trashedAt) => {
   return messages;
 };
 
-module.exports.sendMessage = async (message, user) => {
-  const { text, file, chatId } = message;
+module.exports.sendMessage = async (req, res) => {
+  const rawFiles = req.files;
+  let text = req.body.text;
+  const chatId = req.params.id;
+  const { _id, username, avatar } = req.user;
+
+  const files = rawFiles.map(({ originalname, path }) => {
+    return { originalname, path: path.replace("/upload", "/upload/w_600") };
+  });
 
   const messageDoc = await new Message({
     text,
-    author: user._id,
+    files,
+    author: _id,
     chat: chatId,
   });
   await messageDoc.save();
 
-  const author = {
-    _id: user._id,
-    username: user.username,
-    avatar: {
-      filename: user.avatar.filename,
-      hexCode: user.avatar.hexCode,
-      path: user.avatar.path,
-    },
-  };
+  const author = { _id, username, avatar };
 
-  const formatMessage = {
+  const message = {
     _id: messageDoc._id,
     createdAt: messageDoc.createdAt,
     text: messageDoc.text,
+    files: messageDoc.files,
     author,
   };
 
-  return formatMessage;
+  socket.emitMessage(chatId, message);
+
+  res.json({ message });
 };
 
 module.exports.getLastMessages = async (chats) => {

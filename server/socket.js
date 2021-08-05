@@ -1,4 +1,4 @@
-const { sendMessage } = require("./controllers/messages");
+// const { sendMessage } = require("./controllers/messages");
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
@@ -16,16 +16,9 @@ module.exports = (io) => {
       console.log(`Socket ${socket.id} leaving ${roomId}`);
       socket.leave(roomId);
     });
-    socket.on("message", (message) => {
-      console.log("all good, got the message");
-      emitMessage(message, socket.request);
-    });
   });
 
-  const emitMessage = async (message, req) => {
-    console.log("socket " + message.text);
-    const messageDoc = await sendMessage(message, req.user);
-    console.log(message.chatId);
-    io.to(message.chatId).emit("message", messageDoc);
+  module.exports.emitMessage = (chatId, message) => {
+    io.to(chatId).emit("message", message);
   };
 };
