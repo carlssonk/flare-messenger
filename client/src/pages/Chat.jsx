@@ -28,6 +28,7 @@ import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
 import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
 import GroupAvatar from "../components/GroupAvatar";
+import Message from "../components/Chat/Message";
 
 const draftUtils = require("draftjs-utils");
 
@@ -201,8 +202,8 @@ function Chat() {
   };
 
   useEffect(() => {
-    console.log(files);
-  }, [files]);
+    console.log(messages);
+  }, [messages]);
 
   return (
     <div className="chat-page page">
@@ -264,30 +265,20 @@ function Chat() {
       <div className="message-container">
         <ul className="message-list">
           {messages &&
-            messages.map((e) => {
-              return e.author._id === user.id ? (
-                e.files.length > 0 ? (
-                  <React.Fragment key={e._id}>
-                    {e.text ? <li className="my-message">{e.text}</li> : null}
-                    {e.files.map((img) => (
-                      <li className="my-message file" key={() => uuidv4()}>
-                        <img src={img.path} alt="" />
-                      </li>
-                    ))}
-                  </React.Fragment>
-                ) : (
-                  <li key={e._id} className="my-message">
-                    {e.text}
-                  </li>
-                )
-              ) : (
-                <li key={e._id} className="user-message">
-                  {e.text}
-                </li>
+            messages.map((e, i) => {
+              return (
+                <Message
+                  key={e._id}
+                  messages={messages}
+                  message={e}
+                  previousMessage={messages[i - 1]}
+                  isMyMessage={e.author._id === user.id}
+                />
               );
             })}
         </ul>
       </div>
+      {/* e.author._id === user.id ? */}
       <div className="controller-container">
         <Ripple.Div className="icon-outside">
           <FontAwesomeIcon icon={faCamera} />

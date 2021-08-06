@@ -2,6 +2,7 @@ const Chat = require("../models/chat");
 const User = require("../models/user");
 const { getMessages, getLastMessages } = require("./messages");
 const moment = require("moment");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -40,7 +41,7 @@ module.exports.showChats = async (req, res) => {
       : "",
   }));
 
-  console.log(chats);
+  // console.log(chats);
 
   if (hasTrashedChatGottenMessage(chats)) {
     return unTrashChats(res, myId, chats);
@@ -54,7 +55,7 @@ const hasTrashedChatGottenMessage = (chats) => {
 };
 
 const unTrashChats = async (res, myId, chats) => {
-  console.log("trash");
+  // console.log("trash");
   let chatIdList = [];
 
   const updatedChats = chats.map((e) => {
@@ -133,7 +134,55 @@ module.exports.showChat = async (req, res) => {
 
   const messages = await getMessages(id, trashedAt);
 
-  res.json({ friends, messages, chat });
+  // Add avatar to messages
+  const parseMsgs = JSON.parse(JSON.stringify(messages)).reverse();
+
+  const msgs = handleSpreadMessages(parseMsgs);
+
+  let lastId;
+  let idArr = [];
+  for (let i = 0; i < msgs.length; i++) {
+    // console.log(msgs[i].text);
+    if (msgs[i].author._id === lastId) {
+      const startDate = new Date(msgs[i].createdAt).getTime();
+      const endDate = new Date(msgs[i - 1].createdAt).getTime();
+
+      if ((endDate - startDate) / 1000 > 60) {
+        idArr.push(msgs[i]._id);
+      }
+    } else {
+      idArr.push(msgs[i]._id);
+    }
+
+    lastId = msgs[i].author._id;
+  }
+
+  const newMsgs = msgs.map((obj) => {
+    if (idArr.includes(obj._id)) {
+      return { ...obj, showAvatar: true };
+    } else {
+      return { ...obj, showAvatar: false };
+    }
+  });
+
+  res.json({ friends, messages: newMsgs.reverse(), chat });
+};
+
+const handleSpreadMessages = (messages) => {
+  let newArray = [];
+  for (let { files, author, createdAt, text, ...rest } of messages) {
+    if (text) newArray.push({ author, createdAt, text, ...rest });
+
+    for (let file of files) {
+      newArray.push({
+        author,
+        createdAt,
+        file,
+        _id: uuidv4(),
+      });
+    }
+  }
+  return newArray;
 };
 
 module.exports.enableChat = async (req, res) => {
