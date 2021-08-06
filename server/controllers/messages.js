@@ -31,7 +31,7 @@ module.exports.getMessages = async (chatId, trashedAt) => {
 
 module.exports.sendMessage = async (req, res) => {
   const rawFiles = req.files;
-  let text = req.body.text;
+  const text = req.body.text;
   const chatId = req.params.id;
   const { _id, username, avatar } = req.user;
 
@@ -49,11 +49,20 @@ module.exports.sendMessage = async (req, res) => {
 
   const author = { _id, username, avatar };
 
+  // for (let file of files) {
+  //   newArray.push({
+  //     author,
+  //     createdAt,
+  //     file,
+  //     _id: uuidv4(),
+  //   });
+  // }
   const message = {
     _id: messageDoc._id,
     createdAt: messageDoc.createdAt,
     text: messageDoc.text,
-    files: messageDoc.files,
+    // files: messageDoc.files,
+    showAvatar: true,
     author,
   };
 

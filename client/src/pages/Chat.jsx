@@ -80,7 +80,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      console.log(message);
       setMessages((messages) => [message, ...messages]);
     });
   }, [socket]);
@@ -116,7 +115,6 @@ function Chat() {
 
     let formData = new FormData();
 
-    console.log(files);
     if (files.length > 0) {
       const filesArr = files.map(({ file }) => {
         return file;
@@ -201,9 +199,52 @@ function Chat() {
     setFiles(updatedArr);
   };
 
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+  const handleBubbleRadius = (message) => {
+    const isMyMessage = message.author._id === user.id;
+
+    const bubbleDown = isMyMessage
+      ? { borderRadius: "20px 20px 4px 20px" }
+      : { borderRadius: "20px 20px 20px 4px" };
+    const bubbleUp = isMyMessage
+      ? { borderRadius: "20px 4px 20px 20px" }
+      : { borderRadius: "4px 20px 20px 20px" };
+    const bubbleMid = isMyMessage
+      ? { borderRadius: "20px 4px 4px 20px" }
+      : { borderRadius: "4px 20px 20px 4px" };
+
+    const msgs = [...messages].reverse();
+    const idx = msgs.findIndex((e) => e._id === message._id);
+
+    const prevMessage = msgs[idx - 1];
+    const nextMessage = msgs[idx + 1];
+
+    if (!prevMessage && !nextMessage) return;
+
+    if (!prevMessage) return nextMessage.showAvatar ? null : bubbleDown;
+    if (!nextMessage) {
+      return prevMessage.showAvatar ? null : bubbleUp;
+    }
+
+    if (message.showAvatar) {
+      if (
+        message.author._id === prevMessage.author._id &&
+        !prevMessage.showAvatar
+      )
+        return bubbleUp;
+    }
+
+    if (!message.showAvatar) {
+      if (
+        message.author._id === prevMessage.author._id &&
+        message.author._id === nextMessage.author._id
+      ) {
+        if (prevMessage.showAvatar) return bubbleDown;
+        return bubbleMid;
+      }
+
+      if (message.author._id === nextMessage.author._id) return bubbleDown;
+    }
+  };
 
   return (
     <div className="chat-page page">
@@ -265,14 +306,14 @@ function Chat() {
       <div className="message-container">
         <ul className="message-list">
           {messages &&
-            messages.map((e, i) => {
+            messages.map((e) => {
               return (
                 <Message
                   key={e._id}
                   messages={messages}
                   message={e}
-                  previousMessage={messages[i - 1]}
                   isMyMessage={e.author._id === user.id}
+                  bubble={handleBubbleRadius(e)}
                 />
               );
             })}
