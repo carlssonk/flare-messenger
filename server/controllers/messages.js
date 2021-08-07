@@ -4,6 +4,7 @@ const Message = require("../models/message");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 const socket = require("../socket");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports.getMessages = async (chatId, trashedAt) => {
   let messages;
@@ -49,26 +50,37 @@ module.exports.sendMessage = async (req, res) => {
 
   const author = { _id, username, avatar };
 
-  // for (let file of files) {
-  //   newArray.push({
-  //     author,
-  //     createdAt,
-  //     file,
-  //     _id: uuidv4(),
-  //   });
-  // }
   const message = {
     _id: messageDoc._id,
     createdAt: messageDoc.createdAt,
     text: messageDoc.text,
-    // files: messageDoc.files,
+    files: messageDoc.files,
     showAvatar: true,
     author,
   };
 
-  socket.emitMessage(chatId, message);
+  const spreadMessage = handleSpreadMessage(message);
 
-  res.json({ message });
+  console.log(spreadMessage);
+
+  socket.emitMessage(chatId, spreadMessage);
+
+  res.json({ message: spreadMessage });
+};
+
+const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
+  let newArray = [];
+  if (text) newArray.push({ author, createdAt, text, ...rest });
+
+  for (let file of files) {
+    newArray.push({
+      author,
+      createdAt,
+      file,
+      _id: uuidv4(),
+    });
+  }
+  return newArray;
 };
 
 module.exports.getLastMessages = async (chats) => {

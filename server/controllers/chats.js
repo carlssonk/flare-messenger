@@ -139,32 +139,32 @@ module.exports.showChat = async (req, res) => {
 
   const msgs = handleSpreadMessages(parseMsgs);
 
-  let lastId;
-  let idArr = [];
-  for (let i = 0; i < msgs.length; i++) {
-    if (msgs[i].author._id === lastId) {
-      const startDate = new Date(msgs[i].createdAt).getTime();
-      const endDate = new Date(msgs[i - 1].createdAt).getTime();
+  // let lastId;
+  // let idArr = [];
+  // for (let i = 0; i < msgs.length; i++) {
+  //   if (msgs[i].author._id === lastId) {
+  //     const startDate = new Date(msgs[i].createdAt).getTime();
+  //     const endDate = new Date(msgs[i - 1].createdAt).getTime();
 
-      if ((endDate - startDate) / 1000 > 60) {
-        idArr.push(msgs[i]._id);
-      }
-    } else {
-      idArr.push(msgs[i]._id);
-    }
+  //     if ((endDate - startDate) / 1000 > 60) {
+  //       idArr.push(msgs[i]._id);
+  //     }
+  //   } else {
+  //     idArr.push(msgs[i]._id);
+  //   }
 
-    lastId = msgs[i].author._id;
-  }
+  //   lastId = msgs[i].author._id;
+  // }
 
-  const newMsgs = msgs.map((obj) => {
-    if (idArr.includes(obj._id)) {
-      return { ...obj, showAvatar: true };
-    } else {
-      return { ...obj, showAvatar: false };
-    }
-  });
+  // const newMsgs = msgs.map((obj) => {
+  //   if (idArr.includes(obj._id)) {
+  //     return { ...obj, showAvatar: true };
+  //   } else {
+  //     return { ...obj, showAvatar: false };
+  //   }
+  // });
 
-  res.json({ friends, messages: newMsgs.reverse(), chat });
+  res.json({ friends, messages: msgs.reverse(), chat });
 };
 
 const handleSpreadMessages = (messages) => {

@@ -16,9 +16,8 @@ module.exports = (io) => {
       console.log(`Socket ${socket.id} leaving ${roomId}`);
       socket.leave(roomId);
     });
+    module.exports.emitMessage = (chatId, message) => {
+      io.to(chatId).emit("message", message);
+    };
   });
-
-  module.exports.emitMessage = (chatId, message) => {
-    io.to(chatId).emit("message", message);
-  };
 };

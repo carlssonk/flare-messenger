@@ -81,10 +81,11 @@ function Chat() {
   };
 
   useEffect(() => {
+    console.log("WATTAFAK");
     socket.on("message", (message) => {
-      console.log(message);
-      setNewMessages((message) => [message, ...messages]);
-      setInitMessages((messages) => [message, ...messages]);
+      if (message[0].author._id === user.id) return;
+
+      setInitMessages((messages) => [...message, ...messages]);
     });
   }, [socket]);
 
@@ -166,12 +167,51 @@ function Chat() {
     }
 
     resetInput();
-    const res = await fetch(`/api/messages/${chatId}`, {
+
+    submitUI(text);
+    await fetch(`/api/messages/${chatId}`, {
       method: "POST",
       body: formData,
     });
+    console.log("GOOO");
+  };
 
-    const data = await res.json();
+  const submitUI = (text) => {
+    const { avatar, username, id } = user;
+    const author = { avatar, username, _id: id };
+
+    const copyFiles = [...files];
+    const newFiles = copyFiles.map(({ url, file }) => {
+      return { path: url, originalname: file.name };
+    });
+
+    const message = {
+      _id: uuidv4(),
+      createdAt: new Date(),
+      text,
+      files: newFiles,
+      showAvatar: true,
+      author,
+    };
+
+    const spreadMessage = handleSpreadMessage(message);
+
+    setInitMessages((messages) => [...spreadMessage, ...messages]);
+  };
+
+  const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
+    let newArray = [];
+    if (text) newArray.push({ author, createdAt, text, ...rest });
+
+    for (let file of files) {
+      newArray.push({
+        author,
+        createdAt,
+        file,
+        _id: uuidv4(),
+      });
+    }
+    return newArray;
   };
 
   const enableChat = async () => {
