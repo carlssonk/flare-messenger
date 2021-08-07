@@ -21,9 +21,9 @@ function Message({ message, isMyMessage, bubble }) {
     ? { borderRadius: "20px 4px 4px 20px" }
     : { borderRadius: "4px 20px 20px 4px" };
 
-  useEffect(() => {
-    console.log(bubble);
-  }, [bubble]);
+  // useEffect(() => {
+  //   console.log(console.log(message));
+  // }, [message]);
 
   // const handleBubbleRadius = () => {
   //   const msgs = [...messages].reverse();

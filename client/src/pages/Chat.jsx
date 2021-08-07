@@ -41,6 +41,8 @@ function Chat() {
 
   const [friends, setFriends] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [nesMessages, setNewMessages] = useState([]);
+  const [initMessages, setInitMessages] = useState([]);
   const [chat, setChat] = useState({});
 
   const inputRef = useRef(null);
@@ -80,9 +82,44 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      setMessages((messages) => [message, ...messages]);
+      console.log(message);
+      setNewMessages((message) => [message, ...messages]);
+      setInitMessages((messages) => [message, ...messages]);
     });
   }, [socket]);
+
+  useEffect(() => {
+    let lastId;
+    let idArr = [];
+    for (let i = 0; i < initMessages.length; i++) {
+      if (initMessages[i].author._id === lastId) {
+        const startDate = new Date(initMessages[i].createdAt).getTime();
+        const endDate = new Date(initMessages[i - 1].createdAt).getTime();
+
+        if ((endDate - startDate) / 1000 > 60) {
+          idArr.push(initMessages[i]._id);
+        }
+      } else {
+        idArr.push(initMessages[i]._id);
+      }
+
+      lastId = initMessages[i].author._id;
+    }
+
+    const newMsgs = initMessages.map((obj) => {
+      if (idArr.includes(obj._id)) {
+        return { ...obj, showAvatar: true };
+      } else {
+        return { ...obj, showAvatar: false };
+      }
+    });
+
+    setMessages(newMsgs);
+  }, [initMessages]);
+
+  // useEffect(() => {
+  //   console.log(messages);
+  // }, [messages]);
 
   useEffect(() => {
     setEditorHeight(
@@ -170,7 +207,7 @@ function Chat() {
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
-      setMessages(data.messages.reverse());
+      setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
     };

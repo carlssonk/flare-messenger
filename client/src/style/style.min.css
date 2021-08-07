@@ -188,7 +188,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 1;
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
 }
@@ -509,7 +509,7 @@
 }
 
 .header {
-  z-index: 1;
+  z-index: 2;
 }
 
 .header .nav-wrapper {
@@ -1079,7 +1079,7 @@
 }
 
 :root {
-  --primary-gradient: linear-gradient(to bottom, #f64f59, #c471ed, #12c2e9);
+  --primary-gradient: linear-gradient(to bottom, #ff0011, #c471ed, #12c2e9);
   --primary-cyan: #1bbbbb;
   --secondary-cyan: #1aadad;
   --cyan-gradient: linear-gradient(to right, #169c9c, #1bd8d8);
@@ -1310,7 +1310,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(17, 17, 17, 0.8);
-  z-index: 1;
+  z-index: 2;
 }
 
 .home-page .footer-wrapper .footer .camera-box {
@@ -1916,10 +1916,11 @@ body {
   height: 100%;
   background-color: var(--primary-background);
   color: white;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .chat-page .message-container .message-list {
+  position: relative;
   height: 100%;
   width: 100%;
   display: -webkit-box;
@@ -1934,6 +1935,7 @@ body {
 }
 
 .chat-page .message-container .message-list .my-message {
+  position: relative;
   max-width: 80%;
   margin: 4px 8px 0 0;
   display: -webkit-box;
@@ -1942,7 +1944,7 @@ body {
   -ms-flex-item-align: end;
       align-self: flex-end;
   word-break: break-all;
-  color: black;
+  color: white;
   white-space: pre-line;
   -webkit-box-pack: end;
       -ms-flex-pack: end;
@@ -1975,6 +1977,8 @@ body {
   padding: 6px 10px;
   border-radius: 20px;
   min-width: 30px;
+  background-image: var(--primary-gradient);
+  background-attachment: fixed;
 }
 
 .chat-page .message-container .message-list .user-bubble {

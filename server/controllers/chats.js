@@ -142,7 +142,6 @@ module.exports.showChat = async (req, res) => {
   let lastId;
   let idArr = [];
   for (let i = 0; i < msgs.length; i++) {
-    // console.log(msgs[i].text);
     if (msgs[i].author._id === lastId) {
       const startDate = new Date(msgs[i].createdAt).getTime();
       const endDate = new Date(msgs[i - 1].createdAt).getTime();
