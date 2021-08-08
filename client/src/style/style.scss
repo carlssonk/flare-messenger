@@ -621,6 +621,7 @@ body {
         background-position-y: 44px;
 
         animation: bubbleFadeIn 250ms;
+        clip-path: circle(150% at 50% 100%);
       }
       // @keyframes bubbleFadeIn {
       //   from {
@@ -635,7 +636,7 @@ body {
           clip-path: circle(0% at 50% 100%);
         }
         to {
-          clip-path: circle(112% at 50% 100%);
+          clip-path: circle(150% at 50% 100%);
         }
       }
 
@@ -644,6 +645,7 @@ body {
         border-radius: 20px;
         padding: 6px 10px;
         min-width: 30px;
+        clip-path: circle(150% at 50% 100%);
         animation: bubbleFadeIn 250ms;
       }
       // .file {
@@ -654,6 +656,7 @@ body {
         max-height: 300px;
         display: flex;
         animation: bubbleFadeIn 250ms;
+        clip-path: circle(150% at 50% 100%);
         img {
           width: 100%;
           height: 100%;

@@ -1078,6 +1078,16 @@
   margin-left: 12px;
 }
 
+.image-loading-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
 :root {
   --primary-gradient: linear-gradient(to bottom, #ff0011, #c471ed, #12c2e9);
   --bubble-gradient: linear-gradient(to bottom, #1bbbbb 52px, #38af6e);
@@ -1986,6 +1996,8 @@ body {
   background-position-y: 44px;
   -webkit-animation: bubbleFadeIn 250ms;
           animation: bubbleFadeIn 250ms;
+  -webkit-clip-path: circle(150% at 50% 100%);
+          clip-path: circle(150% at 50% 100%);
 }
 
 @-webkit-keyframes bubbleFadeIn {
@@ -1994,8 +2006,8 @@ body {
             clip-path: circle(0% at 50% 100%);
   }
   to {
-    -webkit-clip-path: circle(112% at 50% 100%);
-            clip-path: circle(112% at 50% 100%);
+    -webkit-clip-path: circle(150% at 50% 100%);
+            clip-path: circle(150% at 50% 100%);
   }
 }
 
@@ -2005,8 +2017,8 @@ body {
             clip-path: circle(0% at 50% 100%);
   }
   to {
-    -webkit-clip-path: circle(112% at 50% 100%);
-            clip-path: circle(112% at 50% 100%);
+    -webkit-clip-path: circle(150% at 50% 100%);
+            clip-path: circle(150% at 50% 100%);
   }
 }
 
@@ -2015,6 +2027,8 @@ body {
   border-radius: 20px;
   padding: 6px 10px;
   min-width: 30px;
+  -webkit-clip-path: circle(150% at 50% 100%);
+          clip-path: circle(150% at 50% 100%);
   -webkit-animation: bubbleFadeIn 250ms;
           animation: bubbleFadeIn 250ms;
 }
@@ -2027,6 +2041,8 @@ body {
   display: flex;
   -webkit-animation: bubbleFadeIn 250ms;
           animation: bubbleFadeIn 250ms;
+  -webkit-clip-path: circle(150% at 50% 100%);
+          clip-path: circle(150% at 50% 100%);
 }
 
 .chat-page .message-container .message-list .img-wrapper img {

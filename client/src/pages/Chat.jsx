@@ -41,9 +41,11 @@ function Chat() {
 
   const [friends, setFriends] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [nesMessages, setNewMessages] = useState([]);
   const [initMessages, setInitMessages] = useState([]);
+  // const [myLastMessage, setMyLastMessage] = useState([]);
   const [chat, setChat] = useState({});
+
+  const [initPage, setInitPage] = useState(false);
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -79,6 +81,10 @@ function Chat() {
     // we need to give a small delay so our transition class appends on the DOM before we redirect
     setTimeout(() => history.push(to), 10);
   };
+
+  useEffect(() => {
+    setTimeout(() => setInitPage(true), 400);
+  }, []);
 
   useEffect(() => {
     console.log("WATTAFAK");
@@ -168,12 +174,22 @@ function Chat() {
 
     resetInput();
 
-    submitUI(text);
+    const myMessage = submitUI(text);
     await fetch(`/api/messages/${chatId}`, {
       method: "POST",
       body: formData,
     });
-    console.log("GOOO");
+    // const data = await res.json();
+    handleMessageLoading(myMessage);
+  };
+
+  const handleMessageLoading = (message) => {
+    const updateMessage = message.map((obj) => {
+      return { ...obj, isLoading: false };
+    });
+    const copyMessages = [...messages];
+    const newMessages = [...updateMessage, ...copyMessages];
+    setInitMessages(newMessages);
   };
 
   const submitUI = (text) => {
@@ -191,12 +207,14 @@ function Chat() {
       text,
       files: newFiles,
       showAvatar: true,
+      isLoading: true,
       author,
     };
 
     const spreadMessage = handleSpreadMessage(message);
 
     setInitMessages((messages) => [...spreadMessage, ...messages]);
+    return spreadMessage;
   };
 
   const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
@@ -209,6 +227,7 @@ function Chat() {
         createdAt,
         file,
         _id: uuidv4(),
+        isLoading: true,
       });
     }
     return newArray;
@@ -330,6 +349,7 @@ function Chat() {
   };
 
   useEffect(() => {
+    if (!initPage) return;
     setTimeout(() => {
       scrollToBottom();
     }, 10);
