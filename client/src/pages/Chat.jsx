@@ -323,6 +323,18 @@ function Chat() {
     }
   };
 
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      scrollToBottom();
+    }, 10);
+  }, [messages]);
+
   return (
     <div className="chat-page page">
       <div className="header-wrapper">
@@ -382,6 +394,7 @@ function Chat() {
       </div>
       <div className="message-container">
         <ul className="message-list">
+          <div ref={messagesEndRef} style={{ width: "0" }} />
           {messages &&
             messages.map((e) => {
               return (

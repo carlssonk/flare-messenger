@@ -1982,7 +1982,7 @@ body {
   overflow: hidden;
   background-image: var(--bubble-gradient);
   background-attachment: fixed;
-  background-size: 100% 685px;
+  background-size: 100% 691px;
   background-position-y: 44px;
   -webkit-animation: bubbleFadeIn 250ms;
           animation: bubbleFadeIn 250ms;
@@ -1990,23 +1990,23 @@ body {
 
 @-webkit-keyframes bubbleFadeIn {
   from {
-    height: 0;
-    padding: 0 5px;
+    -webkit-clip-path: circle(0% at 50% 100%);
+            clip-path: circle(0% at 50% 100%);
   }
   to {
-    height: 100%;
-    padding: 6px 10px;
+    -webkit-clip-path: circle(112% at 50% 100%);
+            clip-path: circle(112% at 50% 100%);
   }
 }
 
 @keyframes bubbleFadeIn {
   from {
-    height: 0;
-    padding: 0 5px;
+    -webkit-clip-path: circle(0% at 50% 100%);
+            clip-path: circle(0% at 50% 100%);
   }
   to {
-    height: 100%;
-    padding: 6px 10px;
+    -webkit-clip-path: circle(112% at 50% 100%);
+            clip-path: circle(112% at 50% 100%);
   }
 }
 
@@ -2025,8 +2025,8 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-animation: imgFadeIn 250ms;
-          animation: imgFadeIn 250ms;
+  -webkit-animation: bubbleFadeIn 250ms;
+          animation: bubbleFadeIn 250ms;
 }
 
 .chat-page .message-container .message-list .img-wrapper img {
@@ -2039,27 +2039,8 @@ body {
   border-radius: 20px;
 }
 
-@-webkit-keyframes imgFadeIn {
-  from {
-    max-height: 0px;
-  }
-  to {
-    max-height: 300px;
-  }
-}
-
-@keyframes imgFadeIn {
-  from {
-    max-height: 0px;
-  }
-  to {
-    max-height: 300px;
-  }
-}
-
 .chat-page .controller-container {
   width: 100%;
-  padding: 10px 0;
   margin-top: auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2069,6 +2050,8 @@ body {
           align-items: flex-end;
   color: white;
   color: #38af6e;
+  padding-bottom: 10px;
+  padding-top: 4px;
 }
 
 .chat-page .controller-container .icon-outside {
