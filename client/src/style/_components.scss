@@ -474,16 +474,11 @@
   }
 }
 
-.image-loading-container {
+.message-loading-container {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: grid;
   place-items: center;
-  // .image-loading-container {
-  //   position: relative;
-  //   width: 100%;
-  //   height: 100%;
-  // }
 }

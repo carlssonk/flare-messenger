@@ -153,13 +153,15 @@
   }
 }
 
-// .measure-text-length {
-//   width: fit-content;
-//   position: fixed;
-//   visibility: hidden;
-//   outline: none;
-//   border: none;
-//   font-size: 16px;
-//   line-height: 20px;
-//   white-space: break-spaces;
-// }
+.bubble-fade-in {
+  animation: bubbleFadeIn 400ms;
+}
+
+@keyframes bubbleFadeIn {
+  from {
+    clip-path: circle(0% at 50% 100%);
+  }
+  to {
+    clip-path: circle(150% at 50% 100%);
+  }
+}

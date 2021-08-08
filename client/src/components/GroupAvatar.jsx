@@ -14,10 +14,6 @@ function GroupAvatar({ style, chat: chatObj, scale = 1 }) {
     setChat(chatObj);
   }, [chatObj, user.username]);
 
-  useEffect(() => {
-    console.log(chat.users);
-  }, [chat]);
-
   let multipleUsersStyle = {};
   let avatarBoxStyle = {};
   let lastUserStyle = {};

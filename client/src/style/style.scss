@@ -486,7 +486,7 @@ body {
         justify-content: space-between;
         align-items: center;
         color: var(--primary-cyan);
-        color: #1bbbbb;
+        color: #38af6e;
         width: 100%;
         height: 52px;
         font-size: 24px;
@@ -617,45 +617,25 @@ body {
 
         background-image: var(--bubble-gradient);
         background-attachment: fixed;
-        background-size: 100% 691px;
+        background-size: 100% var(--background-size-h);
         background-position-y: 44px;
 
-        animation: bubbleFadeIn 250ms;
+        // animation: bubbleFadeIn 400ms;
         clip-path: circle(150% at 50% 100%);
       }
-      // @keyframes bubbleFadeIn {
-      //   from {
-      //     clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
-      //   }
-      //   to {
-      //     clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
-      //   }
-      // }
-      @keyframes bubbleFadeIn {
-        from {
-          clip-path: circle(0% at 50% 100%);
-        }
-        to {
-          clip-path: circle(150% at 50% 100%);
-        }
-      }
-
       .user-bubble {
         background-color: rgb(50, 50, 50);
         border-radius: 20px;
         padding: 6px 10px;
         min-width: 30px;
         clip-path: circle(150% at 50% 100%);
-        animation: bubbleFadeIn 250ms;
+        // animation: bubbleFadeIn 400ms;
       }
-      // .file {
-      //   background-color: unset;
-      //   align-items: flex-end;
       .img-wrapper {
         max-width: 300px;
         max-height: 300px;
         display: flex;
-        animation: bubbleFadeIn 250ms;
+        // animation: bubbleFadeIn 400ms;
         clip-path: circle(150% at 50% 100%);
         img {
           width: 100%;
@@ -666,15 +646,6 @@ body {
           border-radius: 20px;
         }
       }
-      // @keyframes imgFadeIn {
-      //   from {
-      //     max-height: 0px;
-      //   }
-      //   to {
-      //     max-height: 300px;
-      //   }
-      // }
-      // }
     }
   }
 
@@ -684,7 +655,7 @@ body {
     display: flex;
     align-items: flex-end;
     color: white;
-    color: #38af6e;
+    color: var(--primary-cyan);
     padding-bottom: 10px;
     padding-top: 4px;
 

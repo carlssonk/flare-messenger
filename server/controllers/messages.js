@@ -56,6 +56,7 @@ module.exports.sendMessage = async (req, res) => {
     text: messageDoc.text,
     files: messageDoc.files,
     showAvatar: true,
+    isNewMessage: true,
     author,
   };
 
@@ -77,6 +78,7 @@ const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
       author,
       createdAt,
       file,
+      isNewMessage: true,
       _id: uuidv4(),
     });
   }

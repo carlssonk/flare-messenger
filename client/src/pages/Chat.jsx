@@ -29,6 +29,7 @@ import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
 import GroupAvatar from "../components/GroupAvatar";
 import Message from "../components/Chat/Message";
+import Options from "../components/Chat/Options";
 
 const draftUtils = require("draftjs-utils");
 
@@ -51,6 +52,7 @@ function Chat() {
   const editorWrapper = useRef(null);
   const editorContainer = useRef(null);
   const fileRef = useRef(null);
+  const messageContainer = useRef(null);
 
   const [files, setFiles] = useState([]);
   const [maximumFilesAlert, setMaximumFilesAlert] = useState(false);
@@ -208,6 +210,7 @@ function Chat() {
       files: newFiles,
       showAvatar: true,
       isLoading: true,
+      isNewMessage: true,
       author,
     };
 
@@ -228,6 +231,7 @@ function Chat() {
         file,
         _id: uuidv4(),
         isLoading: true,
+        isNewMessage: true,
       });
     }
     return newArray;
@@ -357,6 +361,7 @@ function Chat() {
 
   return (
     <div className="chat-page page">
+      <Options container={messageContainer} />
       <div className="header-wrapper">
         <div className="header">
           <div className="top-bar">
@@ -412,7 +417,7 @@ function Chat() {
         </div>
         <div className="blur"></div>
       </div>
-      <div className="message-container">
+      <div className="message-container" ref={messageContainer}>
         <ul className="message-list">
           <div ref={messagesEndRef} style={{ width: "0" }} />
           {messages &&
