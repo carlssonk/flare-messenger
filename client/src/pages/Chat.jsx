@@ -330,14 +330,14 @@ function Chat() {
     const isMyMessage = message.author._id === user.id;
 
     const bubbleDown = isMyMessage
-      ? { borderRadius: "20px 20px 4px 20px" }
-      : { borderRadius: "20px 20px 20px 4px" };
+      ? { borderRadius: "30px 30px 4px 30px" }
+      : { borderRadius: "30px 30px 30px 4px" };
     const bubbleUp = isMyMessage
-      ? { borderRadius: "20px 4px 20px 20px" }
-      : { borderRadius: "4px 20px 20px 20px" };
+      ? { borderRadius: "30px 4px 30px 30px" }
+      : { borderRadius: "4px 30px 30px 30px" };
     const bubbleMid = isMyMessage
-      ? { borderRadius: "20px 4px 4px 20px" }
-      : { borderRadius: "4px 20px 20px 4px" };
+      ? { borderRadius: "30px 4px 4px 30px" }
+      : { borderRadius: "4px 30px 30px 4px" };
 
     const msgs = [...messages].reverse();
     const idx = msgs.findIndex((e) => e._id === message._id);
@@ -385,6 +385,20 @@ function Chat() {
       scrollToBottom();
     }, 10);
   }, [messages, showChat, initPage]);
+
+  const handleAddEmoji = (emoji) => {
+    let contentState = editorState.getCurrentContent();
+    let targetRange = editorState.getSelection();
+    let newContentState = Modifier.insertText(
+      contentState,
+      targetRange,
+      emoji.native
+    );
+
+    let newEditorState = EditorState.push(editorState, newContentState);
+
+    setEditorState(newEditorState);
+  };
 
   return (
     <div className="chat-page page">
@@ -570,6 +584,7 @@ function Chat() {
             theme="auto"
             style={{ width: "100%", height: "100%" }}
             color="#0575e6"
+            onSelect={handleAddEmoji}
           />
         </div>
       ) : null}

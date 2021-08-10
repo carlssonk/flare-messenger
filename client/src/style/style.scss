@@ -628,7 +628,7 @@ body {
       .my-bubble {
         background-color: var(--primary-cyan);
         padding: 6px 10px;
-        border-radius: 20px;
+        border-radius: 30px;
         min-width: 30px;
         overflow: hidden;
         color: white;
@@ -643,7 +643,7 @@ body {
       }
       .user-bubble {
         background-color: rgb(50, 50, 50);
-        border-radius: 20px;
+        border-radius: 30px;
         padding: 6px 10px;
         min-width: 30px;
         clip-path: circle(150% at 50% 100%);
