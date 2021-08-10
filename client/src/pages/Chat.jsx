@@ -72,6 +72,9 @@ function Chat() {
   const editorContainer = useRef(null);
   const fileRef = useRef(null);
   const messageContainer = useRef(null);
+  let domEditor = useRef(null);
+
+  const setDomEditorRef = (ref) => (domEditor = ref);
 
   const [files, setFiles] = useState([]);
   const [maximumFilesAlert, setMaximumFilesAlert] = useState(false);
@@ -87,11 +90,6 @@ function Chat() {
 
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
-  );
-
-  const editorValue = useMemo(
-    () => ({ editorState, setEditorState }),
-    [editorState, setEditorState]
   );
 
   const text = editorState.getCurrentContent().getPlainText();
@@ -155,8 +153,10 @@ function Chat() {
   }, [initMessages]);
 
   useEffect(() => {
-    if (text.replace(/\s/g, "").length === 0) setSimpleController(false);
+    if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
     if (simpleController) return;
+
+    domEditor.focus();
 
     const textBlocks = editorState.getCurrentContent().getBlockMap()._list
       ._tail.array;
@@ -164,7 +164,9 @@ function Chat() {
     for (let i = 0; i < textBlocks.length; i++) {
       const key = textBlocks[i][1].getKey();
       const node = document.querySelector(`span[data-offset-key="${key}-0-0"]`);
-      if (node && node.offsetWidth > 120) setSimpleController(true);
+      const parentNode = node.parentElement;
+      if (node && node.offsetWidth > parentNode.offsetWidth / 2)
+        setSimpleController(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
@@ -421,6 +423,11 @@ function Chat() {
     setEditorState(newEditorState);
   };
 
+  useEffect(() => {
+    if (!initPage) return;
+    domEditor.focus();
+  }, [toggleEmoji, initPage]);
+
   return (
     <div className="chat-page page">
       {/* <div style={{ position: "relative" }}> */}
@@ -596,6 +603,7 @@ function Chat() {
                 onChange={setEditorState}
                 placeholder="Enter Message"
                 keyBindingFn={keyBindning}
+                ref={setDomEditorRef}
               />
             </div>
           </div>

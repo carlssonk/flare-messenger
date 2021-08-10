@@ -807,10 +807,20 @@ body {
             width: 100%;
             color: white;
             margin: auto 0;
+            // .public-DraftEditor-content {
+            //   caret-color: red;
+            //   // cursor: none;
+            //   // animation: typing 3.5s steps(60, end),
+            //   //   blink-caret 0.65s step-end 8;
+            //   // white-space: nowrap;
+            //   // border-right: 0.15em solid transparent;
+            // }
             .public-DraftEditorPlaceholder-inner {
               padding: 4px 0;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap !important;
             }
-
             .public-DraftEditor-content {
               min-height: 40px;
               display: flex;
@@ -823,8 +833,6 @@ body {
             }
           }
         }
-
-        // }
       }
     }
   }

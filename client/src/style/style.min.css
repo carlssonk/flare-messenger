@@ -2348,6 +2348,9 @@ body {
 
 .chat-page .controller-container .input-box .editor-wrapper .editor-container .DraftEditor-root .public-DraftEditorPlaceholder-inner {
   padding: 4px 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap !important;
 }
 
 .chat-page .controller-container .input-box .editor-wrapper .editor-container .DraftEditor-root .public-DraftEditor-content {
