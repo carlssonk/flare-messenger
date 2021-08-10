@@ -17,6 +17,7 @@ import {
   faGrinSquintTears,
   faTimes,
   faKeyboard,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
@@ -42,6 +43,10 @@ import { Picker } from "emoji-mart";
 
 const draftUtils = require("draftjs-utils");
 
+const isInputEmpty = (text, files) => {
+  return text.replace(/\s/g, "").length > 0 || files.length > 0 ? true : false;
+};
+
 function Chat() {
   const { user } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
@@ -56,6 +61,7 @@ function Chat() {
   const [imagesCount, setImagesCount] = useState(0);
   const [showChat, setShowChat] = useState(0);
   const [chat, setChat] = useState({});
+  const [simpleController, setSimpleController] = useState(false);
 
   const [toggleEmoji, setToggleEmoji] = useState(false);
 
@@ -81,6 +87,11 @@ function Chat() {
 
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
+  );
+
+  const editorValue = useMemo(
+    () => ({ editorState, setEditorState }),
+    [editorState, setEditorState]
   );
 
   const text = editorState.getCurrentContent().getPlainText();
@@ -143,9 +154,20 @@ function Chat() {
     setMessages(newMsgs);
   }, [initMessages]);
 
-  // useEffect(() => {
-  //   console.log(messages);
-  // }, [messages]);
+  useEffect(() => {
+    if (text.replace(/\s/g, "").length === 0) setSimpleController(false);
+    if (simpleController) return;
+
+    const textBlocks = editorState.getCurrentContent().getBlockMap()._list
+      ._tail.array;
+
+    for (let i = 0; i < textBlocks.length; i++) {
+      const key = textBlocks[i][1].getKey();
+      const node = document.querySelector(`span[data-offset-key="${key}-0-0"]`);
+      if (node && node.offsetWidth > 120) setSimpleController(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
 
   useEffect(() => {
     // if (editorHeight < 240) {
@@ -175,10 +197,9 @@ function Chat() {
   };
 
   const handleSubmit = async () => {
-    const text = editorState.getCurrentContent().getPlainText();
     const chatId = location.pathname.replace("/chat/", "");
     if (!user.chats.includes(chatId)) return;
-    if (text.length === 0 && files.length === 0) return;
+    if (text.replace(/\s/g, "").length === 0 && files.length === 0) return;
     if (messages.length === 0) enableChat();
 
     let formData = new FormData();
@@ -477,6 +498,7 @@ function Chat() {
                   bubble={handleBubbleRadius(e)}
                   setImagesHasLoaded={setImagesHasLoaded}
                   scrollToBottom={scrollToBottom}
+                  initPage={initPage}
                 />
               );
             })}
@@ -485,23 +507,38 @@ function Chat() {
       {/* e.author._id === user.id ? */}
 
       <div className="controller-container">
-        <Ripple.Div className="icon-outside">
-          <FontAwesomeIcon icon={faCamera} />
-        </Ripple.Div>
-        <Ripple.Div
-          className="icon-outside"
-          onClick={() => fileRef.current.click()}
+        <div
+          className="icon-outside-wrapper"
+          style={simpleController ? { left: "-36px" } : null}
         >
-          <FontAwesomeIcon icon={faImages} />
-          <input
-            type="file"
-            ref={fileRef}
-            onChange={addFile}
-            accept="image/*"
-            multiple
-            style={{ display: "none" }}
-          />
-        </Ripple.Div>
+          <Ripple.Div className="icon-outside">
+            <FontAwesomeIcon icon={faCamera} />
+          </Ripple.Div>
+          {simpleController ? (
+            <Ripple.Div
+              className="icon-outside"
+              onClick={() => setSimpleController(false)}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Ripple.Div>
+          ) : (
+            <Ripple.Div
+              className="icon-outside"
+              onClick={() => fileRef.current.click()}
+            >
+              <FontAwesomeIcon icon={faImages} />
+              <input
+                type="file"
+                ref={fileRef}
+                onChange={addFile}
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+              />
+            </Ripple.Div>
+          )}
+        </div>
+
         <div
           className="input-box"
           style={{
@@ -509,8 +546,9 @@ function Chat() {
             //   editorContainer.current && editorContainer.current.offsetHeight
             // }px`,
             minHeight: "40px",
-            marginRight: text.length > 0 || files.length > 0 ? "56px" : "",
-            transition: text.length <= 1 ? "100ms" : "0ms",
+            marginRight: isInputEmpty(text, files) ? "56px" : "",
+            marginLeft: simpleController ? "40px" : "",
+            // transition: text.replace(/\s/g, "").length <= 1 ? "100ms" : "0ms",
           }}
           ref={inputRef}
         >
@@ -561,7 +599,7 @@ function Chat() {
               />
             </div>
           </div>
-          {text.length > 0 || files.length > 0 ? null : (
+          {isInputEmpty(text, files) ? null : (
             <Ripple.Div className="icon-inside">
               <FontAwesomeIcon icon={faMicrophone} />
             </Ripple.Div>
@@ -570,7 +608,9 @@ function Chat() {
         <Ripple.Div
           onClick={handleSubmit}
           className="send-btn"
-          style={{ right: text.length > 0 || files.length > 0 ? "0" : "" }}
+          style={{
+            right: isInputEmpty(text, files) ? "0" : "",
+          }}
         >
           <FontAwesomeIcon icon={faPaperPlane} />
         </Ripple.Div>

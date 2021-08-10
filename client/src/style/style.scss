@@ -678,18 +678,28 @@ body {
     padding-bottom: 4px;
     padding-top: 4px;
 
-    .icon-outside {
-      width: 36px;
-      min-width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      border-radius: 100%;
-      &:first-of-type {
-        margin-left: 4px;
+    .icon-outside-wrapper {
+      position: fixed;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      transition: 100ms;
+      .icon-outside {
+        width: 36px;
+        min-width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        border-radius: 100%;
+        &:first-of-type {
+          margin-left: 4px;
+        }
       }
     }
+
     .send-btn {
       position: fixed;
       right: -48px;
@@ -715,9 +725,10 @@ body {
       display: flex;
       align-items: flex-end;
       margin-right: 8px;
-      margin-left: 4px;
+      margin-left: 80px;
       font-size: 20px;
       overflow: hidden;
+      transition: 100ms;
       .icon-inside {
         height: 32px;
         width: 32px;

@@ -2155,7 +2155,27 @@ body {
   padding-top: 4px;
 }
 
-.chat-page .controller-container .icon-outside {
+.chat-page .controller-container .icon-outside-wrapper {
+  position: fixed;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-transition: 100ms;
+  transition: 100ms;
+}
+
+.chat-page .controller-container .icon-outside-wrapper .icon-outside {
   width: 36px;
   min-width: 36px;
   height: 36px;
@@ -2166,7 +2186,7 @@ body {
   border-radius: 100%;
 }
 
-.chat-page .controller-container .icon-outside:first-of-type {
+.chat-page .controller-container .icon-outside-wrapper .icon-outside:first-of-type {
   margin-left: 4px;
 }
 
@@ -2201,9 +2221,11 @@ body {
       -ms-flex-align: end;
           align-items: flex-end;
   margin-right: 8px;
-  margin-left: 4px;
+  margin-left: 80px;
   font-size: 20px;
   overflow: hidden;
+  -webkit-transition: 100ms;
+  transition: 100ms;
 }
 
 .chat-page .controller-container .input-box .icon-inside {

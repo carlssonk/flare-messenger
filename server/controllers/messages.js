@@ -99,6 +99,9 @@ module.exports.getLastMessages = async (chats) => {
         text: {
           $first: "$text",
         },
+        files: {
+          $first: "$files",
+        },
         lastMessageAt: {
           $first: "$createdAt",
         },
@@ -108,6 +111,8 @@ module.exports.getLastMessages = async (chats) => {
 
   // Convert BSON to JSON
   chatMessages = JSON.parse(JSON.stringify(chatMessages));
+
+  console.log(chatMessages);
 
   // Merge matching arrays
   const updatedChats = _.map(chats, function (item) {
