@@ -18,6 +18,7 @@ import {
   faTimes,
   faKeyboard,
   faChevronRight,
+  faSmile,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
@@ -40,6 +41,7 @@ import Options from "../components/Chat/Options";
 
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
+import Gif from "../components/Chat/Gif";
 
 const draftUtils = require("draftjs-utils");
 
@@ -62,6 +64,7 @@ function Chat() {
   const [showChat, setShowChat] = useState(0);
   const [chat, setChat] = useState({});
   const [simpleController, setSimpleController] = useState(false);
+  const [switchEmojiGif, setSwitchEmojiGif] = useState("emoji");
 
   const [toggleEmoji, setToggleEmoji] = useState(false);
 
@@ -72,8 +75,8 @@ function Chat() {
   const editorContainer = useRef(null);
   const fileRef = useRef(null);
   const messageContainer = useRef(null);
-  let domEditor = useRef(null);
 
+  let domEditor = useRef(null);
   const setDomEditorRef = (ref) => (domEditor = ref);
 
   const [files, setFiles] = useState([]);
@@ -625,15 +628,34 @@ function Chat() {
       </div>
       {toggleEmoji ? (
         <div className="emoji-wrapper">
-          <Picker
-            set="apple"
-            title="Pick your emoji…"
-            emoji="point_up"
-            theme="auto"
-            style={{ width: "100%", height: "100%" }}
-            color="#0575e6"
-            onSelect={handleAddEmoji}
-          />
+          {switchEmojiGif === "emoji" ? (
+            <Picker
+              set="apple"
+              title="Pick your emoji…"
+              emoji="point_up"
+              theme="auto"
+              style={{ width: "100%", height: "100%" }}
+              color="#0575e6"
+              onSelect={handleAddEmoji}
+            />
+          ) : (
+            <Gif style={{ width: "100%", height: "100%" }} />
+          )}
+
+          <div className="emoji-gif-box">
+            <Ripple.Button
+              className={switchEmojiGif === "emoji" ? "selected" : ""}
+              onClick={() => setSwitchEmojiGif("emoji")}
+            >
+              <FontAwesomeIcon icon={faSmile} />
+            </Ripple.Button>
+            <Ripple.Button
+              className={switchEmojiGif === "gif" ? "selected" : ""}
+              onClick={() => setSwitchEmojiGif("gif")}
+            >
+              GIF
+            </Ripple.Button>
+          </div>
         </div>
       ) : null}
 

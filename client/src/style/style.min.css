@@ -1116,6 +1116,9 @@
 }
 
 .emoji-wrapper {
+  position: relative;
+  height: 375px;
+  min-height: 375px;
   width: 100%;
   margin-top: auto;
 }
@@ -1153,7 +1156,6 @@
   width: 100%;
   padding: 6px 0;
   border-radius: 5px;
-  border: 1px solid #555453;
   outline: 0;
 }
 
@@ -1165,6 +1167,49 @@
 
 .emoji-wrapper .emoji-mart-scroll {
   height: 240px;
+}
+
+.emoji-wrapper .gif-container {
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+}
+
+.emoji-wrapper .emoji-gif-box {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 46px;
+  bottom: 0;
+  background-color: #222;
+  border-top: 1px solid #555453;
+}
+
+.emoji-wrapper .emoji-gif-box button {
+  background-color: unset;
+  border: none;
+  outline: none;
+  width: 80px;
+  height: 30px;
+  border-radius: 20px;
+  border: 1px solid #555453;
+  color: white;
+  margin: 0 2px;
+}
+
+.emoji-wrapper .selected {
+  color: #0575e6 !important;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 :root {
