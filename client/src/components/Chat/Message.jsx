@@ -1,24 +1,32 @@
-import React, { useEffect, useState, useContext } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState, useRef } from "react";
 import Avatar from "../Avatar";
-import { UserContext } from "../../context/UserContext";
 import MessageLoading from "./MessageLoading";
 
-function Message({ message, isMyMessage, bubble }) {
+function Message({
+  message,
+  isMyMessage,
+  bubble,
+  setImagesHasLoaded,
+  scrollToBottom,
+}) {
+  const fileRef = useRef();
+
   const messageClass = isMyMessage ? "my-message" : "user-message";
   const bubbleClass = isMyMessage ? "my-bubble" : "user-bubble";
   const [showMessage, setShowMessage] = useState(false);
 
-  // const [isLoading, setIsLoading] = useState(false);
-
   // useEffect(() => {
-  //   // console.log(message.isLoading);
-  //   if (message.isLoading) setIsLoading(true);
-  // }, []);
+  //   console.log(showMessage);
+  // }, [showMessage]);
 
-  useEffect(() => {
-    console.log("show message");
-  }, [showMessage]);
+  const handleInitMessage = () => {
+    setImagesHasLoaded((count) => count + 1);
+    //
+    setShowMessage(true);
+    scrollToBottom();
+
+    message.isNewMessage && fileRef.current.classList.add("bubble-fade-in");
+  };
 
   return (
     <>
@@ -26,7 +34,7 @@ function Message({ message, isMyMessage, bubble }) {
         <li
           key={message._id}
           className={`${messageClass}`}
-          style={showMessage ? null : { display: "none" }}
+          style={showMessage ? null : { height: "0", position: "absolute" }}
         >
           {!isMyMessage && message.showAvatar ? (
             <Avatar
@@ -41,11 +49,7 @@ function Message({ message, isMyMessage, bubble }) {
               user={message.author}
             />
           ) : null}
-          <div
-            className={`${showMessage ? "img-wrapper" : null} ${
-              message.isNewMessage ? "bubble-fade-in" : null
-            }`}
-          >
+          <div className={`img-wrapper`} ref={fileRef}>
             {message.isLoading ? (
               <MessageLoading style={{ ...bubble }} />
             ) : null}
@@ -53,7 +57,7 @@ function Message({ message, isMyMessage, bubble }) {
               src={message.file.path}
               alt=""
               style={{ ...bubble }}
-              onLoad={() => setShowMessage(true)}
+              onLoad={() => handleInitMessage()}
             />
           </div>
         </li>
@@ -74,7 +78,7 @@ function Message({ message, isMyMessage, bubble }) {
           ) : null}
           <div
             className={`${bubbleClass} ${
-              message.isNewMessage ? "bubble-fade-in" : null
+              message.isNewMessage ? "bubble-fade-in" : ""
             }`}
             style={{ ...bubble }}
           >

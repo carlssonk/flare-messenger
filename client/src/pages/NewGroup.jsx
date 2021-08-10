@@ -26,7 +26,6 @@ function NewGroup() {
   };
 
   const handleSelectFriend = (user) => {
-    console.log(user);
     if (selectedFriends.some((e) => e._id === user._id)) {
       setIsRemoving(true);
       const selectedFriendsCopy = [...selectedFriends];

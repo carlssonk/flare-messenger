@@ -5,7 +5,7 @@ import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
 // import { Scroll } from "framer";
 
-function FindFriends({ toggleScroll, incomingRequests, handleRequest }) {
+function FindFriends({ incomingRequests, handleRequest }) {
   return (
     <div className="incoming-requests-wrapper">
       {/* <Scroll

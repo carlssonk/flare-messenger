@@ -68,7 +68,6 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
     });
     const data = await res.json();
     setIsLoading(false);
-    console.log(data.chatId);
     setUser({
       ...user,
       chats: [...user.chats, data.chatId],
@@ -83,7 +82,6 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
   const addFile = (e) => {
     if (e.target.files[0].type.indexOf("image/") > -1) {
       const file = e.target.files[0];
-      console.log(file);
       const fileURL = window.URL.createObjectURL(file);
       setImageFile(file);
       setPreviewAvatarUrl(fileURL);

@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import FindFriends from "../components/AddFriends/FindFriends";
 import SentRequests from "../components/AddFriends/SentRequests";
-import SwipeableViews from "react-swipeable-views";
 import UsersList from "../components/AddFriends/UsersList";
 import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
 import { findUserAndRemove } from "../utils/friends";
 
 function AddFriends() {
   const [pageNum, setPageNum] = useState(0);
-  const [toggleScroll, setToggleScroll] = useState(true);
 
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -144,7 +142,7 @@ function AddFriends() {
             </IonSegmentButton>
           </IonSegment>
 
-          <SwipeableViews
+          {/* <SwipeableViews
             enableMouseEvents
             index={pageNum}
             hysteresis={0.5}
@@ -154,17 +152,16 @@ function AddFriends() {
             onSwitching={() => setToggleScroll(false)}
             onTransitionEnd={() => setToggleScroll(true)}
             style={{ height: "100%" }}
-          >
-            <FindFriends
-              toggleScroll={toggleScroll}
-              incomingRequests={incomingRequests}
-              handleRequest={handleRequest}
-            />
-            <SentRequests
-              sentRequests={sentRequests}
-              handleRequest={handleRequest}
-            />
-          </SwipeableViews>
+          > */}
+          <FindFriends
+            incomingRequests={incomingRequests}
+            handleRequest={handleRequest}
+          />
+          <SentRequests
+            sentRequests={sentRequests}
+            handleRequest={handleRequest}
+          />
+          {/* </SwipeableViews> */}
         </>
       )}
     </IonPage>

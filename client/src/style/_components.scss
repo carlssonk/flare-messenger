@@ -482,3 +482,60 @@
   display: grid;
   place-items: center;
 }
+
+.emoji-wrapper {
+  width: 100%;
+  // height: 50%;
+  // height: 400px;
+  // bottom: 54px;
+  // display: flex;
+  // align-items: flex-end;
+  margin-top: auto;
+
+  .emoji-mart {
+    border: none;
+    border-radius: unset;
+    .emoji-mart-title-label {
+      font-size: 20px !important;
+    }
+    .emoji-mart-preview {
+      overflow: hidden;
+      height: 40px;
+    }
+  }
+
+  .emoji-mart-anchors {
+    max-height: 50px;
+  }
+
+  .emoji-mart-search {
+    input {
+      background-color: transparent;
+      height: unset;
+      margin: unset;
+      -webkit-box-shadow: none;
+      box-shadow: unset;
+      -webkit-box-sizing: none;
+      box-sizing: unset;
+      -webkit-transition: none;
+      transition: none;
+
+      font-size: 16px;
+      display: block;
+      width: 100%;
+      padding: 6px 0;
+      border-radius: 5px;
+      border: 1px solid #555453;
+      outline: 0;
+      &:focus {
+        border-bottom: 1px solid #555453 !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .emoji-mart-scroll {
+    height: 240px;
+  }
+}

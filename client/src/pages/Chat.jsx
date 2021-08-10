@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
 import { SocketContext } from "../context/SocketContext";
-import _Jeb from "../imgs/Jens-Bergensten.png";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -17,19 +16,29 @@ import {
   faMicrophone,
   faGrinSquintTears,
   faTimes,
+  faKeyboard,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 import { IonAlert } from "@ionic/react";
 
-import { sendMessage } from "../utils/socket";
-
-import { Editor, EditorState, getDefaultKeyBinding } from "draft-js";
+import {
+  Editor,
+  EditorState,
+  getDefaultKeyBinding,
+  ContentState,
+  RichUtils,
+  Modifier,
+  SelectionState,
+} from "draft-js";
 import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
 import GroupAvatar from "../components/GroupAvatar";
 import Message from "../components/Chat/Message";
 import Options from "../components/Chat/Options";
+
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
 
 const draftUtils = require("draftjs-utils");
 
@@ -43,8 +52,12 @@ function Chat() {
   const [friends, setFriends] = useState([]);
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState([]);
-  // const [myLastMessage, setMyLastMessage] = useState([]);
+  const [imagesHasLoaded, setImagesHasLoaded] = useState(0);
+  const [imagesCount, setImagesCount] = useState(0);
+  const [showChat, setShowChat] = useState(0);
   const [chat, setChat] = useState({});
+
+  const [toggleEmoji, setToggleEmoji] = useState(false);
 
   const [initPage, setInitPage] = useState(false);
 
@@ -89,13 +102,17 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    console.log("WATTAFAK");
+    if (imagesCount === 0) return;
+    if (imagesCount === imagesHasLoaded) setShowChat(true);
+  }, [imagesHasLoaded, imagesCount]);
+
+  useEffect(() => {
     socket.on("message", (message) => {
       if (message[0].author._id === user.id) return;
 
       setInitMessages((messages) => [...message, ...messages]);
     });
-  }, [socket]);
+  }, [socket, user.id]);
 
   useEffect(() => {
     let lastId;
@@ -131,16 +148,21 @@ function Chat() {
   // }, [messages]);
 
   useEffect(() => {
+    // if (editorHeight < 240) {
     setEditorHeight(
       editorContainer.current && editorContainer.current.offsetHeight
     );
+    // }
     setEditorMaxWidth(
       editorWrapper.current && editorWrapper.current.offsetWidth
     );
+
+    // if (draftUtils.getAllBlocks(editorState).size >= 8) return;
   }, [editorState]);
 
   const keyBindning = (e) => {
     if (listenSubmit(e)) return handleSubmit();
+
     return getDefaultKeyBinding(e);
   };
 
@@ -254,6 +276,7 @@ function Chat() {
 
   const resetInput = () => {
     setEditorState(draftUtils.clearEditorContent(editorState));
+
     setFiles([]);
   };
 
@@ -273,6 +296,10 @@ function Chat() {
       setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
+
+      const filesCount = data.messages.filter((e) => e.file).length;
+      setImagesCount(filesCount);
+      if (filesCount === 0) setShowChat(true);
     };
     getChatData();
   }, [location.pathname, user]);
@@ -357,11 +384,12 @@ function Chat() {
     setTimeout(() => {
       scrollToBottom();
     }, 10);
-  }, [messages]);
+  }, [messages, showChat, initPage]);
 
   return (
     <div className="chat-page page">
-      <Options container={messageContainer} />
+      {/* <div style={{ position: "relative" }}> */}
+      <Options container={messageContainer} toggleEmoji={toggleEmoji} />
       <div className="header-wrapper">
         <div className="header">
           <div className="top-bar">
@@ -417,7 +445,11 @@ function Chat() {
         </div>
         <div className="blur"></div>
       </div>
-      <div className="message-container" ref={messageContainer}>
+      <div
+        className="message-container"
+        ref={messageContainer}
+        style={showChat ? null : { visibility: "hidden" }}
+      >
         <ul className="message-list">
           <div ref={messagesEndRef} style={{ width: "0" }} />
           {messages &&
@@ -429,12 +461,15 @@ function Chat() {
                   message={e}
                   isMyMessage={e.author._id === user.id}
                   bubble={handleBubbleRadius(e)}
+                  setImagesHasLoaded={setImagesHasLoaded}
+                  scrollToBottom={scrollToBottom}
                 />
               );
             })}
         </ul>
       </div>
       {/* e.author._id === user.id ? */}
+
       <div className="controller-container">
         <Ripple.Div className="icon-outside">
           <FontAwesomeIcon icon={faCamera} />
@@ -465,10 +500,22 @@ function Chat() {
           }}
           ref={inputRef}
         >
-          <Ripple.Div className="icon-inside">
-            <FontAwesomeIcon icon={faGrinSquintTears} />
+          <Ripple.Div
+            className="icon-inside"
+            onClick={() => setToggleEmoji((bool) => !bool)}
+          >
+            {/* <FontAwesomeIcon icon={faGrinSquintTears} /> */}
+            {toggleEmoji ? (
+              <FontAwesomeIcon icon={faKeyboard} />
+            ) : (
+              <FontAwesomeIcon icon={faGrinSquintTears} />
+            )}
           </Ripple.Div>
-          <div className="editor-wrapper" ref={editorWrapper}>
+          <div
+            className="editor-wrapper"
+            ref={editorWrapper}
+            style={{ maxHeight: "240px" }}
+          >
             <ul className="file-preview-list">
               {files &&
                 files.map((e) => {
@@ -514,6 +561,19 @@ function Chat() {
           <FontAwesomeIcon icon={faPaperPlane} />
         </Ripple.Div>
       </div>
+      {toggleEmoji ? (
+        <div className="emoji-wrapper">
+          <Picker
+            set="apple"
+            title="Pick your emoji…"
+            emoji="point_up"
+            theme="auto"
+            style={{ width: "100%", height: "100%" }}
+            color="#0575e6"
+          />
+        </div>
+      ) : null}
+
       <IonAlert
         isOpen={maximumFilesAlert}
         onDidDismiss={() => setMaximumFilesAlert(false)}
@@ -522,6 +582,7 @@ function Chat() {
         message={"Maxmimum number of attatchments is 10."}
         buttons={[{ text: "OK", handler: () => setMaximumFilesAlert(false) }]}
       />
+      {/* </div> */}
     </div>
   );
 }

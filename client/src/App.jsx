@@ -21,7 +21,6 @@ import { joinChat, leaveChat } from "./utils/socket";
 import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
 import Archived from "./pages/Archived";
-import Options from "./components/Chat/Options";
 
 function App() {
   const location = useLocation();

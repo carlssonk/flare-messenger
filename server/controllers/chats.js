@@ -41,8 +41,6 @@ module.exports.showChats = async (req, res) => {
       : "",
   }));
 
-  // console.log(chats);
-
   if (hasTrashedChatGottenMessage(chats)) {
     return unTrashChats(res, myId, chats);
   }
@@ -55,7 +53,6 @@ const hasTrashedChatGottenMessage = (chats) => {
 };
 
 const unTrashChats = async (res, myId, chats) => {
-  // console.log("trash");
   let chatIdList = [];
 
   const updatedChats = chats.map((e) => {

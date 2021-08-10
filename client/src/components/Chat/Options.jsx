@@ -1,22 +1,21 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-function Options({ container }) {
+function Options({ container, toggleEmoji }) {
   useEffect(() => {
     if (!container.current) return;
-    setBubbleGradientHeight();
-  }, [container]);
+    document.documentElement.style.setProperty(
+      "--background-size-h",
+      `${container.current.offsetHeight}px`
+    );
+  }, [container, toggleEmoji]);
 
   const reportWindowSize = () => {
-    setBubbleGradientHeight();
-  };
-  window.onresize = reportWindowSize;
-
-  const setBubbleGradientHeight = () => {
     document.documentElement.style.setProperty(
       "--background-size-h",
       `${container.current.offsetHeight}px`
     );
   };
+  window.onresize = reportWindowSize;
 
   return null;
 }

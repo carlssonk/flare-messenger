@@ -62,8 +62,6 @@ module.exports.sendMessage = async (req, res) => {
 
   const spreadMessage = handleSpreadMessage(message);
 
-  console.log(spreadMessage);
-
   socket.emitMessage(chatId, spreadMessage);
 
   res.json({ message: spreadMessage });

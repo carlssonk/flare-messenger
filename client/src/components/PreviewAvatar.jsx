@@ -46,8 +46,6 @@ function PreviewAvatar({
   useEffect(() => {
     if (imageLoaded) {
       const imageInfo = getImgSizeInfo(imageRef.current);
-      console.log(imageRef.current);
-      console.log(imageInfo);
       setImageSize({
         width: imageInfo.width,
         height: imageInfo.height,
@@ -154,10 +152,6 @@ function PreviewAvatar({
       calculatePosition(imageSize, circleRef, imageRef, scaleValue)
     );
   };
-
-  useEffect(() => {
-    console.log(outsideBounds);
-  }, [outsideBounds]);
 
   useEffect(() => {
     if (!togglePopupWait) setTimeout(() => handleTogglePopup(false), 250);
