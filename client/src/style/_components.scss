@@ -551,11 +551,11 @@
     .query-gifs {
       display: inline-block;
       grid-template-columns: unset !important;
-      -webkit-column-count: 3;
+      -webkit-column-count: 10;
       -webkit-column-gap: 0px;
-      -moz-column-count: 3;
+      -moz-column-count: 10;
       -moz-column-gap: 0px;
-      column-count: 3 !important;
+      column-count: 10;
       column-gap: 0px;
       li {
         width: fit-content;
