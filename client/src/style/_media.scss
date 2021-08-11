@@ -1,0 +1,27 @@
+@media all and (max-width: 540px) {
+  .gif-container {
+    .__gif-wrapper__ {
+      ul {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        li {
+          max-height: 110px;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: 375px) {
+  .page {
+    .gif-container {
+      .__gif-wrapper__ {
+        ul {
+          grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+          li {
+            max-height: 90px;
+          }
+        }
+      }
+    }
+  }
+}

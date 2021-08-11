@@ -189,19 +189,21 @@ function Header({
         </div>
       </div>
       {page === "archived" ? null : (
-        <div className="search-box">
-          <FontAwesomeIcon icon={faSearch} />
-          {location.pathname === "/add" ? (
-            <input
-              onChange={handleFindUsers}
-              type="text"
-              className="search"
-              placeholder="Find Friends"
-            />
-          ) : null}
-          {location.pathname !== "/add" ? (
-            <input type="text" className="search" placeholder="Search" />
-          ) : null}
+        <div className="input-wrapper">
+          <div className="search-box">
+            <FontAwesomeIcon icon={faSearch} />
+            {location.pathname === "/add" ? (
+              <input
+                onChange={handleFindUsers}
+                type="text"
+                className="search"
+                placeholder="Find Friends"
+              />
+            ) : null}
+            {location.pathname !== "/add" ? (
+              <input type="text" className="search" placeholder="Search" />
+            ) : null}
+          </div>
         </div>
       )}
       <IonAlert
