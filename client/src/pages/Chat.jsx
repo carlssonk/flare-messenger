@@ -639,7 +639,7 @@ function Chat() {
               onSelect={handleAddEmoji}
             />
           ) : (
-            <Gif style={{ width: "100%", height: "100%" }} />
+            <Gif />
           )}
 
           <div className="emoji-gif-box">
