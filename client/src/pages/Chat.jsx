@@ -179,6 +179,7 @@ function Chat() {
   }, [socket, user.id]);
 
   useEffect(() => {
+    console.log(initMessages.length);
     let lastId;
     let idArr = [];
     for (let i = 0; i < initMessages.length; i++) {
@@ -203,6 +204,7 @@ function Chat() {
         return { ...obj, showAvatar: false };
       }
     });
+    console.log(newMsgs.length);
 
     let bubbleArray = [];
     for (let message of newMsgs) {
@@ -212,72 +214,10 @@ function Chat() {
     const bubbledMsgs = newMsgs.map((obj, idx) => {
       return { ...obj, ...bubbleArray[idx] };
     });
-    console.log(bubbledMsgs);
 
+    console.log(bubbledMsgs.length);
     setMessages(bubbledMsgs);
-    // console.log(newMsgs);
-    // factorBubbles(newMsgs);
   }, [initMessages]);
-
-  // const factorBubbles = (messages) => {
-  //   let array = [];
-
-  //   for (let i = 0; i < messages.length; i++) {
-  //     const msgs = [...messages].reverse();
-  //     const isMyMessage = msgs[i].author._id === user.id;
-  //     const prevMessage = msgs[i - 1];
-  //     const nextMessage = msgs[i + 1];
-  //     if (!prevMessage || !nextMessage) {
-  //       array.push(null);
-  //       continue;
-  //     }
-  //     const currentId = msgs[i].author._id;
-  //     const prevId = prevMessage.author._id;
-  //     const nextId = nextMessage.author._id;
-  //     if (!prevMessage && !nextMessage) {
-  //       array.push(null);
-  //       continue;
-  //     }
-
-  //     // If Last Message
-  //     if (msgs[i].showAvatar) {
-  //       if (currentId === prevId && !prevMessage.showAvatar) {
-  //         array.push(bubbleUp(isMyMessage));
-  //         continue;
-  //       }
-  //     }
-
-  //     // If has no avatar
-  //     if (prevMessage && nextMessage && !msgs[i].showAvatar) {
-  //       // If in middle
-  //       if (currentId === prevId && currentId === nextId) {
-  //         // If prevMesage has avatar
-  //         if (prevMessage.showAvatar) {
-  //           array.push(bubbleDown(isMyMessage));
-  //           // continue;
-  //         } else {
-  //           array.push(bubbleMid(isMyMessage));
-  //         }
-  //         continue;
-  //       }
-
-  //       if (currentId === nextId) {
-  //         array.push(bubbleDown(isMyMessage));
-  //       }
-  //     }
-  //   }
-
-  //   console.log(array.length);
-  //   console.log(array);
-
-  //   const bubbledMsgs = messages.map((obj, idx) => {
-  //     return { ...obj, ...array[idx] };
-  //   });
-
-  //   console.log(bubbledMsgs);
-
-  //   // setMessages(bubbledMsgs);
-  // };
 
   const handleBubbleRadius = (message, messages) => {
     if (!message) return;
@@ -407,7 +347,7 @@ function Chat() {
     // setMessages(newMessages);
   };
 
-  const submitUI = (text) => {
+  const submitUI = () => {
     const { avatar, username, id } = user;
     const author = { avatar, username, _id: id };
 
@@ -493,6 +433,7 @@ function Chat() {
       if (!user.chats.includes(chatId)) return;
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
+      console.log(data.messages.length);
       setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
@@ -766,7 +707,7 @@ function Chat() {
               onSelect={handleAddEmoji}
             />
           ) : (
-            <Gif handleSubmit={handleSubmit} setFiles={setFiles} />
+            <Gif setInitMessages={setInitMessages} />
           )}
 
           <div className="emoji-gif-box">

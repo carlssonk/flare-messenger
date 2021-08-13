@@ -26,6 +26,7 @@ module.exports.getMessages = async (chatId, trashedAt) => {
       "-__v -createdAt -updatedAt -friends -email -chats -name"
     );
   }
+  // console.log(messages);
 
   return messages;
 };
@@ -68,8 +69,41 @@ const wrapURLs = function (text, new_window) {
   });
 };
 
+const sendGif = async (req, res) => {
+  const { _id, username, avatar } = req.user;
+  const chatId = req.params.id;
+  const { url, source } = req.body;
+
+  const messageDoc = await new Message({
+    gif: { url, source },
+    files: [],
+    author: _id,
+    chat: chatId,
+  });
+  await messageDoc.save();
+
+  const author = { _id, username, avatar };
+
+  const message = [
+    {
+      _id: messageDoc._id,
+      createdAt: messageDoc.createdAt,
+      gif: messageDoc.gif,
+      files: messageDoc.files,
+      showAvatar: true,
+      isNewMessage: true,
+      author,
+    },
+  ];
+
+  socket.emitMessage(chatId, message);
+
+  res.json({ message: message });
+};
+
 module.exports.sendMessage = async (req, res) => {
-  console.log("SEND MESSAGE");
+  console.log(req.query.type);
+  if (req.query.type === "gif") return sendGif(req, res);
   const rawFiles = req.files;
   let text = req.body.text;
   if (!text) text = "";
@@ -102,14 +136,14 @@ module.exports.sendMessage = async (req, res) => {
   const message = {
     _id: messageDoc._id,
     createdAt: messageDoc.createdAt,
+    hasUrl: messageDoc.hasUrl,
+    stringTag: messageDoc.stringTag,
     text: messageDoc.text,
     files: messageDoc.files,
     showAvatar: true,
     isNewMessage: true,
     author,
   };
-
-  console.log(message.text);
 
   const spreadMessage = handleSpreadMessage(message);
 
@@ -118,9 +152,18 @@ module.exports.sendMessage = async (req, res) => {
   res.json({ message: spreadMessage });
 };
 
-const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
+const handleSpreadMessage = ({
+  files,
+  author,
+  createdAt,
+  text,
+  hasUrl,
+  stringTag,
+  ...rest
+}) => {
   let newArray = [];
-  if (text) newArray.push({ author, createdAt, text, ...rest });
+  if (text)
+    newArray.push({ author, createdAt, text, hasUrl, stringTag, ...rest });
 
   for (let file of files) {
     newArray.push({

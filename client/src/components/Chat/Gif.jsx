@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { categories } from "../../utils/gifCategories";
+import { useLocation } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidv4 } from "uuid";
 import Ripple from "../Effects/Ripple";
+import { UserContext } from "../../context/UserContext";
 
 const FlareKey = "PLHRTZN7D20S";
 
@@ -20,7 +22,9 @@ function getWindowDimensions() {
   };
 }
 
-function Gif({ setFiles, handleSubmit }) {
+function Gif({ setInitMessages }) {
+  const { user } = useContext(UserContext);
+  const location = useLocation();
   const imgRef = useRef(null);
   const gifContainer = useRef(null);
   const topRef = useRef(null);
@@ -117,6 +121,7 @@ function Gif({ setFiles, handleSubmit }) {
     );
     const data = await res.json();
     setGifs(data.results);
+    console.log(data.results);
     setShowGifs(true);
   };
 
@@ -126,15 +131,37 @@ function Gif({ setFiles, handleSubmit }) {
   };
   window.onresize = handleWindowResize;
 
-  const scrollToTop = () => {
-    topRef.current?.scrollIntoView();
+  const handleSendGif = async (url, source) => {
+    const chatId = location.pathname.replace("/chat/", "");
+    if (!user.chats.includes(chatId)) return;
+    const myMessage = submitUI(url, source);
+    await fetch(`/api/messages/${chatId}?type=gif`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url, source }),
+    });
   };
 
-  const handleSendGif = async (url) => {
-    const res = await testImage(
-      "https://preview.redd.it/hodmzjpzzue51.jpg?width=640&crop=smart&auto=webp&s=0498691dfd949cae6acd0e276405849a8f7d6f6c"
-    );
-    console.log(res);
+  const submitUI = (url, source) => {
+    const { avatar, username, id } = user;
+    const author = { avatar, username, _id: id };
+
+    const message = {
+      _id: uuidv4(),
+      createdAt: new Date(),
+      gif: { url, source },
+      files: [],
+      showAvatar: true,
+      isLoading: false,
+      isNewMessage: true,
+      author,
+    };
+
+    setInitMessages((messages) => [message, ...messages]);
+    return message;
   };
 
   function testImage(url, timeout = 5000) {
@@ -214,7 +241,7 @@ function Gif({ setFiles, handleSubmit }) {
                             alt=""
                             className="gif-img"
                             onClick={() =>
-                              handleSendGif(gif.media[0].tinygif.url)
+                              handleSendGif(gif.url, gif.media[0].tinygif.url)
                             }
                             // ref={imgRef}
                             // onLoad={() => handleSetGifLoaded()}

@@ -63,6 +63,7 @@ function Message({
   };
 
   useEffect(() => {
+    console.log(message);
     // if (!message.text) return;
     if (!message.text) return;
     const rawText = message.text;
@@ -124,7 +125,6 @@ function Message({
               user={message.author}
             />
           ) : null}
-
           {message.hasUrl ? (
             <div
               className={`${bubbleClass} ${
@@ -150,6 +150,30 @@ function Message({
               name="dots"
             />
           ) : null}
+        </li>
+      ) : null}
+      {message.gif ? (
+        <li key={message._id} className={messageClass}>
+          {!isMyMessage && message.showAvatar ? (
+            <Avatar
+              style={{
+                width: "30px",
+                minWidth: "30px",
+                height: "30px",
+                fontSize: "18px",
+                position: "absolute",
+                left: "0",
+              }}
+              user={message.author}
+            />
+          ) : null}
+          <div className={`img-wrapper`}>
+            <img
+              src={message.gif.source}
+              alt=""
+              style={{ borderRadius: message.borderRadius }}
+            />
+          </div>
         </li>
       ) : null}
     </>

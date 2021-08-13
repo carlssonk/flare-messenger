@@ -131,10 +131,10 @@ module.exports.showChat = async (req, res) => {
 
   const messages = await getMessages(id, trashedAt);
 
-  // Add avatar to messages
   const parseMsgs = JSON.parse(JSON.stringify(messages)).reverse();
 
   const msgs = handleSpreadMessages(parseMsgs);
+  console.log(msgs.length);
 
   // let lastId;
   // let idArr = [];
@@ -166,8 +166,8 @@ module.exports.showChat = async (req, res) => {
 
 const handleSpreadMessages = (messages) => {
   let newArray = [];
-  for (let { files, author, createdAt, text, ...rest } of messages) {
-    if (text) newArray.push({ author, createdAt, text, ...rest });
+  for (let { files, author, createdAt, text, gif, ...rest } of messages) {
+    if (text || gif) newArray.push({ author, createdAt, text, gif, ...rest });
 
     for (let file of files) {
       newArray.push({
