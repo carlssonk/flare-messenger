@@ -312,7 +312,7 @@ function Chat() {
     }
 
     // Handle FIRST message
-    if (currentId === msgs[0].author._id) {
+    if (nextMessage && message._id === msgs[0]._id) {
       if (currentId === nextMessage.author._id && !nextMessage.showAvatar) {
         return bubbleDown(isMy);
       }
