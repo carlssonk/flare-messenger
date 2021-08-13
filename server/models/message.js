@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
     text: String,
+    stringTag: String,
+    hasUrl: Boolean,
     files: {
       type: Array,
       required: true,

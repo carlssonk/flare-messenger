@@ -32,12 +32,14 @@ import {
   RichUtils,
   Modifier,
   SelectionState,
+  CompositeDecorator,
 } from "draft-js";
 import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
 import GroupAvatar from "../components/GroupAvatar";
 import Message from "../components/Chat/Message";
 import Options from "../components/Chat/Options";
+import LinkSpan from "../components/Chat/LinkSpan";
 
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
@@ -45,8 +47,51 @@ import Gif from "../components/Chat/Gif";
 
 const draftUtils = require("draftjs-utils");
 
+const bubbleDown = (isMyMessage) => {
+  return isMyMessage
+    ? { borderRadius: "30px 30px 4px 30px" }
+    : { borderRadius: "30px 30px 30px 4px" };
+};
+
+const bubbleUp = (isMyMessage) => {
+  return isMyMessage
+    ? { borderRadius: "30px 4px 30px 30px" }
+    : { borderRadius: "4px 30px 30px 30px" };
+};
+
+const bubbleMid = (isMyMessage) => {
+  return isMyMessage
+    ? { borderRadius: "30px 4px 4px 30px" }
+    : { borderRadius: "4px 30px 30px 4px" };
+};
+
 const isInputEmpty = (text, files) => {
   return text.replace(/\s/g, "").length > 0 || files.length > 0 ? true : false;
+};
+
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
+
+function linkStrategy(contentBlock, callback, contentState) {
+  findWithRegex(URL_REGEX, contentBlock, callback);
+}
+
+function findWithRegex(regex, contentBlock, callback) {
+  const text = contentBlock.getText();
+  let matchArr, start;
+  while ((matchArr = regex.exec(text)) !== null) {
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
+  }
+}
+
+const wrapURLs = function (text, new_window) {
+  const target = new_window === true || new_window == null ? "_blank" : "";
+  return text.replace(URL_REGEX, function (url) {
+    const protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
+    const href = protocol_pattern.test(url) ? url : "http://" + url;
+    return '<a href="' + href + '" target="' + target + '">' + url + "</a>";
+  });
 };
 
 function Chat() {
@@ -92,7 +137,14 @@ function Chat() {
   );
 
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    EditorState.createEmpty(
+      new CompositeDecorator([
+        {
+          strategy: linkStrategy,
+          component: LinkSpan,
+        },
+      ])
+    )
   );
 
   const text = editorState.getCurrentContent().getPlainText();
@@ -152,8 +204,120 @@ function Chat() {
       }
     });
 
-    setMessages(newMsgs);
+    let bubbleArray = [];
+    for (let message of newMsgs) {
+      const res = handleBubbleRadius(message, newMsgs);
+      bubbleArray.push(res);
+    }
+    const bubbledMsgs = newMsgs.map((obj, idx) => {
+      return { ...obj, ...bubbleArray[idx] };
+    });
+    console.log(bubbledMsgs);
+
+    setMessages(bubbledMsgs);
+    // console.log(newMsgs);
+    // factorBubbles(newMsgs);
   }, [initMessages]);
+
+  // const factorBubbles = (messages) => {
+  //   let array = [];
+
+  //   for (let i = 0; i < messages.length; i++) {
+  //     const msgs = [...messages].reverse();
+  //     const isMyMessage = msgs[i].author._id === user.id;
+  //     const prevMessage = msgs[i - 1];
+  //     const nextMessage = msgs[i + 1];
+  //     if (!prevMessage || !nextMessage) {
+  //       array.push(null);
+  //       continue;
+  //     }
+  //     const currentId = msgs[i].author._id;
+  //     const prevId = prevMessage.author._id;
+  //     const nextId = nextMessage.author._id;
+  //     if (!prevMessage && !nextMessage) {
+  //       array.push(null);
+  //       continue;
+  //     }
+
+  //     // If Last Message
+  //     if (msgs[i].showAvatar) {
+  //       if (currentId === prevId && !prevMessage.showAvatar) {
+  //         array.push(bubbleUp(isMyMessage));
+  //         continue;
+  //       }
+  //     }
+
+  //     // If has no avatar
+  //     if (prevMessage && nextMessage && !msgs[i].showAvatar) {
+  //       // If in middle
+  //       if (currentId === prevId && currentId === nextId) {
+  //         // If prevMesage has avatar
+  //         if (prevMessage.showAvatar) {
+  //           array.push(bubbleDown(isMyMessage));
+  //           // continue;
+  //         } else {
+  //           array.push(bubbleMid(isMyMessage));
+  //         }
+  //         continue;
+  //       }
+
+  //       if (currentId === nextId) {
+  //         array.push(bubbleDown(isMyMessage));
+  //       }
+  //     }
+  //   }
+
+  //   console.log(array.length);
+  //   console.log(array);
+
+  //   const bubbledMsgs = messages.map((obj, idx) => {
+  //     return { ...obj, ...array[idx] };
+  //   });
+
+  //   console.log(bubbledMsgs);
+
+  //   // setMessages(bubbledMsgs);
+  // };
+
+  const handleBubbleRadius = (message, messages) => {
+    if (!message) return;
+    const isMy = message.author._id === user.id;
+
+    const msgs = [...messages].reverse();
+    const idx = msgs.findIndex((e) => e._id === message._id);
+
+    const prevMessage = msgs[idx - 1];
+    const nextMessage = msgs[idx + 1];
+    const currentId = message.author._id;
+
+    if (!prevMessage && !nextMessage) return;
+
+    if (prevMessage && message.showAvatar) {
+      // Handle LAST message of block
+      if (currentId === prevMessage.author._id && !prevMessage.showAvatar)
+        return bubbleUp(isMy);
+    }
+
+    // Handle TOP & MIDDLE messages of block
+    if (prevMessage && nextMessage && !message.showAvatar) {
+      if (
+        currentId === prevMessage.author._id &&
+        currentId === nextMessage.author._id
+      ) {
+        if (prevMessage.showAvatar) return bubbleDown(isMy);
+        return bubbleMid(isMy);
+      }
+
+      if (currentId === nextMessage.author._id) return bubbleDown(isMy);
+    }
+
+    // Handle FIRST message
+    if (currentId === msgs[0].author._id) {
+      if (currentId === nextMessage.author._id && !nextMessage.showAvatar) {
+        return bubbleDown(isMy);
+      }
+    }
+  };
 
   useEffect(() => {
     if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
@@ -240,6 +404,7 @@ function Chat() {
     const copyMessages = [...messages];
     const newMessages = [...updateMessage, ...copyMessages];
     setInitMessages(newMessages);
+    // setMessages(newMessages);
   };
 
   const submitUI = (text) => {
@@ -251,10 +416,19 @@ function Chat() {
       return { path: url, originalname: file.name };
     });
 
+    let hasUrl = false;
+    let stringTag = "";
+    if (URL_REGEX.exec(text) !== null) {
+      stringTag = wrapURLs(text);
+      hasUrl = true;
+    }
+
     const message = {
       _id: uuidv4(),
       createdAt: new Date(),
       text,
+      stringTag,
+      hasUrl,
       files: newFiles,
       showAvatar: true,
       isLoading: true,
@@ -350,53 +524,6 @@ function Chat() {
     const updatedArr = filesCopy.filter((e) => e.id !== id);
 
     setFiles(updatedArr);
-  };
-
-  const handleBubbleRadius = (message) => {
-    const isMyMessage = message.author._id === user.id;
-
-    const bubbleDown = isMyMessage
-      ? { borderRadius: "30px 30px 4px 30px" }
-      : { borderRadius: "30px 30px 30px 4px" };
-    const bubbleUp = isMyMessage
-      ? { borderRadius: "30px 4px 30px 30px" }
-      : { borderRadius: "4px 30px 30px 30px" };
-    const bubbleMid = isMyMessage
-      ? { borderRadius: "30px 4px 4px 30px" }
-      : { borderRadius: "4px 30px 30px 4px" };
-
-    const msgs = [...messages].reverse();
-    const idx = msgs.findIndex((e) => e._id === message._id);
-
-    const prevMessage = msgs[idx - 1];
-    const nextMessage = msgs[idx + 1];
-
-    if (!prevMessage && !nextMessage) return;
-
-    if (!prevMessage) return nextMessage.showAvatar ? null : bubbleDown;
-    if (!nextMessage) {
-      return prevMessage.showAvatar ? null : bubbleUp;
-    }
-
-    if (message.showAvatar) {
-      if (
-        message.author._id === prevMessage.author._id &&
-        !prevMessage.showAvatar
-      )
-        return bubbleUp;
-    }
-
-    if (!message.showAvatar) {
-      if (
-        message.author._id === prevMessage.author._id &&
-        message.author._id === nextMessage.author._id
-      ) {
-        if (prevMessage.showAvatar) return bubbleDown;
-        return bubbleMid;
-      }
-
-      if (message.author._id === nextMessage.author._id) return bubbleDown;
-    }
   };
 
   const messagesEndRef = useRef(null);
@@ -505,7 +632,7 @@ function Chat() {
                   messages={messages}
                   message={e}
                   isMyMessage={e.author._id === user.id}
-                  bubble={handleBubbleRadius(e)}
+                  // bubble={handleBubbleRadius(e)}
                   setImagesHasLoaded={setImagesHasLoaded}
                   scrollToBottom={scrollToBottom}
                   initPage={initPage}
@@ -639,7 +766,7 @@ function Chat() {
               onSelect={handleAddEmoji}
             />
           ) : (
-            <Gif />
+            <Gif handleSubmit={handleSubmit} setFiles={setFiles} />
           )}
 
           <div className="emoji-gif-box">

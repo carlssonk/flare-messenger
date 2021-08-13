@@ -10,7 +10,6 @@ const emojiExp =
 function Message({
   message,
   isMyMessage,
-  bubble,
   setImagesHasLoaded,
   scrollToBottom,
   initPage,
@@ -21,6 +20,38 @@ function Message({
   const bubbleClass = isMyMessage ? "my-bubble" : "user-bubble";
   const [showMessage, setShowMessage] = useState(false);
   const [onlyEmoji, setOnlyEmoji] = useState(false);
+  // const [isUrl, setIsUrl] = useState(false);
+  // const [isImgUrl, setImgIsUrl] = useState(false);
+  // const [message, setMessage] = useState({});
+
+  // useEffect(() => {
+  //   function checkURL(url) {
+  //     return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+  //   }
+
+  //   var wrapURLs = function (text, new_window) {
+  //     const URL_REGEX =
+  //       /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
+  //     if (URL_REGEX.exec(text) === null) return false;
+
+  //     console.log(checkURL(text));
+
+  //     var target = new_window === true || new_window == null ? "_blank" : "";
+  //     return text.replace(URL_REGEX, function (url) {
+  //       var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
+  //       var href = protocol_pattern.test(url) ? url : "http://" + url;
+  //       return '<a href="' + href + '" target="' + target + '">' + url + "</a>";
+  //     });
+  //   };
+
+  //   const url = wrapURLs(msg.text);
+  //   if (url) {
+  //     setMessage({ ...msg, text: url });
+  //     setIsUrl(true);
+  //   } else {
+  //     setMessage(msg);
+  //   }
+  // }, [msg]);
 
   const handleInitMessage = () => {
     setImagesHasLoaded((count) => count + 1);
@@ -32,14 +63,12 @@ function Message({
   };
 
   useEffect(() => {
+    // if (!message.text) return;
     if (!message.text) return;
     const rawText = message.text;
     const text = message.text.replace(/\s/g, "");
     if (onlyEmojiExp.test(rawText) || onlyEmojiExp.test(text))
       setOnlyEmoji(true);
-
-    // console.log(message.text.replace(emojiExp, "&lt; SPAN BRO &gt;"));
-    // console.log(message.text.match(emojiExp));
   }, []);
 
   return (
@@ -65,17 +94,18 @@ function Message({
           ) : null}
           <div className={`img-wrapper`} ref={fileRef}>
             {message.isLoading ? (
-              <MessageLoading style={{ ...bubble }} />
+              <MessageLoading style={{ borderRadius: message.borderRadius }} />
             ) : null}
             <img
               src={message.file.path}
               alt=""
-              style={{ ...bubble }}
+              style={{ borderRadius: message.borderRadius }}
               onLoad={() => handleInitMessage()}
             />
           </div>
         </li>
-      ) : (
+      ) : null}
+      {message.text ? (
         <li
           key={message._id}
           className={messageClass}
@@ -94,19 +124,34 @@ function Message({
               user={message.author}
             />
           ) : null}
-          <div
-            className={`${bubbleClass} ${
-              message.isNewMessage ? "bubble-fade-in" : ""
-            }`}
-            style={{ ...bubble }}
-          >
-            {message.text}
-          </div>
+
+          {message.hasUrl ? (
+            <div
+              className={`${bubbleClass} ${
+                message.isNewMessage ? "bubble-fade-in" : ""
+              }`}
+              style={{ borderRadius: message.borderRadius }}
+              dangerouslySetInnerHTML={{ __html: `${message.stringTag}` }}
+            ></div>
+          ) : (
+            <div
+              className={`${bubbleClass} ${
+                message.isNewMessage ? "bubble-fade-in" : ""
+              }`}
+              style={{ borderRadius: message.borderRadius }}
+            >
+              {message.text}
+            </div>
+          )}
+
           {message.isLoading ? (
-            <MessageLoading style={{ ...bubble }} name="dots" />
+            <MessageLoading
+              style={{ borderRadius: message.borderRadius }}
+              name="dots"
+            />
           ) : null}
         </li>
-      )}
+      ) : null}
     </>
   );
 }

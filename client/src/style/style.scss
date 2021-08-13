@@ -641,6 +641,10 @@ body {
 
         // animation: bubbleFadeIn 400ms;
         clip-path: circle(150% at 50% 100%);
+        a {
+          color: white;
+          text-decoration: underline;
+        }
       }
       .user-bubble {
         background-color: rgb(50, 50, 50);
@@ -649,6 +653,11 @@ body {
         min-width: 30px;
         clip-path: circle(150% at 50% 100%);
         // animation: bubbleFadeIn 400ms;
+        a {
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
       .img-wrapper {
         max-width: 300px;

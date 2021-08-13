@@ -30,9 +30,49 @@ module.exports.getMessages = async (chatId, trashedAt) => {
   return messages;
 };
 
+// function testImage(url, timeout = 5000) {
+//   return new Promise(function (resolve, reject) {
+//     var timer,
+//       img = new Image();
+//     img.onerror = img.onabort = function () {
+//       clearTimeout(timer);
+//       reject("error");
+//     };
+//     img.onload = function () {
+//       clearTimeout(timer);
+//       resolve("success");
+//     };
+//     timer = setTimeout(function () {
+//       // reset .src to invalid URL so it stops previous
+//       // loading, but doens't trigger new load
+//       img.src = "//!!!!/noexist.jpg";
+//       reject("timeout");
+//     }, timeout);
+//     img.src = url;
+//   });
+// }
+
+// function checkURL(url) {
+//   return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+// }
+
+const URL_REGEX =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
+
+const wrapURLs = function (text, new_window) {
+  const target = new_window === true || new_window == null ? "_blank" : "";
+  return text.replace(URL_REGEX, function (url) {
+    const protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
+    const href = protocol_pattern.test(url) ? url : "http://" + url;
+    return '<a href="' + href + '" target="' + target + '">' + url + "</a>";
+  });
+};
+
 module.exports.sendMessage = async (req, res) => {
+  console.log("SEND MESSAGE");
   const rawFiles = req.files;
-  const text = req.body.text;
+  let text = req.body.text;
+  if (!text) text = "";
   const chatId = req.params.id;
   const { _id, username, avatar } = req.user;
 
@@ -40,8 +80,17 @@ module.exports.sendMessage = async (req, res) => {
     return { originalname, path: path.replace("/upload", "/upload/w_600") };
   });
 
+  let hasUrl = false;
+  let stringTag = "";
+  if (URL_REGEX.exec(text) !== null) {
+    stringTag = wrapURLs(text);
+    hasUrl = true;
+  }
+
   const messageDoc = await new Message({
     text,
+    hasUrl,
+    stringTag,
     files,
     author: _id,
     chat: chatId,
@@ -59,6 +108,8 @@ module.exports.sendMessage = async (req, res) => {
     isNewMessage: true,
     author,
   };
+
+  console.log(message.text);
 
   const spreadMessage = handleSpreadMessage(message);
 

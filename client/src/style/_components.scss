@@ -558,11 +558,19 @@
       .column {
         height: 100%;
         width: 100%;
+        margin-top: 2px;
         li {
           height: unset !important;
           max-height: unset !important;
           margin-top: -5px;
-          padding: 5px;
+          padding: 3px;
+          .gif-img {
+            border: 2px solid transparent;
+            transition: 200ms;
+            &:hover {
+              border: 2px solid #0575e6;
+            }
+          }
         }
       }
     }

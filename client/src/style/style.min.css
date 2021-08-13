@@ -1209,13 +1209,24 @@
 .emoji-wrapper .gif-container .query-gifs .column {
   height: 100%;
   width: 100%;
+  margin-top: 2px;
 }
 
 .emoji-wrapper .gif-container .query-gifs .column li {
   height: unset !important;
   max-height: unset !important;
   margin-top: -5px;
-  padding: 5px;
+  padding: 3px;
+}
+
+.emoji-wrapper .gif-container .query-gifs .column li .gif-img {
+  border: 2px solid transparent;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+}
+
+.emoji-wrapper .gif-container .query-gifs .column li .gif-img:hover {
+  border: 2px solid #0575e6;
 }
 
 .emoji-wrapper .gif-container ul {
@@ -2276,6 +2287,11 @@ body {
           clip-path: circle(150% at 50% 100%);
 }
 
+.chat-page .message-container .message-list .my-bubble a {
+  color: white;
+  text-decoration: underline;
+}
+
 .chat-page .message-container .message-list .user-bubble {
   background-color: #323232;
   border-radius: 30px;
@@ -2283,6 +2299,10 @@ body {
   min-width: 30px;
   -webkit-clip-path: circle(150% at 50% 100%);
           clip-path: circle(150% at 50% 100%);
+}
+
+.chat-page .message-container .message-list .user-bubble a:hover {
+  text-decoration: underline;
 }
 
 .chat-page .message-container .message-list .img-wrapper {

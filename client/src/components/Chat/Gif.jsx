@@ -20,9 +20,10 @@ function getWindowDimensions() {
   };
 }
 
-function Gif() {
+function Gif({ setFiles, handleSubmit }) {
   const imgRef = useRef(null);
   const gifContainer = useRef(null);
+  const topRef = useRef(null);
 
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState([]);
@@ -89,7 +90,11 @@ function Gif() {
   // }, [gifLoadedCount]);
 
   useEffect(() => {
-    if (query.length === 0) return setGifs([]);
+    if (query.length === 0) {
+      setGifs([]);
+      gifContainer.current && gifContainer.current.scrollTo(0, 0);
+      return;
+    }
 
     const timer = setTimeout(() => setFreeze(false), 200);
     return () => clearTimeout(timer);
@@ -101,11 +106,12 @@ function Gif() {
   }, [freeze]);
 
   const handleChangeQuery = (query) => {
-    setFreeze(true);
     setQuery(query);
+    setFreeze(true);
   };
 
-  const handleQueryGifs = async () => {
+  const handleQueryGifs = async (query) => {
+    setQuery(query);
     const res = await fetch(
       `https://g.tenor.com/v1/search?q=${query}&key=${FlareKey}&media_filter=minimal&limit=50`
     );
@@ -119,6 +125,39 @@ function Gif() {
     if (columnsCount !== columns) handleSetGifsOrder();
   };
   window.onresize = handleWindowResize;
+
+  const scrollToTop = () => {
+    topRef.current?.scrollIntoView();
+  };
+
+  const handleSendGif = async (url) => {
+    const res = await testImage(
+      "https://preview.redd.it/hodmzjpzzue51.jpg?width=640&crop=smart&auto=webp&s=0498691dfd949cae6acd0e276405849a8f7d6f6c"
+    );
+    console.log(res);
+  };
+
+  function testImage(url, timeout = 5000) {
+    return new Promise(function (resolve, reject) {
+      var timer,
+        img = new Image();
+      img.onerror = img.onabort = function () {
+        clearTimeout(timer);
+        reject("error");
+      };
+      img.onload = function () {
+        clearTimeout(timer);
+        resolve("success");
+      };
+      timer = setTimeout(function () {
+        // reset .src to invalid URL so it stops previous
+        // loading, but doens't trigger new load
+        img.src = "//!!!!/noexist.jpg";
+        reject("timeout");
+      }, timeout);
+      img.src = url;
+    });
+  }
 
   return (
     <div className="gif-container">
@@ -173,6 +212,10 @@ function Gif() {
                           <img
                             src={gif.media[0].tinygif.url}
                             alt=""
+                            className="gif-img"
+                            onClick={() =>
+                              handleSendGif(gif.media[0].tinygif.url)
+                            }
                             // ref={imgRef}
                             // onLoad={() => handleSetGifLoaded()}
                             // onLoad={() =>
