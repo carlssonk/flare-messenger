@@ -22,7 +22,7 @@ function getWindowDimensions() {
   };
 }
 
-function Gif({ setInitMessages }) {
+function Gif({ setInitMessages, handleSubmit }) {
   const { user } = useContext(UserContext);
   const location = useLocation();
   const imgRef = useRef(null);
@@ -131,60 +131,60 @@ function Gif({ setInitMessages }) {
   };
   window.onresize = handleWindowResize;
 
-  const handleSendGif = async (url, source) => {
-    const chatId = location.pathname.replace("/chat/", "");
-    if (!user.chats.includes(chatId)) return;
-    const myMessage = submitUI(url, source);
-    await fetch(`/api/messages/${chatId}?type=gif`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url, source }),
-    });
-  };
+  // const handleSendGif = async (url, source) => {
+  //   const chatId = location.pathname.replace("/chat/", "");
+  //   if (!user.chats.includes(chatId)) return;
+  //   const myMessage = submitUI(url, source);
+  //   await fetch(`/api/messages/${chatId}?type=gif`, {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ url, source }),
+  //   });
+  // };
 
-  const submitUI = (url, source) => {
-    const { avatar, username, id } = user;
-    const author = { avatar, username, _id: id };
+  // const submitUI = (url, source) => {
+  //   const { avatar, username, id } = user;
+  //   const author = { avatar, username, _id: id };
 
-    const message = {
-      _id: uuidv4(),
-      createdAt: new Date(),
-      gif: { url, source },
-      files: [],
-      showAvatar: true,
-      isLoading: false,
-      isNewMessage: true,
-      author,
-    };
+  //   const message = {
+  //     _id: uuidv4(),
+  //     createdAt: new Date(),
+  //     gif: { url, source },
+  //     files: [],
+  //     showAvatar: true,
+  //     isLoading: false,
+  //     isNewMessage: true,
+  //     author,
+  //   };
 
-    setInitMessages((messages) => [message, ...messages]);
-    return message;
-  };
+  //   setInitMessages((messages) => [message, ...messages]);
+  //   return message;
+  // };
 
-  function testImage(url, timeout = 5000) {
-    return new Promise(function (resolve, reject) {
-      var timer,
-        img = new Image();
-      img.onerror = img.onabort = function () {
-        clearTimeout(timer);
-        reject("error");
-      };
-      img.onload = function () {
-        clearTimeout(timer);
-        resolve("success");
-      };
-      timer = setTimeout(function () {
-        // reset .src to invalid URL so it stops previous
-        // loading, but doens't trigger new load
-        img.src = "//!!!!/noexist.jpg";
-        reject("timeout");
-      }, timeout);
-      img.src = url;
-    });
-  }
+  // function testImage(url, timeout = 5000) {
+  //   return new Promise(function (resolve, reject) {
+  //     var timer,
+  //       img = new Image();
+  //     img.onerror = img.onabort = function () {
+  //       clearTimeout(timer);
+  //       reject("error");
+  //     };
+  //     img.onload = function () {
+  //       clearTimeout(timer);
+  //       resolve("success");
+  //     };
+  //     timer = setTimeout(function () {
+  //       // reset .src to invalid URL so it stops previous
+  //       // loading, but doens't trigger new load
+  //       img.src = "//!!!!/noexist.jpg";
+  //       reject("timeout");
+  //     }, timeout);
+  //     img.src = url;
+  //   });
+  // }
 
   return (
     <div className="gif-container">
@@ -241,7 +241,10 @@ function Gif({ setInitMessages }) {
                             alt=""
                             className="gif-img"
                             onClick={() =>
-                              handleSendGif(gif.url, gif.media[0].tinygif.url)
+                              handleSubmit({
+                                url: gif.url,
+                                source: gif.media[0].tinygif.url,
+                              })
                             }
                             // ref={imgRef}
                             // onLoad={() => handleSetGifLoaded()}

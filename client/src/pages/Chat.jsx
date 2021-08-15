@@ -38,61 +38,25 @@ import "draft-js/dist/Draft.css";
 import Avatar from "../components/Avatar";
 import GroupAvatar from "../components/GroupAvatar";
 import Message from "../components/Chat/Message";
-import Options from "../components/Chat/Options";
+import Utils from "../components/Chat/Utils";
 import LinkSpan from "../components/Chat/LinkSpan";
 
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import Gif from "../components/Chat/Gif";
+import {
+  contentStateEmoji,
+  enableChat,
+  handleSpreadMessage,
+  createMessageUI,
+  listenSubmit,
+  handleAddBubble,
+  handleShowAvatar,
+  linkStrategy,
+  isInputEmpty,
+} from "../utils/chat";
 
 const draftUtils = require("draftjs-utils");
-
-const bubbleDown = (isMyMessage) => {
-  return isMyMessage
-    ? { borderRadius: "30px 30px 4px 30px" }
-    : { borderRadius: "30px 30px 30px 4px" };
-};
-
-const bubbleUp = (isMyMessage) => {
-  return isMyMessage
-    ? { borderRadius: "30px 4px 30px 30px" }
-    : { borderRadius: "4px 30px 30px 30px" };
-};
-
-const bubbleMid = (isMyMessage) => {
-  return isMyMessage
-    ? { borderRadius: "30px 4px 4px 30px" }
-    : { borderRadius: "4px 30px 30px 4px" };
-};
-
-const isInputEmpty = (text, files) => {
-  return text.replace(/\s/g, "").length > 0 || files.length > 0 ? true : false;
-};
-
-const URL_REGEX =
-  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
-
-function linkStrategy(contentBlock, callback, contentState) {
-  findWithRegex(URL_REGEX, contentBlock, callback);
-}
-
-function findWithRegex(regex, contentBlock, callback) {
-  const text = contentBlock.getText();
-  let matchArr, start;
-  while ((matchArr = regex.exec(text)) !== null) {
-    start = matchArr.index;
-    callback(start, start + matchArr[0].length);
-  }
-}
-
-const wrapURLs = function (text, new_window) {
-  const target = new_window === true || new_window == null ? "_blank" : "";
-  return text.replace(URL_REGEX, function (url) {
-    const protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
-    const href = protocol_pattern.test(url) ? url : "http://" + url;
-    return '<a href="' + href + '" target="' + target + '">' + url + "</a>";
-  });
-};
 
 function Chat() {
   const { user } = useContext(UserContext);
@@ -120,6 +84,7 @@ function Chat() {
   const editorContainer = useRef(null);
   const fileRef = useRef(null);
   const messageContainer = useRef(null);
+  const messagesEndRef = useRef(null);
 
   let domEditor = useRef(null);
   const setDomEditorRef = (ref) => (domEditor = ref);
@@ -147,6 +112,10 @@ function Chat() {
     )
   );
 
+  // useEffect(() => {
+  //   console.log(editorState.getCurrentContent());
+  // }, []);
+
   const text = editorState.getCurrentContent().getPlainText();
 
   const { setNav } = useContext(NavContext);
@@ -170,6 +139,7 @@ function Chat() {
     if (imagesCount === imagesHasLoaded) setShowChat(true);
   }, [imagesHasLoaded, imagesCount]);
 
+  // Socket
   useEffect(() => {
     socket.on("message", (message) => {
       if (message[0].author._id === user.id) return;
@@ -179,117 +149,11 @@ function Chat() {
   }, [socket, user.id]);
 
   useEffect(() => {
-    console.log(initMessages.length);
-    let lastId;
-    let idArr = [];
-    for (let i = 0; i < initMessages.length; i++) {
-      if (initMessages[i].author._id === lastId) {
-        const startDate = new Date(initMessages[i].createdAt).getTime();
-        const endDate = new Date(initMessages[i - 1].createdAt).getTime();
+    const avatarMsgs = handleShowAvatar(initMessages);
+    const bubbledMsgs = handleAddBubble(avatarMsgs, user);
 
-        if ((endDate - startDate) / 1000 > 60) {
-          idArr.push(initMessages[i]._id);
-        }
-      } else {
-        idArr.push(initMessages[i]._id);
-      }
-
-      lastId = initMessages[i].author._id;
-    }
-
-    const newMsgs = initMessages.map((obj) => {
-      if (idArr.includes(obj._id)) {
-        return { ...obj, showAvatar: true };
-      } else {
-        return { ...obj, showAvatar: false };
-      }
-    });
-    console.log(newMsgs.length);
-
-    let bubbleArray = [];
-    for (let message of newMsgs) {
-      const res = handleBubbleRadius(message, newMsgs);
-      bubbleArray.push(res);
-    }
-    const bubbledMsgs = newMsgs.map((obj, idx) => {
-      return { ...obj, ...bubbleArray[idx] };
-    });
-
-    console.log(bubbledMsgs.length);
     setMessages(bubbledMsgs);
   }, [initMessages]);
-
-  const handleBubbleRadius = (message, messages) => {
-    if (!message) return;
-    const isMy = message.author._id === user.id;
-
-    const msgs = [...messages].reverse();
-    const idx = msgs.findIndex((e) => e._id === message._id);
-
-    const prevMessage = msgs[idx - 1];
-    const nextMessage = msgs[idx + 1];
-    const currentId = message.author._id;
-
-    if (!prevMessage && !nextMessage) return;
-
-    if (prevMessage && message.showAvatar) {
-      // Handle LAST message of block
-      if (currentId === prevMessage.author._id && !prevMessage.showAvatar)
-        return bubbleUp(isMy);
-    }
-
-    // Handle TOP & MIDDLE messages of block
-    if (prevMessage && nextMessage && !message.showAvatar) {
-      if (
-        currentId === prevMessage.author._id &&
-        currentId === nextMessage.author._id
-      ) {
-        if (prevMessage.showAvatar) return bubbleDown(isMy);
-        return bubbleMid(isMy);
-      }
-
-      if (currentId === nextMessage.author._id) return bubbleDown(isMy);
-    }
-
-    // Handle FIRST message
-    if (nextMessage && message._id === msgs[0]._id) {
-      if (currentId === nextMessage.author._id && !nextMessage.showAvatar) {
-        return bubbleDown(isMy);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
-    if (simpleController) return;
-
-    domEditor.focus();
-
-    const textBlocks = editorState.getCurrentContent().getBlockMap()._list
-      ._tail.array;
-
-    for (let i = 0; i < textBlocks.length; i++) {
-      const key = textBlocks[i][1].getKey();
-      const node = document.querySelector(`span[data-offset-key="${key}-0-0"]`);
-      const parentNode = node.parentElement;
-      if (node && node.offsetWidth > parentNode.offsetWidth / 2)
-        setSimpleController(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
-
-  useEffect(() => {
-    // if (editorHeight < 240) {
-    setEditorHeight(
-      editorContainer.current && editorContainer.current.offsetHeight
-    );
-    // }
-    setEditorMaxWidth(
-      editorWrapper.current && editorWrapper.current.offsetWidth
-    );
-
-    // if (draftUtils.getAllBlocks(editorState).size >= 8) return;
-  }, [editorState]);
 
   const keyBindning = (e) => {
     if (listenSubmit(e)) return handleSubmit();
@@ -297,23 +161,16 @@ function Chat() {
     return getDefaultKeyBinding(e);
   };
 
-  const listenSubmit = (e) => {
-    if (e.keyCode === 13)
-      if (!e.shiftKey) {
-        return true;
-      }
-    return false;
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (gif = null) => {
     const chatId = location.pathname.replace("/chat/", "");
     if (!user.chats.includes(chatId)) return;
-    if (text.replace(/\s/g, "").length === 0 && files.length === 0) return;
-    if (messages.length === 0) enableChat();
+    if (!gif && text.replace(/\s/g, "").length === 0 && files.length === 0)
+      return;
+    if (messages.length === 0) enableChat(location, user);
 
     let formData = new FormData();
 
-    if (files.length > 0) {
+    if (!gif) {
       const filesArr = files.map(({ file }) => {
         return file;
       });
@@ -321,19 +178,15 @@ function Chat() {
         formData.append("files", file);
       });
     }
+    !gif && formData.append("text", text);
+    !gif && resetInput();
+    formData.append("gif", JSON.stringify(gif));
 
-    if (text.length > 0) {
-      formData.append("text", text);
-    }
-
-    resetInput();
-
-    const myMessage = submitUI(text);
+    const myMessage = submitUI(gif);
     await fetch(`/api/messages/${chatId}`, {
       method: "POST",
       body: formData,
     });
-    // const data = await res.json();
     handleMessageLoading(myMessage);
   };
 
@@ -344,106 +197,15 @@ function Chat() {
     const copyMessages = [...messages];
     const newMessages = [...updateMessage, ...copyMessages];
     setInitMessages(newMessages);
-    // setMessages(newMessages);
   };
 
-  const submitUI = () => {
-    const { avatar, username, id } = user;
-    const author = { avatar, username, _id: id };
-
-    const copyFiles = [...files];
-    const newFiles = copyFiles.map(({ url, file }) => {
-      return { path: url, originalname: file.name };
-    });
-
-    let hasUrl = false;
-    let stringTag = "";
-    if (URL_REGEX.exec(text) !== null) {
-      stringTag = wrapURLs(text);
-      hasUrl = true;
-    }
-
-    const message = {
-      _id: uuidv4(),
-      createdAt: new Date(),
-      text,
-      stringTag,
-      hasUrl,
-      files: newFiles,
-      showAvatar: true,
-      isLoading: true,
-      isNewMessage: true,
-      author,
-    };
-
+  const submitUI = (gif) => {
+    const message = createMessageUI(user, text, files, gif);
     const spreadMessage = handleSpreadMessage(message);
 
     setInitMessages((messages) => [...spreadMessage, ...messages]);
     return spreadMessage;
   };
-
-  const handleSpreadMessage = ({ files, author, createdAt, text, ...rest }) => {
-    let newArray = [];
-    if (text) newArray.push({ author, createdAt, text, ...rest });
-
-    for (let file of files) {
-      newArray.push({
-        author,
-        createdAt,
-        file,
-        _id: uuidv4(),
-        isLoading: true,
-        isNewMessage: true,
-      });
-    }
-    return newArray;
-  };
-
-  const enableChat = async () => {
-    const chatId = location.pathname.replace("/chat/", "");
-    if (!user.chats.includes(chatId)) return;
-    await fetch("/api/chats/enable", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatId,
-      }),
-    });
-  };
-
-  const resetInput = () => {
-    setEditorState(draftUtils.clearEditorContent(editorState));
-
-    setFiles([]);
-  };
-
-  const reportWindowSize = () => {
-    setEditorMaxWidth(
-      editorWrapper.current && editorWrapper.current.offsetWidth
-    );
-  };
-  window.onresize = reportWindowSize;
-
-  useEffect(() => {
-    const getChatData = async () => {
-      const chatId = location.pathname.replace("/chat/", "");
-      if (!user.chats.includes(chatId)) return;
-      const res = await fetch(`/api/chats/${chatId}`);
-      const data = await res.json();
-      console.log(data.messages.length);
-      setInitMessages(data.messages.reverse());
-      setFriends(data.friends);
-      setChat(data.chat);
-
-      const filesCount = data.messages.filter((e) => e.file).length;
-      setImagesCount(filesCount);
-      if (filesCount === 0) setShowChat(true);
-    };
-    getChatData();
-  }, [location.pathname, user]);
 
   const addFile = (e) => {
     if (!e.target.files[0]) return;
@@ -463,46 +225,87 @@ function Chat() {
   const handleRemoveFile = (id) => {
     const filesCopy = [...files];
     const updatedArr = filesCopy.filter((e) => e.id !== id);
-
     setFiles(updatedArr);
   };
 
-  const messagesEndRef = useRef(null);
+  const handleAddEmoji = (emoji) => {
+    const newContentState = contentStateEmoji(emoji, editorState, Modifier);
+    const newEditorState = EditorState.push(editorState, newContentState);
+    setEditorState(newEditorState);
+  };
+
+  // Init data
+  useEffect(() => {
+    const getChatData = async () => {
+      const chatId = location.pathname.replace("/chat/", "");
+      if (!user.chats.includes(chatId)) return;
+      const res = await fetch(`/api/chats/${chatId}`);
+      const data = await res.json();
+      setInitMessages(data.messages.reverse());
+      setFriends(data.friends);
+      setChat(data.chat);
+      console.log(data.messages);
+
+      const filesCount = data.messages.filter((e) => e.file).length;
+      setImagesCount(filesCount);
+      if (filesCount === 0) setShowChat(true);
+    };
+    getChatData();
+  }, [location.pathname, user]);
+
+  // Scroll To Bottom
+  useEffect(() => {
+    if (!initPage) return;
+    setTimeout(() => scrollToBottom(), 10);
+  }, [messages, showChat, initPage]);
+
+  // Focus Input
+  useEffect(() => {
+    if (!initPage) return;
+    console.log("FOCUS");
+    domEditor.focus();
+  }, [toggleEmoji, initPage]);
+
+  const resetInput = () => {
+    setEditorState(draftUtils.clearEditorContent(editorState));
+    setFiles([]);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Set simpleController
   useEffect(() => {
-    if (!initPage) return;
-    setTimeout(() => {
-      scrollToBottom();
-    }, 10);
-  }, [messages, showChat, initPage]);
+    if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
+    if (simpleController) return;
 
-  const handleAddEmoji = (emoji) => {
-    let contentState = editorState.getCurrentContent();
-    let targetRange = editorState.getSelection();
-    let newContentState = Modifier.insertText(
-      contentState,
-      targetRange,
-      emoji.native
-    );
+    domEditor && domEditor.focus();
 
-    let newEditorState = EditorState.push(editorState, newContentState);
+    const textBlocks = editorState.getCurrentContent().getBlockMap()._list
+      ._tail.array;
 
-    setEditorState(newEditorState);
-  };
-
-  useEffect(() => {
-    if (!initPage) return;
-    domEditor.focus();
-  }, [toggleEmoji, initPage]);
+    for (let i = 0; i < textBlocks.length; i++) {
+      const key = textBlocks[i][1].getKey();
+      const node = document.querySelector(`span[data-offset-key="${key}-0-0"]`);
+      const parentNode = node.parentElement;
+      if (node && node.offsetWidth > parentNode.offsetWidth / 2)
+        setSimpleController(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
 
   return (
     <div className="chat-page page">
-      {/* <div style={{ position: "relative" }}> */}
-      <Options container={messageContainer} toggleEmoji={toggleEmoji} />
+      <Utils
+        container={messageContainer}
+        toggleEmoji={toggleEmoji}
+        editorState={editorState}
+        setEditorHeight={setEditorHeight}
+        setEditorMaxWidth={setEditorMaxWidth}
+        editorContainer={editorContainer}
+        editorWrapper={editorWrapper}
+      />
       <div className="header-wrapper">
         <div className="header">
           <div className="top-bar">
@@ -573,7 +376,6 @@ function Chat() {
                   messages={messages}
                   message={e}
                   isMyMessage={e.author._id === user.id}
-                  // bubble={handleBubbleRadius(e)}
                   setImagesHasLoaded={setImagesHasLoaded}
                   scrollToBottom={scrollToBottom}
                   initPage={initPage}
@@ -582,7 +384,6 @@ function Chat() {
             })}
         </ul>
       </div>
-      {/* e.author._id === user.id ? */}
 
       <div className="controller-container">
         <div
@@ -620,13 +421,9 @@ function Chat() {
         <div
           className="input-box"
           style={{
-            // height: `${
-            //   editorContainer.current && editorContainer.current.offsetHeight
-            // }px`,
             minHeight: "40px",
             marginRight: isInputEmpty(text, files) ? "56px" : "",
             marginLeft: simpleController ? "40px" : "",
-            // transition: text.replace(/\s/g, "").length <= 1 ? "100ms" : "0ms",
           }}
           ref={inputRef}
         >
@@ -685,7 +482,7 @@ function Chat() {
           )}
         </div>
         <Ripple.Div
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           className="send-btn"
           style={{
             right: isInputEmpty(text, files) ? "0" : "",
@@ -707,7 +504,10 @@ function Chat() {
               onSelect={handleAddEmoji}
             />
           ) : (
-            <Gif setInitMessages={setInitMessages} />
+            <Gif
+              setInitMessages={setInitMessages}
+              handleSubmit={handleSubmit}
+            />
           )}
 
           <div className="emoji-gif-box">
@@ -735,7 +535,6 @@ function Chat() {
         message={"Maxmimum number of attatchments is 10."}
         buttons={[{ text: "OK", handler: () => setMaximumFilesAlert(false) }]}
       />
-      {/* </div> */}
     </div>
   );
 }

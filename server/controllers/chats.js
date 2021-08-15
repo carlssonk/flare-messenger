@@ -3,6 +3,7 @@ const User = require("../models/user");
 const { getMessages, getLastMessages } = require("./messages");
 const moment = require("moment");
 const { v4: uuidv4 } = require("uuid");
+const { handleSpreadMessages } = require("../utils/messages");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -133,52 +134,9 @@ module.exports.showChat = async (req, res) => {
 
   const parseMsgs = JSON.parse(JSON.stringify(messages)).reverse();
 
-  const msgs = handleSpreadMessages(parseMsgs);
-  console.log(msgs.length);
-
-  // let lastId;
-  // let idArr = [];
-  // for (let i = 0; i < msgs.length; i++) {
-  //   if (msgs[i].author._id === lastId) {
-  //     const startDate = new Date(msgs[i].createdAt).getTime();
-  //     const endDate = new Date(msgs[i - 1].createdAt).getTime();
-
-  //     if ((endDate - startDate) / 1000 > 60) {
-  //       idArr.push(msgs[i]._id);
-  //     }
-  //   } else {
-  //     idArr.push(msgs[i]._id);
-  //   }
-
-  //   lastId = msgs[i].author._id;
-  // }
-
-  // const newMsgs = msgs.map((obj) => {
-  //   if (idArr.includes(obj._id)) {
-  //     return { ...obj, showAvatar: true };
-  //   } else {
-  //     return { ...obj, showAvatar: false };
-  //   }
-  // });
+  const msgs = handleSpreadMessages(parseMsgs, false);
 
   res.json({ friends, messages: msgs.reverse(), chat });
-};
-
-const handleSpreadMessages = (messages) => {
-  let newArray = [];
-  for (let { files, author, createdAt, text, gif, ...rest } of messages) {
-    if (text || gif) newArray.push({ author, createdAt, text, gif, ...rest });
-
-    for (let file of files) {
-      newArray.push({
-        author,
-        createdAt,
-        file,
-        _id: uuidv4(),
-      });
-    }
-  }
-  return newArray;
 };
 
 module.exports.enableChat = async (req, res) => {

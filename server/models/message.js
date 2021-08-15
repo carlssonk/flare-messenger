@@ -5,7 +5,6 @@ const MessageSchema = new Schema(
   {
     text: String,
     stringTag: String,
-    hasUrl: Boolean,
     gif: {
       url: String,
       source: String,
