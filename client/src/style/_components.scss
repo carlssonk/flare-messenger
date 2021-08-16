@@ -570,6 +570,9 @@
             &:hover {
               border: 2px solid #0575e6;
             }
+            &:focus {
+              border: 2px solid #0575e6;
+            }
           }
         }
       }
@@ -614,6 +617,14 @@
           &:hover {
             background-color: rgba(0, 0, 0, 0.6);
             border: 2px solid #0575e6;
+          }
+          &:focus {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 2px solid #0575e6;
+          }
+
+          span {
+            pointer-events: none;
           }
         }
         img {

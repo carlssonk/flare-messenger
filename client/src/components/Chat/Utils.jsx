@@ -27,6 +27,7 @@ function Utils({
   }, [container, toggleEmoji]);
 
   const reportWindowSize = () => {
+    if (!editorWrapper.current) return;
     document.documentElement.style.setProperty(
       "--background-size-h",
       `${container.current.offsetHeight}px`

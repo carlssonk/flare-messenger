@@ -29,13 +29,13 @@ export const handleSpreadMessage = ({
   author,
   createdAt,
   text,
-  hasUrl,
   stringTag,
+  gif,
   ...rest
 }) => {
   let newArray = [];
-  if (text)
-    newArray.push({ author, createdAt, text, hasUrl, stringTag, ...rest });
+  if (text || gif)
+    newArray.push({ author, createdAt, text, stringTag, gif, ...rest });
 
   for (let file of files) {
     newArray.push({
@@ -60,13 +60,11 @@ const wrapURLs = function (text, new_window) {
 };
 
 const retrieveStringInfo = (text) => {
-  let hasUrl = false;
   let stringTag = "";
   if (URL_REGEX.exec(text) !== null) {
     stringTag = wrapURLs(text);
-    hasUrl = true;
   }
-  return { stringTag, hasUrl };
+  return { stringTag };
 };
 
 export const createMessageUI = (user, text, files, gif) => {
@@ -78,38 +76,28 @@ export const createMessageUI = (user, text, files, gif) => {
     return { path: url, originalname: file.name };
   });
 
-  const { hasUrl, stringTag } = retrieveStringInfo(text);
+  const { stringTag } = retrieveStringInfo(text);
 
-  const message = {
-    _id: uuidv4(),
-    createdAt: new Date(),
-    text,
-    stringTag,
-    hasUrl,
-    files: newFiles,
-    showAvatar: true,
-    isLoading: true,
-    isNewMessage: true,
-    author,
-  };
+  const message = createMessageObject(
+    { stringTag, gif, text, files: newFiles },
+    author
+  );
+
   return message;
 };
 
-const createMessageObject = (
-  { _id, createdAt, hasUrl, stringTag, text, files, gif },
-  { _id: userId, username, avatar }
-) => {
+const createMessageObject = ({ stringTag, text, files, gif }, author) => {
   return {
-    _id,
-    createdAt,
+    _id: uuidv4(),
+    createdAt: new Date(),
     showAvatar: true,
     isNewMessage: true,
-    author: { _id, userId, username, avatar },
-    ...(gif && { gif }),
-    ...(hasUrl && { hasUrl }),
-    ...(stringTag && { stringTag }),
+    isLoading: true,
+    author,
+    files,
     ...(text && { text }),
-    ...(files && { files }),
+    ...(stringTag && { stringTag }),
+    ...(gif && { gif }),
   };
 };
 

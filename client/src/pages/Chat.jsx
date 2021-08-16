@@ -112,10 +112,6 @@ function Chat() {
     )
   );
 
-  // useEffect(() => {
-  //   console.log(editorState.getCurrentContent());
-  // }, []);
-
   const text = editorState.getCurrentContent().getPlainText();
 
   const { setNav } = useContext(NavContext);
@@ -201,6 +197,7 @@ function Chat() {
 
   const submitUI = (gif) => {
     const message = createMessageUI(user, text, files, gif);
+
     const spreadMessage = handleSpreadMessage(message);
 
     setInitMessages((messages) => [...spreadMessage, ...messages]);
@@ -275,7 +272,7 @@ function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Set simpleController
+  // Set simple controller
   useEffect(() => {
     if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
     if (simpleController) return;

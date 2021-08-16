@@ -41,16 +41,6 @@ function Gif({ setInitMessages, handleSubmit }) {
   const [showGifs, setShowGifs] = useState(false);
   // const gifLoaded
 
-  // useEffect(() => {
-  //   console.log(gifLoadedCount);
-  // }, []);
-
-  // const handleSetGifLoaded = () => {
-  //   const copy = [...gifLoadedCount];
-  //   copy.push(true);
-  //   setGifLoadedCount(copy);
-  // };
-
   useEffect(() => {
     if (gifs.length === 0) return;
     handleSetGifsOrder();
@@ -88,11 +78,6 @@ function Gif({ setInitMessages, handleSubmit }) {
     return arr;
   };
 
-  // useEffect(() => {
-  //   if (gifs.length === 0) return;
-  //   if (gifLoadedCount === gifs.length) setGifsHasLoaded(true);
-  // }, [gifLoadedCount]);
-
   useEffect(() => {
     if (query.length === 0) {
       setGifs([]);
@@ -126,65 +111,11 @@ function Gif({ setInitMessages, handleSubmit }) {
   };
 
   const handleWindowResize = () => {
+    console.log("GIF RESIZE");
     const columnsCount = handleSetColumnsCount();
     if (columnsCount !== columns) handleSetGifsOrder();
   };
   window.onresize = handleWindowResize;
-
-  // const handleSendGif = async (url, source) => {
-  //   const chatId = location.pathname.replace("/chat/", "");
-  //   if (!user.chats.includes(chatId)) return;
-  //   const myMessage = submitUI(url, source);
-  //   await fetch(`/api/messages/${chatId}?type=gif`, {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ url, source }),
-  //   });
-  // };
-
-  // const submitUI = (url, source) => {
-  //   const { avatar, username, id } = user;
-  //   const author = { avatar, username, _id: id };
-
-  //   const message = {
-  //     _id: uuidv4(),
-  //     createdAt: new Date(),
-  //     gif: { url, source },
-  //     files: [],
-  //     showAvatar: true,
-  //     isLoading: false,
-  //     isNewMessage: true,
-  //     author,
-  //   };
-
-  //   setInitMessages((messages) => [message, ...messages]);
-  //   return message;
-  // };
-
-  // function testImage(url, timeout = 5000) {
-  //   return new Promise(function (resolve, reject) {
-  //     var timer,
-  //       img = new Image();
-  //     img.onerror = img.onabort = function () {
-  //       clearTimeout(timer);
-  //       reject("error");
-  //     };
-  //     img.onload = function () {
-  //       clearTimeout(timer);
-  //       resolve("success");
-  //     };
-  //     timer = setTimeout(function () {
-  //       // reset .src to invalid URL so it stops previous
-  //       // loading, but doens't trigger new load
-  //       img.src = "//!!!!/noexist.jpg";
-  //       reject("timeout");
-  //     }, timeout);
-  //     img.src = url;
-  //   });
-  // }
 
   return (
     <div className="gif-container">
@@ -193,6 +124,7 @@ function Gif({ setInitMessages, handleSubmit }) {
           <Ripple.Div
             style={{
               width: "40px",
+              minWidth: "40px",
               height: "40px",
               display: "grid",
               placeItems: "center",
@@ -246,11 +178,6 @@ function Gif({ setInitMessages, handleSubmit }) {
                                 source: gif.media[0].tinygif.url,
                               })
                             }
-                            // ref={imgRef}
-                            // onLoad={() => handleSetGifLoaded()}
-                            // onLoad={() =>
-                            //   setGifLoadedCount((count) => count + 1)
-                            // }
                           />
                         </li>
                       );
@@ -265,7 +192,7 @@ function Gif({ setInitMessages, handleSubmit }) {
                       onClick={() => handleQueryGifs(gif.query)}
                       className="overlay"
                     >
-                      {gif.query}
+                      <span>{gif.query}</span>
                     </div>
                     <img src={gif.url} alt="" />
                   </li>

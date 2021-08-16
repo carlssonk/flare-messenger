@@ -1229,6 +1229,10 @@
   border: 2px solid #0575e6;
 }
 
+.emoji-wrapper .gif-container .query-gifs .column li .gif-img:focus {
+  border: 2px solid #0575e6;
+}
+
 .emoji-wrapper .gif-container ul {
   height: 100%;
   width: 100%;
@@ -1275,6 +1279,15 @@
 .emoji-wrapper .gif-container ul li .overlay:hover {
   background-color: rgba(0, 0, 0, 0.6);
   border: 2px solid #0575e6;
+}
+
+.emoji-wrapper .gif-container ul li .overlay:focus {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid #0575e6;
+}
+
+.emoji-wrapper .gif-container ul li .overlay span {
+  pointer-events: none;
 }
 
 .emoji-wrapper .gif-container ul li img {

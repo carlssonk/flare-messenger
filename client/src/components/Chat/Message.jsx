@@ -38,13 +38,17 @@ function Message({
     />
   );
 
-  const SetMessageLoading = (name) =>
-    message.isLoading ? (
+  const SetMessageLoading = () => {
+    let name = "";
+    if (message.text) name = "dots";
+
+    return message.isLoading ? (
       <MessageLoading
         style={{ borderRadius: message.borderRadius }}
         name={name}
       />
     ) : null;
+  };
 
   const handleInitMessage = () => {
     setImagesHasLoaded((count) => count + 1);
