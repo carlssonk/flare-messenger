@@ -145,11 +145,33 @@ function Chat() {
   }, [socket, user.id]);
 
   useEffect(() => {
+    if (initMessages.length === 0) return;
     const avatarMsgs = handleShowAvatar(initMessages);
-    const bubbledMsgs = handleAddBubble(avatarMsgs, user);
-
+    const addDayMsgs = handleAddDay(avatarMsgs);
+    const bubbledMsgs = handleAddBubble(addDayMsgs, user);
     setMessages(bubbledMsgs);
   }, [initMessages]);
+
+  const handleAddDay = (msgs) => {
+    const datesAreOnSameDay = (first, second) =>
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate();
+
+    let lastDate = new Date(msgs[msgs.length - 1].createdAt);
+
+    for (let i = msgs.length - 1; i >= 0; i--) {
+      const currentDate = new Date(msgs[i].createdAt);
+
+      if (!datesAreOnSameDay(currentDate, lastDate)) {
+        msgs[i].newDay = true;
+        lastDate = new Date(msgs[i].createdAt);
+      }
+    }
+    msgs[msgs.length - 1].newDay = true;
+
+    return msgs;
+  };
 
   const keyBindning = (e) => {
     if (listenSubmit(e)) return handleSubmit();

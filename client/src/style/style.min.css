@@ -1337,6 +1337,32 @@
   background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
+.new-day-message {
+  position: relative;
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+.new-day-message span {
+  background-color: var(--primary-background);
+  color: #627086;
+  padding: 10px;
+  z-index: 1;
+}
+
+.new-day-message:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+  width: 100%;
+  height: 1px;
+  background-color: #313344;
+}
+
 :root {
   --primary-gradient: linear-gradient(to bottom, #ff0011, #c471ed, #12c2e9);
   --bubble-gradient: linear-gradient(to bottom, #1aadad, #0575e6);
