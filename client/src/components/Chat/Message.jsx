@@ -23,6 +23,7 @@ function Message({
   const bubbleClass = isMyMessage ? "my-bubble" : "user-bubble";
   const [showMessage, setShowMessage] = useState(false);
   const [onlyEmoji, setOnlyEmoji] = useState(false);
+  const [time, setTime] = useState("");
 
   const SetAvatar = () => (
     <Avatar
@@ -60,16 +61,25 @@ function Message({
   };
 
   useEffect(() => {
+    handleEmoji();
+    handleTime();
+  }, []);
+
+  const handleTime = () => {
+    if (!message.showAvatar) return;
+    const createdAt = new Date(message.createdAt);
+    const minutes = ("0" + createdAt.getMinutes()).slice(-2);
+    const hours = ("0" + createdAt.getHours()).slice(-2);
+    setTime(`${hours}:${minutes}`);
+  };
+
+  const handleEmoji = () => {
     if (!message.text) return;
     const rawText = message.text;
     const text = message.text.replace(/\s/g, "");
     if (onlyEmojiExp.test(rawText) || onlyEmojiExp.test(text))
       setOnlyEmoji(true);
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(messageClass);
-  // }, [messageClass]);
+  };
 
   return (
     <>
@@ -83,6 +93,7 @@ function Message({
           fileRef={fileRef}
           isMyMessage={isMyMessage}
           messageClass={messageClass}
+          time={time}
         />
       ) : null}
       {message.text ? (
@@ -94,6 +105,7 @@ function Message({
           messageClass={messageClass}
           bubbleClass={bubbleClass}
           onlyEmoji={onlyEmoji}
+          time={time}
         />
       ) : null}
       {message.gif ? (
@@ -102,6 +114,7 @@ function Message({
           SetAvatar={SetAvatar}
           isMyMessage={isMyMessage}
           messageClass={messageClass}
+          time={time}
         />
       ) : null}
     </>

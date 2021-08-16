@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function TextMessage({
   message,
@@ -8,13 +8,14 @@ function TextMessage({
   messageClass,
   bubbleClass,
   onlyEmoji,
+  time,
 }) {
+  const liStyle = {
+    fontSize: onlyEmoji ? "40px" : null,
+  };
+
   return (
-    <li
-      key={message._id}
-      className={messageClass}
-      style={onlyEmoji ? { fontSize: "40px" } : null}
-    >
+    <li key={message._id} className={messageClass} style={{ ...liStyle }}>
       {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
       {message.stringTag ? (
         <div
@@ -22,8 +23,18 @@ function TextMessage({
             message.isNewMessage ? "bubble-fade-in" : ""
           }`}
           style={{ borderRadius: message.borderRadius }}
-          dangerouslySetInnerHTML={{ __html: `${message.stringTag}` }}
-        ></div>
+        >
+          <span
+            dangerouslySetInnerHTML={{ __html: `${message.stringTag}` }}
+          ></span>
+          {message.showAvatar ? (
+            <div
+              className={isMyMessage ? "my-bubble-time" : "user-bubble-time"}
+            >
+              {time}
+            </div>
+          ) : null}
+        </div>
       ) : (
         <div
           className={`${bubbleClass} ${
@@ -32,6 +43,13 @@ function TextMessage({
           style={{ borderRadius: message.borderRadius }}
         >
           {message.text}
+          {message.showAvatar ? (
+            <div
+              className={isMyMessage ? "my-bubble-time" : "user-bubble-time"}
+            >
+              {time}
+            </div>
+          ) : null}
         </div>
       )}
 

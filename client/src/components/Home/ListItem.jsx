@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
 import GroupAvatar from "../GroupAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faThumbtack,
+  faImages,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ListItem({
   e,
@@ -12,6 +16,10 @@ function ListItem({
   selectedChats,
   handleNavigation,
 }) {
+  useEffect(() => {
+    console.log(e);
+  }, []);
+
   return (
     <Ripple.Li
       key={e._id}
@@ -71,7 +79,27 @@ function ListItem({
             <div className="chat">{e.name}</div>
           </>
         )}
-        <div className="message">{e.text}</div>
+        <div className="message">
+          {e.gif && (
+            <span
+              style={{
+                border: "1px solid #aaaaaa",
+                borderRadius: "8px",
+                padding: "1px 4px 1px 4px",
+              }}
+            >
+              GIF
+            </span>
+          )}
+          {e.files.length > 0 ? (
+            <>
+              <FontAwesomeIcon icon={faImages} style={{ marginRight: "4px" }} />
+              Photo
+            </>
+          ) : (
+            e.text && e.text
+          )}
+        </div>
       </div>
       <div className="time-container">
         {e.status === 1 ? (

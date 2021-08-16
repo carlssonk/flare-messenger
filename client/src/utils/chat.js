@@ -139,20 +139,20 @@ export const handleShowAvatar = (initMessages) => {
 
 const bubbleDown = (isMyMessage) => {
   return isMyMessage
-    ? { borderRadius: "30px 30px 4px 30px" }
-    : { borderRadius: "30px 30px 30px 4px" };
+    ? { borderRadius: "20px 20px 4px 20px" }
+    : { borderRadius: "20px 20px 20px 4px" };
 };
 
 const bubbleUp = (isMyMessage) => {
   return isMyMessage
-    ? { borderRadius: "30px 4px 30px 30px" }
-    : { borderRadius: "4px 30px 30px 30px" };
+    ? { borderRadius: "20px 4px 20px 20px" }
+    : { borderRadius: "4px 20px 20px 20px" };
 };
 
 const bubbleMid = (isMyMessage) => {
   return isMyMessage
-    ? { borderRadius: "30px 4px 4px 30px" }
-    : { borderRadius: "4px 30px 30px 4px" };
+    ? { borderRadius: "20px 4px 4px 20px" }
+    : { borderRadius: "4px 20px 20px 4px" };
 };
 
 const handleBubbleRadius = (message, messages, user) => {

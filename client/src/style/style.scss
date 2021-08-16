@@ -629,7 +629,7 @@ body {
       .my-bubble {
         background-color: var(--primary-cyan);
         padding: 6px 10px;
-        border-radius: 30px;
+        border-radius: 20px;
         min-width: 30px;
         overflow: hidden;
         color: white;
@@ -648,7 +648,7 @@ body {
       }
       .user-bubble {
         background-color: rgb(50, 50, 50);
-        border-radius: 30px;
+        border-radius: 20px;
         padding: 6px 10px;
         min-width: 30px;
         clip-path: circle(150% at 50% 100%);
@@ -659,6 +659,7 @@ body {
           }
         }
       }
+
       .img-wrapper {
         max-width: 300px;
         max-height: 300px;
@@ -673,6 +674,36 @@ body {
           object-fit: contain;
           border-radius: 20px;
         }
+      }
+
+      .user-bubble-time {
+        display: flex;
+        justify-content: flex-start;
+        color: rgb(140, 140, 140);
+        font-size: 12px;
+        margin-right: 8px;
+      }
+      .my-bubble-time {
+        display: flex;
+        justify-content: flex-end;
+        color: rgb(222, 222, 222);
+        font-size: 12px;
+        margin-left: 8px;
+      }
+      .user-img-time {
+        position: absolute;
+        bottom: 4px;
+        left: 50px;
+        color: white;
+        color: rgb(140, 140, 140);
+        font-size: 12px;
+      }
+      .my-img-time {
+        position: absolute;
+        bottom: 4px;
+        right: 12px;
+        color: rgb(222, 222, 222);
+        font-size: 12px;
       }
     }
   }
