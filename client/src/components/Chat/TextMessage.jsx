@@ -9,13 +9,16 @@ function TextMessage({
   bubbleClass,
   onlyEmoji,
   time,
+  isVisible,
 }) {
   const liStyle = {
     fontSize: onlyEmoji ? "40px" : null,
+    visibility: !isVisible ? "hidden" : null,
   };
 
   return (
     <li key={message._id} className={messageClass} style={{ ...liStyle }}>
+      {/* <div> */}
       {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
       {message.stringTag ? (
         <div
@@ -54,6 +57,7 @@ function TextMessage({
       )}
 
       <SetMessageLoading />
+      {/* </div> */}
     </li>
   );
 }

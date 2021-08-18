@@ -22,7 +22,7 @@ function getWindowDimensions() {
   };
 }
 
-function Gif({ setInitMessages, handleSubmit }) {
+function Gif({ setInitMessages, handleSubmit, setToggleEmoji }) {
   const { user } = useContext(UserContext);
   const location = useLocation();
   const imgRef = useRef(null);

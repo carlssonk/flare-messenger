@@ -592,6 +592,23 @@ body {
     background-color: var(--primary-background);
     color: white;
     overflow: hidden;
+    .load-messages-spinner {
+      position: fixed;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      top: 94px;
+      span {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        background-color: var(--primary-background);
+      }
+      // background-color: black;
+    }
     .message-list {
       position: relative;
       height: 100%;
@@ -600,11 +617,12 @@ body {
       flex-direction: column-reverse;
       overflow: auto;
       padding-top: 50px;
+      // margin-top: 50px;
 
       .my-message {
         position: relative;
         max-width: 80%;
-        margin: 4px 8px 0 0;
+        margin: 3px 8px 0 0;
         display: flex;
         align-self: flex-end;
         word-break: break-all;
@@ -617,7 +635,7 @@ body {
       .user-message {
         position: relative;
         max-width: 80%;
-        margin: 4px 0 0 8px;
+        margin: 3px 0 0 8px;
         display: flex;
         align-self: flex-start;
         word-break: break-all;

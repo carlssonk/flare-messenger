@@ -2,8 +2,11 @@ const Chat = require("../models/chat");
 const User = require("../models/user");
 const { getMessages, getLastMessages } = require("./messages");
 const moment = require("moment");
-const { v4: uuidv4 } = require("uuid");
-const { handleSpreadMessages } = require("../utils/messages");
+// const { v4: uuidv4 } = require("uuid");
+const {
+  handleReturnMessages,
+  handleReturnMessagesCount,
+} = require("../utils/messages");
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
@@ -128,15 +131,11 @@ module.exports.showChat = async (req, res) => {
     return e._id.toString() !== myId.toString();
   });
 
-  const trashedAt = user.chats.find((e) => e.chat.toString() === id).trashedAt;
+  const messages = await handleReturnMessages(user, id);
 
-  const messages = await getMessages(id, trashedAt);
+  const messagesCount = await handleReturnMessagesCount(user, id);
 
-  const parseMsgs = JSON.parse(JSON.stringify(messages)).reverse();
-
-  const msgs = handleSpreadMessages(parseMsgs, false);
-
-  res.json({ friends, messages: msgs.reverse(), chat });
+  res.json({ friends, messages, chat, messagesCount });
 };
 
 module.exports.enableChat = async (req, res) => {

@@ -19,10 +19,11 @@ import {
   faKeyboard,
   faChevronRight,
   faSmile,
+  faCommentsDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
-import { IonAlert } from "@ionic/react";
+import { IonAlert, IonSpinner } from "@ionic/react";
 
 import {
   Editor,
@@ -56,6 +57,9 @@ import {
   isInputEmpty,
 } from "../utils/chat";
 
+import InfiniteScroll from "react-infinite-scroll-component";
+import VisibilitySensor from "react-visibility-sensor";
+
 const draftUtils = require("draftjs-utils");
 
 function Chat() {
@@ -70,7 +74,8 @@ function Chat() {
   const [initMessages, setInitMessages] = useState([]);
   const [imagesHasLoaded, setImagesHasLoaded] = useState(0);
   const [imagesCount, setImagesCount] = useState(0);
-  const [showChat, setShowChat] = useState(0);
+  const [showChat, setShowChat] = useState(true);
+  const [showLoadedMessages, setShowLoadedMessages] = useState(false);
   const [chat, setChat] = useState({});
   const [simpleController, setSimpleController] = useState(false);
   const [switchEmojiGif, setSwitchEmojiGif] = useState("emoji");
@@ -79,12 +84,21 @@ function Chat() {
 
   const [initPage, setInitPage] = useState(false);
 
+  // const [lastScrollPosition, setLastScrollPosition] = useState(0);
+  const [loadMoreMessages, setLoadMoreMessages] = useState({});
+  const [currentMessagesCount, setCurrentMessagesCount] = useState(0);
+  const [messagesCount, setMessagesCount] = useState(0);
+  // const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
+  const [currentLimit, setCurrentLimit] = useState(40);
+  const [currentSkip, setCurrentSkip] = useState(0);
+
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
   const editorContainer = useRef(null);
   const fileRef = useRef(null);
   const messageContainer = useRef(null);
   const messagesEndRef = useRef(null);
+  const messageListRef = useRef(null);
 
   let domEditor = useRef(null);
   const setDomEditorRef = (ref) => (domEditor = ref);
@@ -132,7 +146,15 @@ function Chat() {
 
   useEffect(() => {
     if (imagesCount === 0) return;
-    if (imagesCount === imagesHasLoaded) setShowChat(true);
+    if (imagesCount === imagesHasLoaded) {
+      setShowChat(true);
+
+      // setTimeout(() => {
+      setShowLoadedMessages(true);
+      setLoadMoreMessages({ ...loadMoreMessages, isLoading: false });
+      // messageListRef.current.scrollTo(0, loadMoreMessages.scrollPosition);
+      // }, 2000);
+    }
   }, [imagesHasLoaded, imagesCount]);
 
   // Socket
@@ -150,6 +172,7 @@ function Chat() {
     const addDayMsgs = handleAddDay(avatarMsgs);
     const bubbledMsgs = handleAddBubble(addDayMsgs, user);
     setMessages(bubbledMsgs);
+    // messageListRef.current.scrollTo(0, lastScrollPosition);
   }, [initMessages]);
 
   const handleAddDay = (msgs) => {
@@ -200,6 +223,7 @@ function Chat() {
     !gif && resetInput();
     formData.append("gif", JSON.stringify(gif));
 
+    setToggleEmoji(false);
     const myMessage = submitUI(gif);
     await fetch(`/api/messages/${chatId}`, {
       method: "POST",
@@ -263,7 +287,7 @@ function Chat() {
       setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
-      console.log(data.messages);
+      setMessagesCount(data.messagesCount);
 
       const filesCount = data.messages.filter((e) => e.file).length;
       setImagesCount(filesCount);
@@ -281,7 +305,6 @@ function Chat() {
   // Focus Input
   useEffect(() => {
     if (!initPage) return;
-    console.log("FOCUS");
     domEditor.focus();
   }, [toggleEmoji, initPage]);
 
@@ -291,7 +314,8 @@ function Chat() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // if (loadMoreMessages.isLoading) return;
+    // messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   // Set simple controller
@@ -307,12 +331,78 @@ function Chat() {
     for (let i = 0; i < textBlocks.length; i++) {
       const key = textBlocks[i][1].getKey();
       const node = document.querySelector(`span[data-offset-key="${key}-0-0"]`);
+      if (!node) return;
       const parentNode = node.parentElement;
       if (node && node.offsetWidth > parentNode.offsetWidth / 2)
         setSimpleController(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
+
+  // window.onscroll = function (ev) {
+  //   console.log(window.innerHeight);
+
+  // };
+
+  // useEffect(() => {
+  const handleLoadMoreMessages = async () => {
+    console.log("LOAD MORE");
+    // return;
+    if (loadMoreMessages.isLoading) return;
+    const chatId = location.pathname.replace("/chat/", "");
+    if (!user.chats.includes(chatId)) return;
+
+    const limit = currentLimit + 30;
+    // const skip = limit > 60 ? limit - 60 : 0;
+    console.log(skip);
+    const skip = 0;
+    const res = await fetch(
+      `/api/messages/load/${chatId}?skip=${skip}&limit=${limit}`
+    );
+    const data = await res.json();
+    setCurrentSkip(skip);
+    setCurrentLimit(limit);
+    setInitMessages(data.messages.reverse());
+
+    // setCurrentMessagesCount(data.messagesLength);
+    console.log(data.messages.length);
+
+    // if (data.messages > messagesCount) setMessagesCount(data.messages.length);
+    // handleSetLoadMessages(data.messages);
+    // setShowLoadedMessages(false);
+
+    // //
+    // //
+
+    // const filesCount = data.messages.filter((e) => e.file).length;
+    // setImagesCount(filesCount);
+    console.log(data.messages.length);
+  };
+
+  const handleSetLoadMessages = (msgs) => {
+    const copyMessages = [...messages];
+    const idArray = copyMessages.map(({ _id }) => _id);
+    const newMsgs = msgs.map((obj) => {
+      if (!idArray.includes(obj._id)) return { ...obj, loadMessage: true };
+      return obj;
+    });
+    setInitMessages(newMsgs.reverse());
+  };
+
+  const handleScroll = (e) => {
+    if (loadMoreMessages.isLoading) return;
+    if (currentLimit >= messagesCount) return;
+    const el = e.target;
+
+    const scrollTop = Math.abs(el.scrollTop - 1);
+    const remainingHeight = Math.abs(el.offsetHeight - el.scrollHeight);
+    const offset = 100;
+    if (scrollTop >= remainingHeight - offset) {
+      // setImagesHasLoaded(0);
+      // setLoadMoreMessages({ isLoading: true, scrollPosition: -scrollTop });
+      // handleLoadMoreMessages();
+    }
+  };
 
   return (
     <div className="chat-page page">
@@ -385,23 +475,54 @@ function Chat() {
         ref={messageContainer}
         style={showChat ? null : { visibility: "hidden" }}
       >
-        <ul className="message-list">
-          <div ref={messagesEndRef} style={{ width: "0" }} />
+        <div ref={messagesEndRef} style={{ width: "0" }} />
+
+        <InfiniteScroll
+          className="message-list"
+          dataLength={messages.length} //This is important field to render the next data
+          next={handleLoadMoreMessages}
+          inverse={true}
+          height={"100%"}
+          scrollThreshold={"100px"}
+          hasMore={messages.length >= messagesCount ? false : true}
+          loader={
+            <div className="load-messages-spinner">
+              <span>
+                <IonSpinner name="lines" />
+              </span>
+            </div>
+          }
+          // endMessage={
+          //   <p style={{ textAlign: "center" }}>
+          //     <b>Yay! You have seen it all</b>
+          //   </p>
+          // }
+        >
           {messages &&
             messages.map((e) => {
               return (
-                <Message
+                <VisibilitySensor
                   key={e._id}
-                  messages={messages}
-                  message={e}
-                  isMyMessage={e.author._id === user.id}
-                  setImagesHasLoaded={setImagesHasLoaded}
-                  scrollToBottom={scrollToBottom}
-                  initPage={initPage}
-                />
+                  offset={{ bottom: -300, top: -300 }}
+                >
+                  {({ isVisible }) => (
+                    // <div>
+                    <Message
+                      isVisible={isVisible}
+                      // key={e._id}
+                      messages={messages}
+                      message={e}
+                      isMyMessage={e.author._id === user.id}
+                      setImagesHasLoaded={setImagesHasLoaded}
+                      scrollToBottom={scrollToBottom}
+                      initPage={initPage}
+                    />
+                    // </div>
+                  )}
+                </VisibilitySensor>
               );
             })}
-        </ul>
+        </InfiniteScroll>
       </div>
 
       <div className="controller-container">

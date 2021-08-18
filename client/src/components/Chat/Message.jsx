@@ -17,6 +17,7 @@ function Message({
   setImagesHasLoaded,
   scrollToBottom,
   initPage,
+  isVisible,
 }) {
   const fileRef = useRef();
 
@@ -106,6 +107,7 @@ function Message({
           isMyMessage={isMyMessage}
           messageClass={messageClass}
           time={time}
+          isVisible={isVisible}
         />
       ) : null}
       {message.text ? (
@@ -118,6 +120,7 @@ function Message({
           bubbleClass={bubbleClass}
           onlyEmoji={onlyEmoji}
           time={time}
+          isVisible={isVisible}
         />
       ) : null}
       {message.gif ? (
@@ -127,10 +130,14 @@ function Message({
           isMyMessage={isMyMessage}
           messageClass={messageClass}
           time={time}
+          isVisible={isVisible}
         />
       ) : null}
       {message.newDay ? (
-        <div className="new-day-message">
+        <div
+          className="new-day-message"
+          style={!isVisible ? { visibility: "hidden" } : null}
+        >
           <span>{date}</span>
         </div>
       ) : null}

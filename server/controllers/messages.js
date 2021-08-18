@@ -8,31 +8,8 @@ const {
   handleSpreadMessages,
   createMessageObject,
   retrieveStringInfo,
+  handleReturnMessages,
 } = require("../utils/messages");
-
-module.exports.getMessages = async (chatId, trashedAt) => {
-  let messages;
-
-  if (trashedAt) {
-    messages = await Message.find(
-      { chat: chatId, createdAt: { $gt: trashedAt } },
-      "-chat -__v -updatedAt"
-    ).populate(
-      "author",
-      "-__v -createdAt -updatedAt -friends -email -chats -name"
-    );
-  } else {
-    messages = await Message.find(
-      { chat: chatId },
-      "-chat -__v -updatedAt"
-    ).populate(
-      "author",
-      "-__v -createdAt -updatedAt -friends -email -chats -name"
-    );
-  }
-
-  return messages;
-};
 
 module.exports.sendMessage = async (req, res) => {
   const { _id: userId, username, avatar } = req.user;
@@ -104,4 +81,21 @@ module.exports.getLastMessages = async (chats) => {
   });
 
   return updatedChats;
+};
+
+module.exports.loadMoreMessages = async (req, res) => {
+  const user = req.user;
+  const { id } = req.params;
+  const { skip, limit } = req.query;
+
+  // console.log()
+
+  const messages = await handleReturnMessages(
+    user,
+    id,
+    parseInt(skip),
+    parseInt(limit)
+  );
+
+  res.json({ messages });
 };

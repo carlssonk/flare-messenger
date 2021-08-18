@@ -6,5 +6,6 @@ const { storage } = require("../cloudinary");
 const upload = multer({ storage });
 
 router.route("/:id").post(upload.array("files", 10), messages.sendMessage);
+router.route("/load/:id").get(messages.loadMoreMessages);
 
 module.exports = router;

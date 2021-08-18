@@ -342,6 +342,32 @@
   }
 }
 
+.LOAD_MESSAGES {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+}
+
+.LOAD_MESSAGES .new-day-message {
+  padding-top: 50px;
+}
+
+.LOAD_MESSAGES .new-day-message:after {
+  margin-top: 25px;
+}
+
+.infinite-scroll-component__outerdiv {
+  height: 100%;
+  overflow: auto;
+}
+
 .auth-page .input-box {
   width: 100%;
   position: relative;
@@ -2258,6 +2284,26 @@ body {
   overflow: hidden;
 }
 
+.chat-page .message-container .load-messages-spinner {
+  position: fixed;
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  top: 94px;
+}
+
+.chat-page .message-container .load-messages-spinner span {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: var(--primary-background);
+}
+
 .chat-page .message-container .message-list {
   position: relative;
   height: 100%;
@@ -2276,7 +2322,7 @@ body {
 .chat-page .message-container .message-list .my-message {
   position: relative;
   max-width: 80%;
-  margin: 4px 8px 0 0;
+  margin: 3px 8px 0 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2296,7 +2342,7 @@ body {
 .chat-page .message-container .message-list .user-message {
   position: relative;
   max-width: 80%;
-  margin: 4px 0 0 8px;
+  margin: 3px 0 0 8px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

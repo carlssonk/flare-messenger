@@ -111,33 +111,31 @@ export const listenSubmit = (e) => {
 
 export const handleShowAvatar = (initMessages) => {
   let lastId;
-  // let idArr = [];
+  let idArr = [];
   for (let i = 0; i < initMessages.length; i++) {
     if (initMessages[i].author._id === lastId) {
       const startDate = new Date(initMessages[i].createdAt).getTime();
       const endDate = new Date(initMessages[i - 1].createdAt).getTime();
 
       if ((endDate - startDate) / 1000 > 60) {
-        // idArr.push(initMessages[i]._id);
-        initMessages[i].showAvatar = true;
+        idArr.push(initMessages[i]._id);
       }
     } else {
-      initMessages[i].showAvatar = true;
-      // idArr.push(initMessages[i]._id);
+      idArr.push(initMessages[i]._id);
     }
 
     lastId = initMessages[i].author._id;
   }
 
-  // const newMsgs = initMessages.map((obj) => {
-  //   if (idArr.includes(obj._id)) {
-  //     return { ...obj, showAvatar: true };
-  //   } else {
-  //     return { ...obj, showAvatar: false };
-  //   }
-  // });
+  const newMsgs = initMessages.map((obj) => {
+    if (idArr.includes(obj._id)) {
+      return { ...obj, showAvatar: true };
+    } else {
+      return { ...obj, showAvatar: false };
+    }
+  });
 
-  return initMessages;
+  return newMsgs;
 };
 
 const bubbleDown = (isMyMessage) => {
