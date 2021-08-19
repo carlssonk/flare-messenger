@@ -12,13 +12,6 @@ function FileMessage({
   time,
   isVisible,
 }) {
-  const liStyle = {
-    position: showMessage ? null : "absolute",
-    height: showMessage ? null : "0",
-    // marginBottom: message.showAvatar ? "10px" : null,
-  };
-
-  const [isLoaded, setIsLoaded] = useState(false);
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
 
@@ -34,10 +27,10 @@ function FileMessage({
         handleInitialDimensions(NATURAL_WIDTH, NATURAL_HEIGHT);
       }
     }, 10);
-  }, []);
+  }, [message.file.path]);
 
   const handleInitialDimensions = (width, height) => {
-    const windowWidth = document.documentElement.offsetWidth;
+    // const windowWidth = document.documentElement.offsetWidth;
 
     if (width >= height) {
       if (width > 300) {
@@ -67,12 +60,7 @@ function FileMessage({
     >
       <div style={!isVisible ? { display: "none" } : null}>
         {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
-        <div
-          className="img-wrapper"
-          ref={fileRef}
-          // style={{ height, width }}
-          // style={{ height: "300px" }}
-        >
+        <div className="img-wrapper" ref={fileRef}>
           <SetMessageLoading />
           <img
             src={message.file.path}
@@ -80,8 +68,6 @@ function FileMessage({
             style={{ borderRadius: message.borderRadius }}
             onLoad={() => {
               handleInitMessage();
-              // setTimeout(() => setIsLoaded(true), 500);
-              setIsLoaded(true);
             }}
           />
           {message.showAvatar ? (

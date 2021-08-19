@@ -8,12 +8,6 @@ function GifMessage({
   time,
   isVisible,
 }) {
-  const liStyle = {
-    // marginBottom: message.showAvatar ? "10px" : null,
-  };
-
-  const [isLoaded, setIsLoaded] = useState(false);
-
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
 
@@ -29,10 +23,10 @@ function GifMessage({
         handleInitialDimensions(NATURAL_WIDTH, NATURAL_HEIGHT);
       }
     }, 10);
-  }, []);
+  }, [message.gif.source]);
 
   const handleInitialDimensions = (width, height) => {
-    const windowWidth = document.documentElement.offsetWidth;
+    // const windowWidth = document.documentElement.offsetWidth;
 
     if (width >= height) {
       if (width > 300) {
@@ -67,9 +61,6 @@ function GifMessage({
             src={message.gif.source}
             alt=""
             style={{ borderRadius: message.borderRadius }}
-            onLoad={() => {
-              setTimeout(() => setIsLoaded(true), 500);
-            }}
           />
           {message.showAvatar ? (
             <div className={isMyMessage ? "my-img-time" : "user-img-time"}>

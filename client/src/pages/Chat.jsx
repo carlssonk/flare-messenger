@@ -19,7 +19,6 @@ import {
   faKeyboard,
   faChevronRight,
   faSmile,
-  faCommentsDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
@@ -29,10 +28,7 @@ import {
   Editor,
   EditorState,
   getDefaultKeyBinding,
-  ContentState,
-  RichUtils,
   Modifier,
-  SelectionState,
   CompositeDecorator,
 } from "draft-js";
 import "draft-js/dist/Draft.css";
@@ -75,22 +71,17 @@ function Chat() {
   const [imagesHasLoaded, setImagesHasLoaded] = useState(0);
   const [imagesCount, setImagesCount] = useState(0);
   const [showChat, setShowChat] = useState(true);
-  const [showLoadedMessages, setShowLoadedMessages] = useState(false);
   const [chat, setChat] = useState({});
   const [simpleController, setSimpleController] = useState(false);
   const [switchEmojiGif, setSwitchEmojiGif] = useState("emoji");
+  const [isMyMessage, setIsMyMessage] = useState(false);
 
   const [toggleEmoji, setToggleEmoji] = useState(false);
 
   const [initPage, setInitPage] = useState(false);
 
-  // const [lastScrollPosition, setLastScrollPosition] = useState(0);
-  const [loadMoreMessages, setLoadMoreMessages] = useState({});
-  const [currentMessagesCount, setCurrentMessagesCount] = useState(0);
   const [messagesCount, setMessagesCount] = useState(0);
-  // const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
   const [currentLimit, setCurrentLimit] = useState(40);
-  const [currentSkip, setCurrentSkip] = useState(0);
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -98,7 +89,7 @@ function Chat() {
   const fileRef = useRef(null);
   const messageContainer = useRef(null);
   const messagesEndRef = useRef(null);
-  const messageListRef = useRef(null);
+  const scrollRef = useRef(null);
 
   let domEditor = useRef(null);
   const setDomEditorRef = (ref) => (domEditor = ref);
@@ -148,12 +139,6 @@ function Chat() {
     if (imagesCount === 0) return;
     if (imagesCount === imagesHasLoaded) {
       setShowChat(true);
-
-      // setTimeout(() => {
-      setShowLoadedMessages(true);
-      setLoadMoreMessages({ ...loadMoreMessages, isLoading: false });
-      // messageListRef.current.scrollTo(0, loadMoreMessages.scrollPosition);
-      // }, 2000);
     }
   }, [imagesHasLoaded, imagesCount]);
 
@@ -172,8 +157,7 @@ function Chat() {
     const addDayMsgs = handleAddDay(avatarMsgs);
     const bubbledMsgs = handleAddBubble(addDayMsgs, user);
     setMessages(bubbledMsgs);
-    // messageListRef.current.scrollTo(0, lastScrollPosition);
-  }, [initMessages]);
+  }, [initMessages, user]);
 
   const handleAddDay = (msgs) => {
     const datesAreOnSameDay = (first, second) =>
@@ -242,11 +226,13 @@ function Chat() {
   };
 
   const submitUI = (gif) => {
+    setIsMyMessage(true);
     const message = createMessageUI(user, text, files, gif);
 
     const spreadMessage = handleSpreadMessage(message);
 
     setInitMessages((messages) => [...spreadMessage, ...messages]);
+
     return spreadMessage;
   };
 
@@ -300,7 +286,8 @@ function Chat() {
   useEffect(() => {
     if (!initPage) return;
     setTimeout(() => scrollToBottom(), 10);
-  }, [messages, showChat, initPage]);
+    // eslint-disable-next-line
+  }, [showChat, initPage, messages]);
 
   // Focus Input
   useEffect(() => {
@@ -314,8 +301,9 @@ function Chat() {
   };
 
   const scrollToBottom = () => {
-    // if (loadMoreMessages.isLoading) return;
-    // messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (Math.abs(scrollRef.current.lastScrollTop) > 300 && !isMyMessage) return;
+    setIsMyMessage(false);
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   // Set simple controller
@@ -339,69 +327,18 @@ function Chat() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
-  // window.onscroll = function (ev) {
-  //   console.log(window.innerHeight);
-
-  // };
-
-  // useEffect(() => {
   const handleLoadMoreMessages = async () => {
-    console.log("LOAD MORE");
-    // return;
-    if (loadMoreMessages.isLoading) return;
     const chatId = location.pathname.replace("/chat/", "");
     if (!user.chats.includes(chatId)) return;
 
     const limit = currentLimit + 30;
-    // const skip = limit > 60 ? limit - 60 : 0;
-    console.log(skip);
     const skip = 0;
     const res = await fetch(
       `/api/messages/load/${chatId}?skip=${skip}&limit=${limit}`
     );
     const data = await res.json();
-    setCurrentSkip(skip);
     setCurrentLimit(limit);
     setInitMessages(data.messages.reverse());
-
-    // setCurrentMessagesCount(data.messagesLength);
-    console.log(data.messages.length);
-
-    // if (data.messages > messagesCount) setMessagesCount(data.messages.length);
-    // handleSetLoadMessages(data.messages);
-    // setShowLoadedMessages(false);
-
-    // //
-    // //
-
-    // const filesCount = data.messages.filter((e) => e.file).length;
-    // setImagesCount(filesCount);
-    console.log(data.messages.length);
-  };
-
-  const handleSetLoadMessages = (msgs) => {
-    const copyMessages = [...messages];
-    const idArray = copyMessages.map(({ _id }) => _id);
-    const newMsgs = msgs.map((obj) => {
-      if (!idArray.includes(obj._id)) return { ...obj, loadMessage: true };
-      return obj;
-    });
-    setInitMessages(newMsgs.reverse());
-  };
-
-  const handleScroll = (e) => {
-    if (loadMoreMessages.isLoading) return;
-    if (currentLimit >= messagesCount) return;
-    const el = e.target;
-
-    const scrollTop = Math.abs(el.scrollTop - 1);
-    const remainingHeight = Math.abs(el.offsetHeight - el.scrollHeight);
-    const offset = 100;
-    if (scrollTop >= remainingHeight - offset) {
-      // setImagesHasLoaded(0);
-      // setLoadMoreMessages({ isLoading: true, scrollPosition: -scrollTop });
-      // handleLoadMoreMessages();
-    }
   };
 
   return (
@@ -475,9 +412,8 @@ function Chat() {
         ref={messageContainer}
         style={showChat ? null : { visibility: "hidden" }}
       >
-        <div ref={messagesEndRef} style={{ width: "0" }} />
-
         <InfiniteScroll
+          ref={scrollRef}
           className="message-list"
           dataLength={messages.length} //This is important field to render the next data
           next={handleLoadMoreMessages}
@@ -492,12 +428,8 @@ function Chat() {
               </span>
             </div>
           }
-          // endMessage={
-          //   <p style={{ textAlign: "center" }}>
-          //     <b>Yay! You have seen it all</b>
-          //   </p>
-          // }
         >
+          <div ref={messagesEndRef} style={{ width: "0" }} />
           {messages &&
             messages.map((e) => {
               return (
@@ -506,10 +438,8 @@ function Chat() {
                   offset={{ bottom: -300, top: -300 }}
                 >
                   {({ isVisible }) => (
-                    // <div>
                     <Message
                       isVisible={isVisible}
-                      // key={e._id}
                       messages={messages}
                       message={e}
                       isMyMessage={e.author._id === user.id}
@@ -517,7 +447,6 @@ function Chat() {
                       scrollToBottom={scrollToBottom}
                       initPage={initPage}
                     />
-                    // </div>
                   )}
                 </VisibilitySensor>
               );
@@ -571,7 +500,6 @@ function Chat() {
             className="icon-inside"
             onClick={() => setToggleEmoji((bool) => !bool)}
           >
-            {/* <FontAwesomeIcon icon={faGrinSquintTears} /> */}
             {toggleEmoji ? (
               <FontAwesomeIcon icon={faKeyboard} />
             ) : (

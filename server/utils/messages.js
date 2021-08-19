@@ -22,8 +22,6 @@ module.exports.handleReturnMessagesCount = async (user, id) => {
     }
   }
 
-  console.log(count);
-
   return count;
 };
 
@@ -135,8 +133,6 @@ module.exports.createMessageObject = (
 };
 
 const getMessages = async (chatId, trashedAt, skip, limit) => {
-  console.log("-----");
-  console.log(skip);
   const messages = await Message.find(
     { chat: chatId, ...(trashedAt && { createdAt: { $gt: trashedAt } }) },
     "-chat -__v -updatedAt"
@@ -148,8 +144,6 @@ const getMessages = async (chatId, trashedAt, skip, limit) => {
     .sort("-createdAt")
     .skip(skip)
     .limit(limit);
-
-  // console.log(messages.length);
 
   return messages.reverse();
 };

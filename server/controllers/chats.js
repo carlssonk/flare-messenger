@@ -1,8 +1,7 @@
 const Chat = require("../models/chat");
 const User = require("../models/user");
-const { getMessages, getLastMessages } = require("./messages");
+const { getLastMessages } = require("./messages");
 const moment = require("moment");
-// const { v4: uuidv4 } = require("uuid");
 const {
   handleReturnMessages,
   handleReturnMessagesCount,

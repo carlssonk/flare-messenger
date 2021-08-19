@@ -1,16 +1,10 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { categories } from "../../utils/gifCategories";
-import { useLocation } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSearch,
-  faArrowLeft,
-  faLessThan,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidv4 } from "uuid";
 import Ripple from "../Effects/Ripple";
-import { UserContext } from "../../context/UserContext";
 
 const FlareKey = "PLHRTZN7D20S";
 
@@ -22,28 +16,21 @@ function getWindowDimensions() {
   };
 }
 
-function Gif({ setInitMessages, handleSubmit, setToggleEmoji }) {
-  const { user } = useContext(UserContext);
-  const location = useLocation();
-  const imgRef = useRef(null);
+function Gif({ handleSubmit }) {
   const gifContainer = useRef(null);
-  const topRef = useRef(null);
 
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState([]);
   const [columns, setColumns] = useState(0);
-  const [columnsCount, setColumnsCount] = useState(0);
   const [gifsOrder, setGifsOrder] = useState([]);
   const [freeze, setFreeze] = useState(false);
 
-  // const [gifLoadedCount, setGifLoadedCount] = useState([]);
-  const [gifsHasLoaded, setGifsHasLoaded] = useState(false);
   const [showGifs, setShowGifs] = useState(false);
-  // const gifLoaded
 
   useEffect(() => {
     if (gifs.length === 0) return;
     handleSetGifsOrder();
+    // eslint-disable-next-line
   }, [gifs]);
 
   const handleSetColumnsCount = () => {
@@ -55,7 +42,6 @@ function Gif({ setInitMessages, handleSubmit, setToggleEmoji }) {
 
   const handleSetGifsOrder = () => {
     const columnsCount = handleSetColumnsCount();
-    setColumnsCount(columnsCount);
     const columnsArray = createArrayFromNum(columnsCount);
     setColumns(columnsArray);
 
@@ -92,7 +78,7 @@ function Gif({ setInitMessages, handleSubmit, setToggleEmoji }) {
   useEffect(() => {
     if (!freeze) setShowGifs(false);
     if (!freeze && query.length > 0) handleQueryGifs(query);
-  }, [freeze]);
+  }, [freeze, query]);
 
   const handleChangeQuery = (query) => {
     setQuery(query);

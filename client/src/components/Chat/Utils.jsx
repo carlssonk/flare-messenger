@@ -16,7 +16,13 @@ function Utils({
     setEditorMaxWidth(
       editorWrapper.current && editorWrapper.current.offsetWidth
     );
-  }, [editorState]);
+  }, [
+    editorState,
+    editorContainer,
+    editorWrapper,
+    setEditorHeight,
+    setEditorMaxWidth,
+  ]);
 
   useEffect(() => {
     if (!container.current) return;

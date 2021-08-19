@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Ripple from "../Effects/Ripple";
 import Avatar from "../Avatar";
 import GroupAvatar from "../GroupAvatar";
@@ -16,10 +16,6 @@ function ListItem({
   selectedChats,
   handleNavigation,
 }) {
-  useEffect(() => {
-    console.log(e);
-  }, []);
-
   return (
     <Ripple.Li
       key={e._id}

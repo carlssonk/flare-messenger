@@ -88,8 +88,6 @@ module.exports.loadMoreMessages = async (req, res) => {
   const { id } = req.params;
   const { skip, limit } = req.query;
 
-  // console.log()
-
   const messages = await handleReturnMessages(
     user,
     id,
