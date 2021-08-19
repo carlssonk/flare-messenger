@@ -896,3 +896,103 @@ body {
     }
   }
 }
+
+.camera-page {
+  display: flex;
+  flex-direction: column;
+  // position: relative;
+  background-color: black;
+  .video-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .video-container {
+      position: relative;
+      max-width: 800px;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      left: 50%;
+      transform: translate(-50%, 0);
+      .video-box {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        width: 100%;
+        // height: 100%;
+        object-fit: contain;
+        z-index: 1;
+      }
+      .video-box-underlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(20px);
+        z-index: 0;
+      }
+      .image-box {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+    }
+  }
+
+  .controller-box {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    z-index: 5;
+    .take-photo-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 100%;
+      background: transparent;
+      border: 4px solid white;
+      margin-bottom: 30px;
+      transition: 200ms;
+      &:active {
+        transform: scale3d(1.1, 1.1, 1.1);
+      }
+    }
+
+    .action-btn {
+      width: 100px;
+      height: 30px;
+      background-color: blue;
+      margin: 14px;
+      color: white;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .retake-photo-btn {
+      background-color: rgb(100, 100, 100);
+    }
+    .send-photo-btn {
+      background-color: var(--primary-cyan);
+      svg {
+        position: absolute;
+        right: 12px;
+      }
+    }
+  }
+
+  .go-back-btn {
+    display: grid;
+    border-radius: 100%;
+    place-items: center;
+    color: white;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    margin: 6px 0 0 6px;
+    z-index: 10;
+  }
+}

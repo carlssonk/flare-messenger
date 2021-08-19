@@ -21,6 +21,7 @@ import { joinChat, leaveChat } from "./utils/socket";
 import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
 import Archived from "./pages/Archived";
+import Camrera from "./pages/Camrera";
 
 function App() {
   const location = useLocation();
@@ -73,6 +74,10 @@ function App() {
       else if (user.chats.includes(lastChatId)) leaveChat(socket, lastChatId);
     }
   }, [socket, user, location, lastLocation]);
+
+  useEffect(() => {
+    console.log(location.key);
+  }, [location]);
 
   return (
     <NavContext.Provider value={navValue}>
@@ -149,6 +154,11 @@ function App() {
                         user={user}
                         path="/archived"
                         component={Archived}
+                      />
+                      <PrivateRoute
+                        user={user}
+                        path="/camera"
+                        component={Camrera}
                       />
                     </Switch>
                   </CSSTransition>

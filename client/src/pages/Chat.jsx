@@ -127,13 +127,36 @@ function Chat() {
     } else {
       setNav("forward");
     }
+
     // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+    if (to === "/camera") {
+      if (files.length >= 10) return setMaximumFilesAlert(true);
+      setTimeout(
+        () =>
+          history.push({
+            pathname: "/camera",
+            state: { path: history.location.pathname, files, text },
+          }),
+        10
+      );
+    } else {
+      setTimeout(() => history.push(to), 10);
+    }
   };
 
   useEffect(() => {
     setTimeout(() => setInitPage(true), 400);
+
+    // return () => {
+    //   history.push({ state: { files: [] } });
+    // };
   }, []);
+
+  useEffect(() => {
+    if (history.location.state) {
+      setFiles(history.location.state.files);
+    }
+  }, [history]);
 
   useEffect(() => {
     if (imagesCount === 0) return;
@@ -239,7 +262,8 @@ function Chat() {
   const addFile = (e) => {
     if (!e.target.files[0]) return;
     if (e.target.files[0].type.indexOf("image/") > -1) {
-      if (e.target.files.length > 10) return setMaximumFilesAlert(true);
+      if (e.target.files.length > 10 || files.length > 10)
+        return setMaximumFilesAlert(true);
 
       const filesArr = [...e.target.files];
 
@@ -255,6 +279,14 @@ function Chat() {
     const filesCopy = [...files];
     const updatedArr = filesCopy.filter((e) => e.id !== id);
     setFiles(updatedArr);
+    // window.history.replaceState(null, null, "/");
+    // history.replace(history.location.pathname, {
+    //   ...history.location.state,
+    //   files: updatedArr,
+    // });
+    // window.history.replaceState(null, "New Page Title");
+    window.history.replaceState(null, "New Title");
+    console.log(history);
   };
 
   const handleAddEmoji = (emoji) => {
@@ -459,7 +491,10 @@ function Chat() {
           className="icon-outside-wrapper"
           style={simpleController ? { left: "-36px" } : null}
         >
-          <Ripple.Div className="icon-outside">
+          <Ripple.Div
+            className="icon-outside"
+            onClick={() => handleNavigation("/camera")}
+          >
             <FontAwesomeIcon icon={faCamera} />
           </Ripple.Div>
           {simpleController ? (
@@ -472,7 +507,10 @@ function Chat() {
           ) : (
             <Ripple.Div
               className="icon-outside"
-              onClick={() => fileRef.current.click()}
+              onClick={() => {
+                if (files.length >= 10) return setMaximumFilesAlert(true);
+                fileRef.current.click();
+              }}
             >
               <FontAwesomeIcon icon={faImages} />
               <input
