@@ -72,7 +72,7 @@ function ListItem({
         ) : (
           <>
             <div className="chat-people">{`${e.users.length} People`}</div>
-            <div className="chat">{e.name}</div>
+            <div className="friend">{e.name}</div>
           </>
         )}
         <div className="message">

@@ -20,6 +20,7 @@ import { IonAlert } from "@ionic/react";
 
 function Header({
   handleFindUsers,
+  handleSearchChats,
   toggleEditChat,
   setToggleEditChat,
   selectedChats,
@@ -151,7 +152,12 @@ function Header({
             page="header"
             handleNavigation={handleNavigation}
             user={user}
-            style={{ width: "40px", height: "40px", fontSize: "18px" }}
+            style={{
+              width: "40px",
+              minWidth: "40px",
+              height: "40px",
+              fontSize: "18px",
+            }}
           />
           <div className="page-label">
             {location.pathname === "/" ? "Chats" : null}
@@ -159,6 +165,7 @@ function Header({
             {location.pathname === "/new/chat" ? "New Chat" : null}
             {location.pathname === "/new/group" ? "New Group" : null}
             {location.pathname === "/archived" ? "Archived" : null}
+            {location.pathname === "/send-photo" ? "Send Photo" : null}
           </div>
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
@@ -201,7 +208,12 @@ function Header({
               />
             ) : null}
             {location.pathname !== "/add" ? (
-              <input type="text" className="search" placeholder="Search" />
+              <input
+                onChange={handleSearchChats}
+                type="text"
+                className="search"
+                placeholder="Search"
+              />
             ) : null}
           </div>
         </div>

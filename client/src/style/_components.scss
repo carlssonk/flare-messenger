@@ -50,6 +50,9 @@
         align-items: center;
         padding-left: 12px;
         z-index: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
       .icon-wrapper {
         display: flex;

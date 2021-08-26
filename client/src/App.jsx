@@ -22,6 +22,7 @@ import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
 import Archived from "./pages/Archived";
 import Camrera from "./pages/Camrera";
+import SendPhoto from "./pages/SendPhoto";
 
 function App() {
   const location = useLocation();
@@ -159,6 +160,11 @@ function App() {
                         user={user}
                         path="/camera"
                         component={Camrera}
+                      />
+                      <PrivateRoute
+                        user={user}
+                        path="/send-photo"
+                        component={SendPhoto}
                       />
                     </Switch>
                   </CSSTransition>

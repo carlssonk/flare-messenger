@@ -6,6 +6,7 @@ import ChatList from "../components/Home/ChatList";
 
 function Home() {
   const [chats, setChats] = useState([]);
+  const [allChats, setAllChats] = useState([]);
   const [toggleEditChat, setToggleEditChat] = useState(false);
   const [selectedChats, setSelectedChats] = useState([]);
 
@@ -19,10 +20,12 @@ function Home() {
   }, []);
 
   const handleSortChat = (chat) => {
+    console.log(chat);
     const sortedChat = chat.sort(function (a, b) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(b.lastMessageAt) - new Date(a.lastMessageAt);
     });
     setChats(sortedChat);
+    setAllChats(sortedChat);
   };
 
   const handleEditChat = (e, chat, action) => {
@@ -38,6 +41,21 @@ function Home() {
       const updatedArray = selectedChatsCopy.filter((e) => e._id !== chat._id);
       setSelectedChats(updatedArray);
     }
+  };
+
+  const handleSearchChats = (e) => {
+    const query = e.target.value.toLowerCase();
+
+    if (query.length === 0) return setChats(allChats);
+
+    const chatsCopy = [...allChats];
+    const newChats = chatsCopy.filter((obj) => {
+      if (obj.name && obj.name.toLowerCase().includes(query)) return obj;
+      if (obj.users[0].name.toLowerCase().includes(query)) return obj;
+      if (obj.users[0].username.toLowerCase().includes(query)) return obj;
+    });
+
+    setChats(newChats);
   };
 
   useEffect(() => {
@@ -56,6 +74,7 @@ function Home() {
         toggleEditChat={toggleEditChat}
         setToggleEditChat={setToggleEditChat}
         selectedChats={selectedChats}
+        handleSearchChats={handleSearchChats}
       />
       <ChatList
         chats={chats}

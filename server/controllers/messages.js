@@ -11,6 +11,8 @@ const {
   handleReturnMessages,
 } = require("../utils/messages");
 
+module.exports.sendPhoto = async (req, res) => {};
+
 module.exports.sendMessage = async (req, res) => {
   const { _id: userId, username, avatar } = req.user;
   const chatId = req.params.id;

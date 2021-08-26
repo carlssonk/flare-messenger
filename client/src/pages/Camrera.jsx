@@ -13,10 +13,8 @@ import Ripple from "../components/Effects/Ripple";
 
 function Camrera() {
   const history = useHistory();
-  const location = useLocation();
 
   const imageTag = useRef(null);
-  const imageTag2 = useRef(null);
   const videoTag = useRef(null);
   const videoTagUnderlay = useRef(null);
   const canvasTag = useRef(null);
@@ -26,17 +24,16 @@ function Camrera() {
   const [stream2, setStream2] = useState(null);
   const [toggleVideo, setToggleVideo] = useState(true);
   const [blob, setBlob] = useState("");
-  const [streamIsOn, setStreamIsOn] = useState(false);
 
   const { setNav } = useContext(NavContext);
 
-  const handleNavigation = (to) => {
+  const handleNavigation = (to, goBack) => {
     setTimeout(() => {
       stream.getVideoTracks()[0].stop();
       stream2.getVideoTracks()[0].stop();
     }, 400);
 
-    if (!blob) {
+    if (!blob || goBack) {
       setNav("backward");
       setTimeout(() => history.push(to), 10);
       return;
@@ -64,8 +61,9 @@ function Camrera() {
       id: uuidv4(),
     };
 
-    const files = [...history.location.state.files, filesObjArr];
-    return files;
+    if (history.location.state)
+      return [...history.location.state.files, filesObjArr];
+    return [filesObjArr];
   };
 
   function dataURLtoFile(dataurl, filename) {
@@ -178,7 +176,10 @@ function Camrera() {
   return (
     <div className="page camera-page">
       <Ripple.Div
-        onClick={() => handleNavigation(prevPath || "/")}
+        onClick={() => {
+          setBlob("");
+          handleNavigation(prevPath || "/", true);
+        }}
         className="go-back-btn"
       >
         <FontAwesomeIcon icon={faChevronLeft} />
@@ -210,19 +211,32 @@ function Camrera() {
         {!toggleVideo ? (
           <>
             <Ripple.Div
-              onClick={() => setToggleVideo(true)}
+              onClick={() => {
+                setBlob("");
+                setToggleVideo(true);
+              }}
               className="retake-photo-btn action-btn"
             >
               Retake
             </Ripple.Div>
 
-            <Ripple.Div
-              onClick={() => handleNavigation(prevPath || "/")}
-              className="send-photo-btn action-btn"
-            >
-              {history.location.state ? "Use" : "Send to"}
-              <FontAwesomeIcon icon={faChevronRight} />
-            </Ripple.Div>
+            {history.location.state ? (
+              <Ripple.Div
+                onClick={() => handleNavigation(prevPath || "/")}
+                className="send-photo-btn action-btn"
+              >
+                Use
+                <FontAwesomeIcon icon={faChevronRight} />
+              </Ripple.Div>
+            ) : (
+              <Ripple.Div
+                onClick={() => handleNavigation("/send-photo")}
+                className="send-photo-btn action-btn"
+              >
+                Send To
+                <FontAwesomeIcon icon={faChevronRight} />
+              </Ripple.Div>
+            )}
           </>
         ) : null}
 

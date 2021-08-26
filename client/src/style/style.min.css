@@ -590,6 +590,9 @@
           align-items: center;
   padding-left: 12px;
   z-index: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .header .nav-wrapper .nav-container .icon-wrapper {
@@ -1566,14 +1569,13 @@ body {
   white-space: nowrap;
 }
 
-.home-page .chat-list li .text-box .chat {
-  font-size: 16px;
-}
-
 .home-page .chat-list li .text-box .chat-people {
   font-size: 11px;
   color: gray;
   margin-bottom: -2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .home-page .chat-list li .text-box .message {
@@ -1723,8 +1725,34 @@ body {
 }
 
 .profile-page .settings-section {
-  height: auto;
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.profile-page .settings-section .logout-btn {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-top: 1px solid #db1b1b;
+  border-bottom: 1px solid #db1b1b;
+  background-color: transparent;
+  color: #db1b1b;
+  outline: none;
+  -webkit-transition: 100ms;
+  transition: 100ms;
+}
+
+.profile-page .settings-section .logout-btn:active {
+  outline: none;
+  font-size: 13px;
 }
 
 .edit-profile-page {
@@ -2701,7 +2729,7 @@ body {
 
 .camera-page .video-wrapper .video-container {
   position: relative;
-  max-width: 800px;
+  max-width: 990px;
   width: 100%;
   height: 100%;
   display: -ms-grid;
@@ -2810,4 +2838,20 @@ body {
   font-size: 22px;
   margin: 6px 0 0 6px;
   z-index: 10;
+}
+
+.send-photo-page .check-icon {
+  color: var(--primary-cyan);
+}
+
+.send-photo-page .send-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: white;
+  background-color: var(--primary-cyan);
+  border: none;
+  outline: none;
+  padding: 12px 20px;
+  border-radius: 20px;
 }

@@ -27,8 +27,8 @@ function DeviceInfo() {
 
   const handleSetDate = () => {
     const date = new Date();
-    setMinutes(date.getMinutes());
-    setHours(date.getHours());
+    setMinutes(("0" + date.getMinutes()).slice(-2));
+    setHours(("0" + date.getHours()).slice(-2));
   };
 
   const getBattery = () => {

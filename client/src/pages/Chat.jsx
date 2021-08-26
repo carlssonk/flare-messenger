@@ -236,6 +236,7 @@ function Chat() {
       method: "POST",
       body: formData,
     });
+    window.history.replaceState(null, "New Title");
     handleMessageLoading(myMessage);
   };
 
@@ -279,14 +280,8 @@ function Chat() {
     const filesCopy = [...files];
     const updatedArr = filesCopy.filter((e) => e.id !== id);
     setFiles(updatedArr);
-    // window.history.replaceState(null, null, "/");
-    // history.replace(history.location.pathname, {
-    //   ...history.location.state,
-    //   files: updatedArr,
-    // });
-    // window.history.replaceState(null, "New Page Title");
+
     window.history.replaceState(null, "New Title");
-    console.log(history);
   };
 
   const handleAddEmoji = (emoji) => {
@@ -425,12 +420,12 @@ function Chat() {
               </div>
             </div>
             <div className="right-section">
-              <Ripple.Div>
+              {/* <Ripple.Div>
                 <FontAwesomeIcon icon={faPhoneAlt} />
               </Ripple.Div>
               <Ripple.Div>
                 <FontAwesomeIcon icon={faVideo} />
-              </Ripple.Div>
+              </Ripple.Div> */}
               <Ripple.Div>
                 <FontAwesomeIcon icon={faEllipsisV} />
               </Ripple.Div>
@@ -581,11 +576,11 @@ function Chat() {
               />
             </div>
           </div>
-          {isInputEmpty(text, files) ? null : (
+          {/* {isInputEmpty(text, files) ? null : (
             <Ripple.Div className="icon-inside">
               <FontAwesomeIcon icon={faMicrophone} />
             </Ripple.Div>
-          )}
+          )} */}
         </div>
         <Ripple.Div
           onClick={() => handleSubmit()}

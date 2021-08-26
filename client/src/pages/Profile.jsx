@@ -58,7 +58,9 @@ function Profile() {
         <div className="username">@{user && user.username}</div>
       </Ripple.Div>
       <div className="settings-section">
-        <button onClick={handleLogout}>LOG OUT</button>
+        <button onClick={handleLogout} className="logout-btn">
+          LOG OUT
+        </button>
       </div>
     </div>
   );
