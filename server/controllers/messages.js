@@ -11,7 +11,35 @@ const {
   handleReturnMessages,
 } = require("../utils/messages");
 
-module.exports.sendPhoto = async (req, res) => {};
+module.exports.sendPhoto = async (req, res) => {
+  const { _id: userId, username, avatar } = req.user;
+
+  const rawFiles = [req.file];
+  const files = rawFiles.map(({ originalname, path }) => {
+    return { originalname, path: path.replace("/upload", "/upload/w_600") };
+  });
+  const chats = req.body.chats.split(",");
+
+  for (let id of chats) {
+    const messageDoc = new Message({
+      files,
+      author: userId,
+      chat: id,
+    });
+    await messageDoc.save();
+
+    const message = createMessageObject(messageDoc, {
+      userId,
+      username,
+      avatar,
+    });
+
+    const spreadMessage = handleSpreadMessages([message], true);
+
+    socket.emitMessage(id, spreadMessage);
+  }
+  res.json({ status: 200 });
+};
 
 module.exports.sendMessage = async (req, res) => {
   const { _id: userId, username, avatar } = req.user;

@@ -15,30 +15,47 @@ function ListItem({
   toggleEditChat,
   selectedChats,
   handleNavigation,
+  sendImage,
+  handleSelectChatImg,
 }) {
+  const LiStyle = {
+    ...(!sendImage &&
+    selectedChats &&
+    selectedChats.some((item) => item._id === e._id)
+      ? { backgroundColor: "#1a1c20" }
+      : null),
+    ...(sendImage &&
+    selectedChats &&
+    selectedChats.some((item) => item === e._id)
+      ? { backgroundColor: "#1a1c20" }
+      : null),
+  };
+
   return (
     <Ripple.Li
       key={e._id}
-      {...(!toggleEditChat && {
-        onClick: () => handleNavigation(`/chat/${e._id}`),
+      {...(!toggleEditChat &&
+        !sendImage && {
+          onClick: () => handleNavigation(`/chat/${e._id}`),
+        })}
+      {...(toggleEditChat &&
+        !sendImage && {
+          onClick: (event) =>
+            handleSelectChat(event, { _id: e._id, status: e.status }),
+        })}
+      {...(sendImage && {
+        onClick: () => handleSelectChatImg(e._id),
       })}
-      {...(toggleEditChat && {
-        onClick: (event) =>
+      {...(!sendImage && {
+        onContextMenu: (event) =>
           handleSelectChat(event, { _id: e._id, status: e.status }),
       })}
-      onContextMenu={(event) =>
-        handleSelectChat(event, { _id: e._id, status: e.status })
-      }
-      style={
-        selectedChats.some((item) => item._id === e._id)
-          ? { backgroundColor: "#1a1c20" }
-          : null
-      }
+      style={{ ...LiStyle }}
     >
       <div
         className="selected-chat-checkbox"
         style={
-          selectedChats.some((item) => item._id === e._id)
+          selectedChats && selectedChats.some((item) => item._id === e._id)
             ? { opacity: "1" }
             : null
         }
@@ -50,6 +67,7 @@ function ListItem({
           style={{
             marginLeft: "14px",
             width: "60px",
+            minWidth: "60px",
             height: "60px",
             fontSize: "27px",
           }}
@@ -60,6 +78,7 @@ function ListItem({
           style={{
             marginLeft: "14px",
             width: "60px",
+            minWidth: "60px",
             height: "60px",
             fontSize: "27px",
           }}
@@ -68,11 +87,33 @@ function ListItem({
       )}
       <div className="text-box">
         {e.isPrivate ? (
-          <div className="friend">{e.users[0].name}</div>
+          <div
+            className="friend"
+            style={
+              sendImage &&
+              selectedChats &&
+              selectedChats.some((item) => item === e._id)
+                ? { color: "#1bbbbb" }
+                : null
+            }
+          >
+            {e.users[0].name}
+          </div>
         ) : (
           <>
             <div className="chat-people">{`${e.users.length} People`}</div>
-            <div className="friend">{e.name}</div>
+            <div
+              className="friend"
+              style={
+                sendImage &&
+                selectedChats &&
+                selectedChats.some((item) => item === e._id)
+                  ? { color: "#1bbbbb" }
+                  : null
+              }
+            >
+              {e.name}
+            </div>
           </>
         )}
         <div className="message">
@@ -98,11 +139,18 @@ function ListItem({
         </div>
       </div>
       <div className="time-container">
-        {e.status === 1 ? (
-          <FontAwesomeIcon icon={faThumbtack} className="thumbtack" />
-        ) : null}
-
-        <div className="time-box">{e.lastMessageTime}</div>
+        {sendImage &&
+        selectedChats &&
+        selectedChats.some((item) => item === e._id) ? (
+          <FontAwesomeIcon icon={faCheck} style={{ color: "#1bbbbb" }} />
+        ) : (
+          <>
+            {e.status === 1 ? (
+              <FontAwesomeIcon icon={faThumbtack} className="thumbtack" />
+            ) : null}
+            <div className="time-box">{e.lastMessageTime}</div>
+          </>
+        )}
       </div>
     </Ripple.Li>
   );

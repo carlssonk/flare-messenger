@@ -13,6 +13,8 @@ function ChatList({
   handleEditChat,
   selectedChats,
   toggleEditChat,
+  sendImage,
+  handleSelectChatImg,
   page,
 }) {
   const { setNav } = useContext(NavContext);
@@ -53,6 +55,8 @@ function ChatList({
                 toggleEditChat={toggleEditChat}
                 selectedChats={selectedChats}
                 handleNavigation={handleNavigation}
+                sendImage={sendImage}
+                handleSelectChatImg={handleSelectChatImg}
               />
             ))
         ) : (
@@ -68,6 +72,8 @@ function ChatList({
                     toggleEditChat={toggleEditChat}
                     selectedChats={selectedChats}
                     handleNavigation={handleNavigation}
+                    sendImage={sendImage}
+                    handleSelectChatImg={handleSelectChatImg}
                   />
                 ))}
             {chats &&
@@ -81,6 +87,8 @@ function ChatList({
                     toggleEditChat={toggleEditChat}
                     selectedChats={selectedChats}
                     handleNavigation={handleNavigation}
+                    sendImage={sendImage}
+                    handleSelectChatImg={handleSelectChatImg}
                   />
                 ))}
           </>
