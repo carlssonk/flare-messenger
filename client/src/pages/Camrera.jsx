@@ -15,13 +15,15 @@ function Camrera() {
   const history = useHistory();
 
   const imageTag = useRef(null);
-  const videoTag = useRef(null);
-  const videoTagUnderlay = useRef(null);
+  const videoTagUse = useRef(null);
+  const videoTagShow = useRef(null);
+  // const videoTagUnderlay = useRef(null);
   const canvasTag = useRef(null);
 
   const [prevPath, setPrevPath] = useState(null);
   const [stream, setStream] = useState(null);
   const [stream2, setStream2] = useState(null);
+  // const [stream2, setStream2] = useState(null);
   const [toggleVideo, setToggleVideo] = useState(true);
   const [blob, setBlob] = useState("");
 
@@ -121,8 +123,9 @@ function Camrera() {
       video: true,
     };
 
-    setGetUserMedia(videoTagUnderlay.current, constraints, true);
-    setGetUserMedia(videoTag.current, constraints, false);
+    // setGetUserMedia(videoTagUnderlay.current, constraints, true);
+    setGetUserMedia(videoTagShow.current, constraints, true);
+    setGetUserMedia(videoTagUse.current, constraints, false);
   }
 
   const setGetUserMedia = (element, constraints, bool) => {
@@ -153,21 +156,21 @@ function Camrera() {
       return;
     }
 
-    if (!stream) {
-      alert("Grab the video stream first!");
-      return;
-    }
+    if (!stream) return;
 
-    const WIDTH = videoTag.current.clientWidth;
-    const HEIGHT = videoTag.current.clientHeight;
+    const WIDTH = videoTagUse.current.clientWidth;
+    const HEIGHT = videoTagUse.current.clientHeight;
 
     canvasTag.current.width = WIDTH;
     canvasTag.current.height = HEIGHT;
 
+    console.log(canvasTag.current.width);
+
     canvasTag.current
       .getContext("2d")
-      .drawImage(videoTag.current, 0, 0, WIDTH, HEIGHT);
+      .drawImage(videoTagUse.current, 0, 0, WIDTH, HEIGHT);
 
+    console.log(canvasTag.current);
     const dataURL = canvasTag.current.toDataURL();
     imageTag.current.src = dataURL;
     setBlob(dataURL);
@@ -189,17 +192,23 @@ function Camrera() {
       <div className="video-wrapper">
         <div className="video-container">
           <video
-            ref={videoTag}
+            ref={videoTagShow}
             autoPlay
-            className="video-box"
+            className="video-box-show"
             style={toggleVideo ? null : { visibility: "hidden" }}
           ></video>
           <video
+            ref={videoTagUse}
+            autoPlay
+            className="video-box"
+            style={{ visibility: "hidden" }}
+          ></video>
+          {/* <video
             ref={videoTagUnderlay}
             autoPlay
             className="video-box-underlay"
             style={toggleVideo ? null : { visibility: "hidden" }}
-          ></video>
+          ></video> */}
           <img ref={imageTag} src="" alt="" className="image-box" />
           <canvas ref={canvasTag} style={{ display: "none" }}></canvas>
         </div>

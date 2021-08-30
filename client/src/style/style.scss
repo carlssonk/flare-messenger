@@ -846,7 +846,7 @@ body {
       display: grid;
       place-items: center;
       left: 50%;
-      transform: translate(-50%, 0);
+      transform: translate(-50%, 0) scaleX(-1);
       .video-box {
         position: absolute;
         top: 50%;
@@ -854,6 +854,15 @@ body {
         width: 100%;
         // height: 100%;
         object-fit: contain;
+        z-index: 1;
+      }
+      .video-box-show {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         z-index: 1;
       }
       .video-box-underlay {
