@@ -26,6 +26,7 @@ import {
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
 import { IonAlert, IonSpinner, IonPopover } from "@ionic/react";
+import { isMobile } from "../utils/isMobile";
 
 import {
   Editor,
@@ -78,7 +79,9 @@ function Chat() {
   const [chat, setChat] = useState({});
   const [chatStatus, setChatStatus] = useState(0);
   const [simpleController, setSimpleController] = useState(false);
-  const [switchEmojiGif, setSwitchEmojiGif] = useState("emoji");
+  const [switchEmojiGif, setSwitchEmojiGif] = useState(
+    isMobile() ? "gif" : "emoji"
+  );
   const [isMyMessage, setIsMyMessage] = useState(false);
 
   const [toggleEmoji, setToggleEmoji] = useState(false);
@@ -216,6 +219,7 @@ function Chat() {
   };
 
   const handleSubmit = async (gif = null) => {
+    domEditor && domEditor.focus();
     const chatId = location.pathname.replace("/chat/", "");
     if (!user.chats.includes(chatId)) return;
     if (!gif && text.replace(/\s/g, "").length === 0 && files.length === 0)
@@ -326,11 +330,11 @@ function Chat() {
     // eslint-disable-next-line
   }, [showChat, initPage, messages]);
 
-  // Focus Input
-  useEffect(() => {
-    if (!initPage) return;
-    domEditor.focus();
-  }, [toggleEmoji, initPage]);
+  // // Focus Input
+  // useEffect(() => {
+  //   if (!initPage) return;
+  //   domEditor.focus();
+  // }, [toggleEmoji, initPage]);
 
   const resetInput = () => {
     setEditorState(draftUtils.clearEditorContent(editorState));
@@ -345,10 +349,23 @@ function Chat() {
 
   // Set simple controller
   useEffect(() => {
+    if (text.length === 0) {
+      setEditorState(
+        EditorState.createEmpty(
+          new CompositeDecorator([
+            {
+              strategy: linkStrategy,
+              component: LinkSpan,
+            },
+          ])
+        )
+      );
+    }
+
     if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
     if (simpleController) return;
 
-    domEditor && domEditor.focus();
+    // domEditor && domEditor.focus();
 
     const textBlocks = editorState.getCurrentContent().getBlockMap()._list
       ._tail.array;
@@ -585,6 +602,7 @@ function Chat() {
                 })}
             </ul>
             <div
+              onClick={() => isMobile() && setToggleEmoji(false)}
               className="editor-container"
               style={{
                 maxWidth: `${editorMaxWidth}px`,
@@ -619,15 +637,17 @@ function Chat() {
       {toggleEmoji ? (
         <div className="emoji-wrapper">
           {switchEmojiGif === "emoji" ? (
-            <Picker
-              set="apple"
-              title="Pick your emoji…"
-              emoji="point_up"
-              theme="auto"
-              style={{ width: "100%", height: "100%" }}
-              color="#0575e6"
-              onSelect={handleAddEmoji}
-            />
+            isMobile() ? null : (
+              <Picker
+                set="apple"
+                title="Pick your emoji…"
+                emoji="point_up"
+                theme="auto"
+                style={{ width: "100%", height: "100%" }}
+                color="#0575e6"
+                onSelect={handleAddEmoji}
+              />
+            )
           ) : (
             <Gif
               setInitMessages={setInitMessages}
@@ -636,12 +656,15 @@ function Chat() {
           )}
 
           <div className="emoji-gif-box">
-            <Ripple.Button
-              className={switchEmojiGif === "emoji" ? "selected" : ""}
-              onClick={() => setSwitchEmojiGif("emoji")}
-            >
-              <FontAwesomeIcon icon={faSmile} />
-            </Ripple.Button>
+            {isMobile() ? null : (
+              <Ripple.Button
+                className={switchEmojiGif === "emoji" ? "selected" : ""}
+                onClick={() => setSwitchEmojiGif("emoji")}
+              >
+                <FontAwesomeIcon icon={faSmile} />
+              </Ripple.Button>
+            )}
+
             <Ripple.Button
               className={switchEmojiGif === "gif" ? "selected" : ""}
               onClick={() => setSwitchEmojiGif("gif")}

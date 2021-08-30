@@ -38,7 +38,9 @@ function EditChat({
   }, [selectedChats]);
 
   const editChatStatus = async (status) => {
-    console.log(selectedChats[0].status === 2);
+    console.log(selectedChats[0]);
+    console.log(page);
+
     console.log(status);
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -94,6 +96,9 @@ function EditChat({
       )}
 
       <Ripple.Div
+        {...(page !== "archived" && {
+          onClick: () => editChatStatus(2),
+        })}
         {...(page === "chat" &&
           selectedChats[0].status === 2 && {
             onClick: () => editChatStatus(0),
@@ -101,10 +106,6 @@ function EditChat({
         {...(page === "archived" && {
           onClick: () => editChatStatus(0),
         })}
-        {...(page !== "archived" &&
-          page !== "chat" && {
-            onClick: () => editChatStatus(2),
-          })}
         className="archived-icon"
         style={toggleEditChat ? { opacity: "1", visibility: "visible" } : null}
       >

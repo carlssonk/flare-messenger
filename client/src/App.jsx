@@ -23,6 +23,7 @@ import io from "socket.io-client";
 import Archived from "./pages/Archived";
 import Camrera from "./pages/Camrera";
 import SendPhoto from "./pages/SendPhoto";
+import FullScreen from "./components/FullScreen";
 
 function App() {
   const location = useLocation();
@@ -85,6 +86,7 @@ function App() {
       <UserContext.Provider value={userValue}>
         <SocketContext.Provider value={socketValue}>
           <DeviceInfo />
+          <FullScreen />
           {!isLoading ? (
             <Route
               render={({ location }) => (
