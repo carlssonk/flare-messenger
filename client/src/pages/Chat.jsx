@@ -308,7 +308,6 @@ function Chat() {
       setChat(data.chat);
       setChatStatus(data.chatStatus);
       setMessagesCount(data.messagesCount);
-
       const filesCount = data.messages.filter((e) => e.file).length;
       setImagesCount(filesCount);
       if (filesCount === 0) setShowChat(true);
@@ -425,7 +424,7 @@ function Chat() {
                     <div className="name">{chat && chat.name}</div>
                   )}
                   {chat.isPrivate ? (
-                    <div className="status">Currently Active</div>
+                    <div className="status">{friends[0].lastActiveTime}</div>
                   ) : null}
                 </div>
               </div>

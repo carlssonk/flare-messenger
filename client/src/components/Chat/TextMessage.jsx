@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Avatar from "../Avatar";
+import MessageLoading from "./MessageLoading";
 
 function TextMessage({
   message,
-  SetAvatar,
+  // setAvatar,
   SetMessageLoading,
   isMyMessage,
   messageClass,
@@ -18,8 +20,19 @@ function TextMessage({
 
   return (
     <li key={message._id} className={messageClass} style={{ ...liStyle }}>
-      {/* <div> */}
-      {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
+      {!isMyMessage && message.showAvatar ? (
+        <Avatar
+          style={{
+            width: "30px",
+            minWidth: "30px",
+            height: "30px",
+            fontSize: "18px",
+            position: "absolute",
+            left: "0",
+          }}
+          user={message.author}
+        />
+      ) : null}
       {message.stringTag ? (
         <div
           className={`${bubbleClass} ${
@@ -57,7 +70,6 @@ function TextMessage({
       )}
 
       <SetMessageLoading />
-      {/* </div> */}
     </li>
   );
 }

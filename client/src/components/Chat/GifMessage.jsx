@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Avatar from "../Avatar";
 
 function GifMessage({
   message,
-  SetAvatar,
+  // SetAvatar,
   isMyMessage,
   messageClass,
   time,
@@ -55,7 +56,19 @@ function GifMessage({
       style={!isVisible ? { minHeight: height, width } : null}
     >
       <div style={!isVisible ? { display: "none" } : null}>
-        {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
+        {!isMyMessage && message.showAvatar ? (
+          <Avatar
+            style={{
+              width: "30px",
+              minWidth: "30px",
+              height: "30px",
+              fontSize: "18px",
+              position: "absolute",
+              left: "0",
+            }}
+            user={message.author}
+          />
+        ) : null}
         <div className="img-wrapper">
           <img
             src={message.gif.source}

@@ -94,14 +94,12 @@ function App() {
                     timeout={400}
                     classNames={nav}
                     onEnter={() => {
-                      console.log("HIDDEN");
                       document.documentElement.style.setProperty(
                         "--overflow",
                         "hidden"
                       );
                     }}
                     onExited={() => {
-                      console.log("UNSET");
                       document.documentElement.style.setProperty(
                         "--overflow",
                         "unset"

@@ -134,8 +134,20 @@ module.exports.showChat = async (req, res) => {
     "-email -__v -chats -friends"
   );
 
-  const friends = chat.users.filter((e) => {
+  const f = chat.users.filter((e) => {
     return e._id.toString() !== myId.toString();
+  });
+  const parseF = JSON.parse(JSON.stringify(f));
+  const oneMinuteAgo = Date.now() - 1000 * 60;
+  const friends = parseF.map(({ lastActive, ...rest }) => {
+    return {
+      ...rest,
+      lastActive,
+      lastActiveTime:
+        oneMinuteAgo < new Date(lastActive).getTime()
+          ? "Currently Active"
+          : `Active ${moment(lastActive).fromNow()}`,
+    };
   });
 
   const messages = await handleReturnMessages(user, id);

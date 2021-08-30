@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Avatar from "../Avatar";
 
 function FileMessage({
   message,
@@ -59,7 +60,19 @@ function FileMessage({
       style={!isVisible ? { minHeight: height, width } : null}
     >
       <div style={!isVisible ? { display: "none" } : null}>
-        {!isMyMessage && message.showAvatar ? <SetAvatar /> : null}
+        {!isMyMessage && message.showAvatar ? (
+          <Avatar
+            style={{
+              width: "30px",
+              minWidth: "30px",
+              height: "30px",
+              fontSize: "18px",
+              position: "absolute",
+              left: "0",
+            }}
+            user={message.author}
+          />
+        ) : null}
         <div className="img-wrapper" ref={fileRef}>
           <SetMessageLoading />
           <img

@@ -26,20 +26,6 @@ function Message({
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
 
-  const SetAvatar = () => (
-    <Avatar
-      style={{
-        width: "30px",
-        minWidth: "30px",
-        height: "30px",
-        fontSize: "18px",
-        position: "absolute",
-        left: "0",
-      }}
-      user={message.author}
-    />
-  );
-
   const SetMessageLoading = () => {
     let name = "";
     if (message.text) name = "dots";
@@ -98,7 +84,7 @@ function Message({
           message={message}
           showMessage={showMessage}
           handleInitMessage={handleInitMessage}
-          SetAvatar={SetAvatar}
+          // SetAvatar={SetAvatar}
           SetMessageLoading={SetMessageLoading}
           fileRef={fileRef}
           isMyMessage={isMyMessage}
@@ -110,7 +96,7 @@ function Message({
       {message.text ? (
         <TextMessage
           message={message}
-          SetAvatar={SetAvatar}
+          // setAvatar={setAvatar}
           SetMessageLoading={SetMessageLoading}
           isMyMessage={isMyMessage}
           messageClass={messageClass}
@@ -123,7 +109,7 @@ function Message({
       {message.gif ? (
         <GifMessage
           message={message}
-          SetAvatar={SetAvatar}
+          // SetAvatar={SetAvatar}
           isMyMessage={isMyMessage}
           messageClass={messageClass}
           time={time}

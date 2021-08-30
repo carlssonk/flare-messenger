@@ -29,6 +29,7 @@ function Camrera() {
 
   const handleNavigation = (to, goBack) => {
     setTimeout(() => {
+      if (!stream || !stream2) return;
       stream.getVideoTracks()[0].stop();
       stream2.getVideoTracks()[0].stop();
     }, 400);
