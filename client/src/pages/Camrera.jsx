@@ -8,6 +8,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faTimes,
+  faUndo,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 
@@ -17,6 +18,7 @@ function Camrera() {
   const imageTag = useRef(null);
   const videoTagUse = useRef(null);
   const videoTagShow = useRef(null);
+  const flipBtn = useRef(null);
   // const videoTagUnderlay = useRef(null);
   const canvasTag = useRef(null);
 
@@ -25,6 +27,8 @@ function Camrera() {
   const [stream2, setStream2] = useState(null);
   // const [stream2, setStream2] = useState(null);
   const [toggleVideo, setToggleVideo] = useState(true);
+  const [shouldFaceUser, setShouldFaceUser] = useState(true);
+  const [canFlip, setCanFlip] = useState(false);
   const [blob, setBlob] = useState("");
 
   const { setNav } = useContext(NavContext);
@@ -84,7 +88,10 @@ function Camrera() {
   }
 
   useEffect(() => {
-    getStream();
+    let supports = navigator.mediaDevices.getSupportedConstraints();
+    if (supports["facingMode"] === true) {
+      setCanFlip(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -120,7 +127,9 @@ function Camrera() {
     }
 
     var constraints = {
-      video: true,
+      video: {
+        facingMode: shouldFaceUser ? "user" : "environment",
+      },
     };
 
     // setGetUserMedia(videoTagUnderlay.current, constraints, true);
@@ -164,18 +173,32 @@ function Camrera() {
     canvasTag.current.width = WIDTH;
     canvasTag.current.height = HEIGHT;
 
-    console.log(canvasTag.current.width);
-
     canvasTag.current
       .getContext("2d")
       .drawImage(videoTagUse.current, 0, 0, WIDTH, HEIGHT);
 
-    console.log(canvasTag.current);
     const dataURL = canvasTag.current.toDataURL();
     imageTag.current.src = dataURL;
     setBlob(dataURL);
     setToggleVideo(false);
   }
+
+  const handleFlip = () => {
+    if (!stream && !stream2) return;
+    // we need to flip, stop everything
+    stream.getTracks().forEach((t) => {
+      t.stop();
+    });
+    stream2.getTracks().forEach((t) => {
+      t.stop();
+    });
+    // toggle / flip
+    setShouldFaceUser((bool) => !bool);
+  };
+
+  useEffect(() => {
+    getStream();
+  }, [shouldFaceUser]);
 
   return (
     <div className="page camera-page">
@@ -190,7 +213,14 @@ function Camrera() {
       </Ripple.Div>
 
       <div className="video-wrapper">
-        <div className="video-container">
+        <div
+          className="video-container"
+          style={
+            shouldFaceUser
+              ? { transform: "translate(-50%, 0) scaleX(-1)" }
+              : { transform: "translate(-50%, 0)" }
+          }
+        >
           <video
             ref={videoTagShow}
             autoPlay
@@ -248,6 +278,16 @@ function Camrera() {
               </Ripple.Div>
             )}
           </>
+        ) : null}
+
+        {canFlip ? (
+          <Ripple.Button
+            className="flip-btn"
+            ref={flipBtn}
+            onClick={() => handleFlip()}
+          >
+            <FontAwesomeIcon icon={faUndo} />
+          </Ripple.Button>
         ) : null}
 
         {toggleVideo ? (

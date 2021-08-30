@@ -846,7 +846,7 @@ body {
       display: grid;
       place-items: center;
       left: 50%;
-      transform: translate(-50%, 0) scaleX(-1);
+      transform: translate(-50%, 0);
       .video-box {
         position: absolute;
         top: 50%;
@@ -897,6 +897,24 @@ body {
       &:active {
         transform: scale3d(1.1, 1.1, 1.1);
       }
+    }
+
+    .flip-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: transparent;
+      display: grid;
+      border-radius: 100%;
+      place-items: center;
+      color: white;
+      width: 40px;
+      height: 40px;
+      font-size: 22px;
+      margin: 7px 7px 0 0;
+      z-index: 10;
+      border: none;
+      outline: none;
     }
 
     .action-btn {
