@@ -9,12 +9,14 @@ function Home() {
   const [allChats, setAllChats] = useState([]);
   const [toggleEditChat, setToggleEditChat] = useState(false);
   const [selectedChats, setSelectedChats] = useState([]);
+  const [hasIncomingRequests, setHasIncomingRequests] = useState(false);
 
   useEffect(() => {
     const getChats = async () => {
       const res = await fetch("/api/chats");
       const data = await res.json();
       handleSortChat(data.chats);
+      setHasIncomingRequests(data.hasIncomingRequests);
     };
     getChats();
   }, []);
@@ -75,6 +77,7 @@ function Home() {
         setToggleEditChat={setToggleEditChat}
         selectedChats={selectedChats}
         handleSearchChats={handleSearchChats}
+        hasIncomingRequests={hasIncomingRequests}
       />
       <ChatList
         chats={chats}

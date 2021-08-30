@@ -17,8 +17,10 @@ import {
 import Ripple from "../components/Effects/Ripple";
 import Avatar from "./Avatar";
 import { IonAlert } from "@ionic/react";
+import EditChat from "./EditChat";
 
 function Header({
+  hasIncomingRequests,
   handleFindUsers,
   handleSearchChats,
   toggleEditChat,
@@ -32,9 +34,6 @@ function Header({
   const history = useHistory();
   const { setNav } = useContext(NavContext);
   const { user } = useContext(UserContext);
-  const [removeThumbtack, setRemoveThumbtack] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toggleTrashChat, setToggleTrashChat] = useState(false);
 
   const handleNavigation = (to) => {
     if (to === "/") {
@@ -44,46 +43,6 @@ function Header({
     }
     // we need to give a small delay so our transition class appends on the DOM before we redirect
     setTimeout(() => history.push(to), 10);
-  };
-
-  useEffect(() => {
-    if (!selectedChats) return;
-    if (
-      selectedChats.length > 0 &&
-      selectedChats.every((e) => e.status === 1)
-    ) {
-      setRemoveThumbtack(true);
-    } else {
-      setRemoveThumbtack(false);
-    }
-  }, [selectedChats]);
-
-  const editChatStatus = async (status) => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    const res = await fetch("/api/chats/status", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ chats: selectedChats, status }),
-    });
-    const data = await res.json();
-    setIsSubmitting(false);
-    setToggleEditChat(false);
-    handleUpdateChats(data.chats, data.status);
-  };
-
-  const handleUpdateChats = (dataChats, status) => {
-    const chatsCopy = [...chats];
-    const chatsUpdate = chatsCopy.map((e) => {
-      if (dataChats.some((item) => item._id === e._id)) {
-        return { ...e, status };
-      }
-      return e;
-    });
-    setChats(chatsUpdate);
   };
 
   return (
@@ -110,7 +69,15 @@ function Header({
             </Ripple.Div>
           </div>
           <div className="section">
-            {page === "archived" ? null : (
+            <EditChat
+              page={page}
+              selectedChats={selectedChats}
+              setToggleEditChat={setToggleEditChat}
+              toggleEditChat={toggleEditChat}
+              chats={chats}
+              setChats={setChats}
+            />
+            {/* {page === "archived" ? null : (
               <Ripple.Div
                 onClick={() => editChatStatus(removeThumbtack ? 0 : 1)}
               >
@@ -144,7 +111,7 @@ function Header({
               }
             >
               <FontAwesomeIcon icon={faTrash} />
-            </Ripple.Div>
+            </Ripple.Div> */}
           </div>
         </div>
         <div className="nav-container">
@@ -169,13 +136,18 @@ function Header({
           </div>
           <div className="icon-wrapper">
             {location.pathname === "/" ? (
-              <Ripple.Div
-                onClick={() => handleNavigation("/add")}
-                className="icon"
-                style={{ marginRight: "10px" }}
-              >
-                <FontAwesomeIcon icon={faUserPlus} />
-              </Ripple.Div>
+              <div className="add-wrapper">
+                <Ripple.Div
+                  onClick={() => handleNavigation("/add")}
+                  className="icon"
+                  style={{ marginRight: "10px" }}
+                >
+                  <FontAwesomeIcon icon={faUserPlus} />
+                </Ripple.Div>
+                {hasIncomingRequests ? (
+                  <div className="notification-bubble"></div>
+                ) : null}
+              </div>
             ) : null}
             {location.pathname === "/" ? (
               <Ripple.Div
@@ -218,17 +190,6 @@ function Header({
           </div>
         </div>
       )}
-      <IonAlert
-        isOpen={toggleTrashChat}
-        onDidDismiss={() => setToggleTrashChat(false)}
-        cssClass="remove-avatar-alert"
-        header={"Do you want to remove the chat?"}
-        message={"This is permanent and cannot be undone"}
-        buttons={[
-          "Cancel",
-          { text: "Remove", handler: () => editChatStatus(3) },
-        ]}
-      />
     </div>
   );
 }

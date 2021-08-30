@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
+    lastActive: {
+      type: Date,
+      required: true,
+    },
     email: {
       type: String,
       required: true,

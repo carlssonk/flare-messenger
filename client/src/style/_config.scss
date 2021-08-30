@@ -4,13 +4,14 @@
   // --bubble-gradient: linear-gradient(to bottom, #1bbbbb 52px, #7231db);
   // --bubble-gradient: linear-gradient(to top, #1bbbbb 52px, #38af6e);
   // --bubble-gradient: linear-gradient(to bottom, #f15811, #f5af19);
-  --bubble-gradient: linear-gradient(to bottom, #1aadad, #0575e6);
+  // --bubble-gradient: linear-gradient(to bottom, #1aadad, #0575e6);
+  --bubble-gradient: linear-gradient(to top, #ff0040, #7173ed);
   --primary-cyan: #1bbbbb;
   --secondary-cyan: #1aadad;
   --cyan-gradient: linear-gradient(to right, #169c9c, #1bd8d8);
   --primary-background: #101218;
   --secondary-background: #1a1c20;
-  --scrollbar-size: 10px;
+  --overflow: unset;
   --ripple-scale: 0;
   --ripple-color: white;
   --ripple-opacity: 0.2;
@@ -41,4 +42,25 @@ nav {
 }
 button:focus {
   background-color: unset;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--primary-background);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #323232;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #202020;
 }

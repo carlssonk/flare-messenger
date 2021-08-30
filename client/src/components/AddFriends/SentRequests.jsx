@@ -5,7 +5,7 @@ import Avatar from "../Avatar";
 
 function SentRequests({ sentRequests, handleRequest }) {
   return (
-    <div>
+    <div className="page-section">
       <ul className="incoming__requests users-list">
         {sentRequests &&
           sentRequests.map((e) => {

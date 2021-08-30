@@ -26,6 +26,11 @@ function ChatList({
     } else {
       setNav("forward");
     }
+
+    // const chatId = to.replace("/chat/", "");
+    // const status = chats.filter((e) => e._id === chatId);
+    // console.log(status);
+
     // we need to give a small delay so our transition class appends on the DOM before we redirect
     setTimeout(() => history.push(to), 10);
   };

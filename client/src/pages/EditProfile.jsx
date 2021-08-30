@@ -83,7 +83,7 @@ function EditProfile() {
 
   const handleRemoveAvatar = async () => {
     setIsLoading(true);
-    const res = await fetch(`http://localhost:3000/api/avatar`, {
+    const res = await fetch(`/api/avatar`, {
       method: "DELETE",
     });
     const data = await res.json();

@@ -10,9 +10,12 @@ const {
   retrieveStringInfo,
   handleReturnMessages,
 } = require("../utils/messages");
+const { updateLastActive } = require("../utils/users");
 
 module.exports.sendPhoto = async (req, res) => {
   const { _id: userId, username, avatar } = req.user;
+
+  updateLastActive(userId);
 
   const rawFiles = [req.file];
   const files = rawFiles.map(({ originalname, path }) => {
@@ -44,6 +47,8 @@ module.exports.sendPhoto = async (req, res) => {
 module.exports.sendMessage = async (req, res) => {
   const { _id: userId, username, avatar } = req.user;
   const chatId = req.params.id;
+
+  updateLastActive(userId);
 
   const text = req.body.text;
   const gif = JSON.parse(req.body.gif);

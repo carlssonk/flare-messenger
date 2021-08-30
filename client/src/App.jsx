@@ -93,18 +93,20 @@ function App() {
                     key={location.key}
                     timeout={400}
                     classNames={nav}
-                    onEnter={() =>
+                    onEnter={() => {
+                      console.log("HIDDEN");
                       document.documentElement.style.setProperty(
-                        "--scrollbar-size",
-                        "0px"
-                      )
-                    }
-                    onExited={() =>
+                        "--overflow",
+                        "hidden"
+                      );
+                    }}
+                    onExited={() => {
+                      console.log("UNSET");
                       document.documentElement.style.setProperty(
-                        "--scrollbar-size",
-                        "10px"
-                      )
-                    }
+                        "--overflow",
+                        "unset"
+                      );
+                    }}
                   >
                     <Switch location={location} key={location.key}>
                       {!user ? (

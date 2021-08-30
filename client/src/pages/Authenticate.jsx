@@ -25,10 +25,10 @@ function Authenticate() {
         timeout={400}
         classNames={nav}
         onEnter={() =>
-          document.documentElement.style.setProperty("--scrollbar-size", "0px")
+          document.documentElement.style.setProperty("--overflow", "hidden")
         }
         onExited={() =>
-          document.documentElement.style.setProperty("--scrollbar-size", "10px")
+          document.documentElement.style.setProperty("--overflow", "unset")
         }
       >
         <>

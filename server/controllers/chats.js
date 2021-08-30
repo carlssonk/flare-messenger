@@ -6,13 +6,16 @@ const {
   handleReturnMessages,
   handleReturnMessagesCount,
 } = require("../utils/messages");
+const { updateLastActive } = require("../utils/users");
+
+// const getIncomingRequests = () => {};
 
 module.exports.showChats = async (req, res) => {
   const myId = req.user._id;
 
   const user = await User.findById(
     myId,
-    "-friends -__v -username -email -updatedAt -_id"
+    "-__v -username -email -updatedAt -_id"
   ).populate({
     path: "chats.chat",
     select: "-__v -createdAt -updatedAt -author",
@@ -48,7 +51,8 @@ module.exports.showChats = async (req, res) => {
     return unTrashChats(res, myId, chats);
   }
 
-  res.json({ chats });
+  const hasIncomingRequests = user.friends.incomingRequests.length > 0;
+  res.json({ chats, hasIncomingRequests });
 };
 
 const hasTrashedChatGottenMessage = (chats) => {
@@ -121,6 +125,10 @@ module.exports.showChat = async (req, res) => {
   const myId = req.user._id;
   const { id } = req.params;
 
+  updateLastActive(myId);
+
+  const chatStatus = await retrieveChatStatus(myId, id);
+
   const chat = await Chat.findById(id).populate(
     "users",
     "-email -__v -chats -friends"
@@ -134,7 +142,22 @@ module.exports.showChat = async (req, res) => {
 
   const messagesCount = await handleReturnMessagesCount(user, id);
 
-  res.json({ friends, messages, chat, messagesCount });
+  res.json({ friends, messages, chat, messagesCount, chatStatus });
+};
+
+const retrieveChatStatus = async (myId, id) => {
+  const userChats = await User.findById(
+    myId,
+    "-friends -__v -username -email -updatedAt -_id -avatar -name -createdAt"
+  ).populate({
+    path: "chats.chat",
+    select:
+      "-__v -createdAt -updatedAt -author -name -image -users -isPrivate -isVisible",
+  });
+
+  return (chatStatus = userChats.chats.filter(
+    (e) => e.chat._id.toString() === id
+  )[0].status);
 };
 
 module.exports.enableChat = async (req, res) => {

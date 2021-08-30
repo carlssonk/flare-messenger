@@ -19,10 +19,13 @@ import {
   faKeyboard,
   faChevronRight,
   faSmile,
+  faTrash,
+  faArchive,
+  faThumbtack,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
-import { IonAlert, IonSpinner } from "@ionic/react";
+import { IonAlert, IonSpinner, IonPopover } from "@ionic/react";
 
 import {
   Editor,
@@ -55,6 +58,7 @@ import {
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import VisibilitySensor from "react-visibility-sensor";
+import EditChat from "../components/EditChat";
 
 const draftUtils = require("draftjs-utils");
 
@@ -72,6 +76,7 @@ function Chat() {
   const [imagesCount, setImagesCount] = useState(0);
   const [showChat, setShowChat] = useState(true);
   const [chat, setChat] = useState({});
+  const [chatStatus, setChatStatus] = useState(0);
   const [simpleController, setSimpleController] = useState(false);
   const [switchEmojiGif, setSwitchEmojiGif] = useState("emoji");
   const [isMyMessage, setIsMyMessage] = useState(false);
@@ -82,6 +87,7 @@ function Chat() {
 
   const [messagesCount, setMessagesCount] = useState(0);
   const [currentLimit, setCurrentLimit] = useState(40);
+  const [showPopover, setShowPopover] = useState(false);
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -300,6 +306,7 @@ function Chat() {
       setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
+      setChatStatus(data.chatStatus);
       setMessagesCount(data.messagesCount);
 
       const filesCount = data.messages.filter((e) => e.file).length;
@@ -308,6 +315,10 @@ function Chat() {
     };
     getChatData();
   }, [location.pathname, user]);
+
+  useEffect(() => {
+    if (chatStatus === 3) handleNavigation("/");
+  }, [chatStatus]);
 
   // Scroll To Bottom
   useEffect(() => {
@@ -420,16 +431,30 @@ function Chat() {
               </div>
             </div>
             <div className="right-section">
-              {/* <Ripple.Div>
-                <FontAwesomeIcon icon={faPhoneAlt} />
-              </Ripple.Div>
-              <Ripple.Div>
-                <FontAwesomeIcon icon={faVideo} />
-              </Ripple.Div> */}
-              <Ripple.Div>
+              <Ripple.Div onClick={() => setShowPopover(true)}>
                 <FontAwesomeIcon icon={faEllipsisV} />
               </Ripple.Div>
             </div>
+            <IonPopover
+              cssClass="settings-popover"
+              isOpen={showPopover}
+              onDidDismiss={() => setShowPopover(false)}
+            >
+              <div className="popover-container">
+                <EditChat
+                  page="chat"
+                  selectedChats={[
+                    {
+                      _id: location.pathname.replace("/chat/", ""),
+                      status: chatStatus,
+                    },
+                  ]}
+                  toggleEditChat={true}
+                  setShowPopover={setShowPopover}
+                  setChatStatus={setChatStatus}
+                />
+              </div>
+            </IonPopover>
           </div>
         </div>
         <div className="blur"></div>

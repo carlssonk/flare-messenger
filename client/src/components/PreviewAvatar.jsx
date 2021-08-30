@@ -130,11 +130,13 @@ function PreviewAvatar({
       )
     );
 
-    const res = await fetch(`http://localhost:3000/api/avatar`, {
+    console.log(image);
+    const res = await fetch(`/api/avatar`, {
       method: "POST",
       body: formData,
     });
     const avatar = await res.json();
+
     setIsLoading(false);
     setUser({
       ...user,

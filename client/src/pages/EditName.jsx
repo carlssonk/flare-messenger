@@ -66,6 +66,7 @@ function EditName() {
         type="text"
         placeholder="Name"
         defaultValue={user.name}
+        maxLength="20"
       />
       <Ripple.Button className="save-btn" onClick={() => handleSaveName()}>
         Save

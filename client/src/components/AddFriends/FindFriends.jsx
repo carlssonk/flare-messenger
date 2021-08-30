@@ -7,7 +7,7 @@ import Avatar from "../Avatar";
 
 function FindFriends({ incomingRequests, handleRequest }) {
   return (
-    <div className="incoming-requests-wrapper">
+    <div className="incoming-requests-wrapper page-section">
       {/* <Scroll
         style={{ height: "100%", width: "100%", position: "relative" }}
         dragElastic={0.2}

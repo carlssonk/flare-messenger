@@ -153,14 +153,24 @@ function AddFriends() {
             onTransitionEnd={() => setToggleScroll(true)}
             style={{ height: "100%" }}
           > */}
-          <FindFriends
-            incomingRequests={incomingRequests}
-            handleRequest={handleRequest}
-          />
-          <SentRequests
-            sentRequests={sentRequests}
-            handleRequest={handleRequest}
-          />
+          <div
+            className="content-wrapper"
+            style={
+              pageNum === 0
+                ? { transform: "translate3d(-0%, 0, 0)" }
+                : { transform: "translate3d(-50%, 0, 0)" }
+            }
+          >
+            <FindFriends
+              incomingRequests={incomingRequests}
+              handleRequest={handleRequest}
+            />
+            <SentRequests
+              sentRequests={sentRequests}
+              handleRequest={handleRequest}
+            />
+          </div>
+
           {/* </SwipeableViews> */}
         </>
       )}

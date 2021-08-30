@@ -2,6 +2,7 @@ const User = require("../models/user");
 const passport = require("passport");
 const { cloudinary } = require("../cloudinary");
 const { randomHexGenerator } = require("../utils/generateAvatar");
+const { updateLastActive } = require("../utils/users");
 
 module.exports.user = (req, res) => {
   if (!req.isAuthenticated()) return res.json(null);
@@ -13,6 +14,7 @@ module.exports.user = (req, res) => {
     chats,
     avatar: { hexCode, path = null },
   } = req.user;
+  updateLastActive(_id);
   const chatIdList = chats.map((e) => e.chat);
   res.json({
     id: _id,
@@ -32,6 +34,7 @@ module.exports.updateName = async (req, res) => {
 };
 
 module.exports.newAvatar = async (req, res) => {
+  console.log("New avatar");
   const myId = req.user._id;
   const resize = JSON.parse(req.body.resize);
 
@@ -94,6 +97,7 @@ module.exports.register = async (req, res) => {
     const { email, username, password } = req.body;
     const hexCode = randomHexGenerator();
     const user = new User({
+      lastActive: new Date(),
       email,
       username,
       name: username,
@@ -141,6 +145,7 @@ module.exports.login = (req, res, next) => {
         chats,
         avatar: { hexCode, path = null },
       } = user;
+      updateLastActive(_id);
       const chatIdList = chats.map((e) => e.chat);
       return res.json({
         id: _id,

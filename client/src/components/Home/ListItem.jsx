@@ -122,13 +122,13 @@ function ListItem({
               style={{
                 border: "1px solid #aaaaaa",
                 borderRadius: "8px",
-                padding: "1px 4px 1px 4px",
+                padding: "0 4px",
               }}
             >
               GIF
             </span>
           )}
-          {e.files.length > 0 ? (
+          {e.files && e.files.length > 0 ? (
             <>
               <FontAwesomeIcon icon={faImages} style={{ marginRight: "4px" }} />
               Photo

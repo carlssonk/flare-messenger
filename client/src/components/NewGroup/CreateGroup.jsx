@@ -211,6 +211,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
               type="text"
               placeholder="GROUP NAME"
               onChange={(e) => setName(e.target.value)}
+              maxLength="30"
             />
           </div>
           <div style={{ color: formRed }}>{error}</div>
