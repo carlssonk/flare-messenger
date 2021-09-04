@@ -82,6 +82,7 @@ function Chat() {
     name: "endless-river",
     colors: "#1bbbbb, #0575e6",
   });
+  const [toggleUserDetail, setToggleUserDetail] = useState(false);
   const [simpleController, setSimpleController] = useState(false);
   const [switchEmojiGif, setSwitchEmojiGif] = useState(
     isMobile() ? "gif" : "emoji"
@@ -103,6 +104,7 @@ function Chat() {
   const messageContainer = useRef(null);
   const messagesEndRef = useRef(null);
   const scrollRef = useRef(null);
+  const userDetailRefs = useRef([]);
 
   let domEditor = useRef(null);
   const setDomEditorRef = (ref) => (domEditor = ref);
@@ -326,7 +328,7 @@ function Chat() {
       const res = await fetch(`/api/chats/${chatId}`);
       const data = await res.json();
       setInitMessages(data.messages.reverse());
-      setFriends(data.friends);
+      handleSetFriends(data.friends);
       setChat(data.chat);
       setChatStatus(data.chatSettings.status);
       data.chatSettings.color && setChatColor(data.chatSettings.color);
@@ -337,6 +339,48 @@ function Chat() {
     };
     getChatData();
   }, [location.pathname, user]);
+
+  const handleSetFriends = (friends) => {
+    friends = friends.map(({ ...rest }) => {
+      return { ...rest, showDetails: false };
+    });
+
+    setFriends(friends);
+  };
+
+  const handleShowUserDetails = (id, i) => {
+    let elPos;
+    let docPos;
+    let detailStyle = {};
+    if (id) {
+      elPos = userDetailRefs.current[i].getBoundingClientRect();
+      docPos = document.documentElement.getBoundingClientRect();
+      if (elPos.right >= docPos.right) detailStyle = { right: 0 };
+    }
+
+    const friendsCopy = [...friends];
+    const newFriends = friendsCopy.map((e) => {
+      if (e._id === id) {
+        return { ...e, showDetails: !e.showDetails, detailStyle };
+      }
+      return { ...e, showDetails: false, detailStyle };
+    });
+
+    if (newFriends.some((e) => e.showDetails)) {
+      setToggleUserDetail(true);
+    } else setToggleUserDetail(false);
+
+    setFriends(newFriends);
+  };
+
+  // useEffect(() => {
+  //   if (!friends) return;
+  //   setUserDetailRefs((elRefs) =>
+  //     Array(friends.length)
+  //       .fill()
+  //       .map((_, i) => elRefs[i] || createRef())
+  //   );
+  // }, [friends.length]);
 
   useEffect(() => {
     if (chatStatus === 3) handleNavigation("/");
@@ -361,6 +405,7 @@ function Chat() {
   };
 
   const scrollToBottom = () => {
+    if (!scrollRef.current) return;
     if (Math.abs(scrollRef.current.lastScrollTop) > 300 && !isMyMessage) return;
     setIsMyMessage(false);
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -498,6 +543,57 @@ function Chat() {
         </div>
         <div className="blur"></div>
       </div>
+      {!chat.isPrivate ? (
+        <>
+          <div className="users-container">
+            <ul className="users-list">
+              {friends &&
+                friends.map((e, i) => {
+                  return (
+                    <React.Fragment key={e._id}>
+                      <div className="list-item">
+                        <Ripple.Div
+                          className="name"
+                          onClick={() => handleShowUserDetails(e._id, i)}
+                        >
+                          <span>{e.name}</span>
+                        </Ripple.Div>
+                        <div
+                          ref={(el) => (userDetailRefs.current[i] = el)}
+                          className="user-detail-container"
+                          style={
+                            e.showDetails
+                              ? { ...e.detailStyle }
+                              : { visibility: "hidden" }
+                          }
+                        >
+                          <div className="user-detail-inner">
+                            <Avatar
+                              user={e}
+                              style={{
+                                fontSize: "16.2px",
+                                width: "36px",
+                                height: "36px",
+                              }}
+                            />
+                            <span>{e.name}</span>
+                            <span>{e.lastActiveTime}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+            </ul>
+          </div>
+          <div
+            onClick={() => handleShowUserDetails(null)}
+            className="user-detail-click-catcher"
+            style={toggleUserDetail ? null : { display: "none" }}
+          ></div>
+        </>
+      ) : null}
+
       <div
         className="message-container"
         ref={messageContainer}
