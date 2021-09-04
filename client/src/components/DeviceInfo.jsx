@@ -64,28 +64,13 @@ function DeviceInfo() {
         {hours}:{minutes}
       </div>
       <div className="device-info__status">
-        <FontAwesomeIcon icon={faSignal} />
-        <FontAwesomeIcon icon={faWifi} />
+        <FontAwesomeIcon
+          icon={faWifi}
+          style={navigator.onLine && navigator.onLine ? null : { color: "red" }}
+        />
         <div className="battery-box">
           <FontAwesomeIcon icon={faBatteryEmpty} />
-          <div
-            className="battery-level"
-            // style={
-            //   {
-            //     clipPath: `polygon(0 0, ${battery * 100}% 0, ${
-            //       battery * 100
-            //     }% 100%, 0% 100%)`,
-            //   },
-
-            //   battery <= 0.2 && battery > 0.1
-            //     ? { backgroundColor: "yellow" }
-            //     : null,
-            //   // battery >= 0 && battery <= 0.1
-            //   //   ? { backgroundColor: "red" }
-            //   //   : null
-            // }
-            style={batteryStyle}
-          ></div>
+          <div className="battery-level" style={batteryStyle}></div>
         </div>
       </div>
     </div>

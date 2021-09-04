@@ -13,12 +13,12 @@
   }
   .device-info__status {
     display: flex;
-    justify-content: space-between;
-    width: 100px;
+    justify-content: flex-end;
     align-items: center;
     .battery-box {
       display: flex;
       position: relative;
+      margin: 0 4px 0 14px;
       .battery-level {
         position: absolute;
         width: 60%;
@@ -522,7 +522,6 @@
 .emoji-wrapper {
   position: relative;
   height: 375px;
-  min-height: 375px;
   width: 100%;
   margin-top: auto;
 
@@ -829,5 +828,25 @@
         }
       }
     }
+  }
+}
+
+.chat-color-container {
+  .chat-color-btn {
+    display: flex;
+    align-items: center;
+    .color-box {
+      width: 15px;
+      height: 15px;
+      border-radius: 100%;
+      margin-right: 6px;
+    }
+    .current {
+      background: var(--bubble-gradient);
+    }
+  }
+  ul {
+    overflow: auto;
+    transition: 200ms;
   }
 }

@@ -289,17 +289,35 @@ body {
 
   .content-wrapper {
     display: flex;
-    // position: fixed;
     width: 200%;
     height: 100%;
     top: 196px;
     transform: translate3d(-0%, 0, 0);
     transition: 200ms ease-in-out;
     .page-section {
-      // background-color: rgba(255, 0, 0, 0.192);
-      // border: 2px solid white;
       width: 100%;
       height: 100%;
+    }
+  }
+  .select-page-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      border: none;
+      outline: none;
+      background: none;
+      color: white;
+      padding: 8px;
+    }
+    .page-line-slider {
+      position: absolute;
+      height: 2px;
+      margin-top: -2px;
+      background-color: var(--primary-cyan);
+      transition: 200ms;
+      opacity: 0.5;
     }
   }
 }
@@ -426,7 +444,7 @@ body {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: #1aadad;
+        color: var(--top-color);
         width: 100%;
         height: 52px;
         font-size: 24px;
@@ -660,8 +678,7 @@ body {
     margin-top: auto;
     display: flex;
     align-items: flex-end;
-    color: white;
-    color: #0575e6;
+    color: var(--bottom-color);
     padding-bottom: 4px;
     padding-top: 4px;
 
@@ -698,7 +715,7 @@ body {
       font-size: 20px;
       border-radius: 100%;
       margin-right: 8px;
-      background: #0575e6;
+      background: var(--bottom-color);
       transition: 100ms;
       color: white;
     }
@@ -822,6 +839,12 @@ body {
       }
     }
   }
+}
+.edit-chat-hr {
+  border: none;
+  height: 1px;
+  color: #333; /* old IE */
+  background-color: #333; /* Modern Browsers */
 }
 
 .camera-page {

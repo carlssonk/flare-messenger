@@ -228,3 +228,13 @@ const findWithRegex = (regex, contentBlock, callback) => {
 export const isInputEmpty = (text, files) => {
   return text.replace(/\s/g, "").length > 0 || files.length > 0 ? true : false;
 };
+
+export const chatColors = [
+  { name: "flare", colors: "#f5af19, #f12711" },
+  { name: "endless-river", colors: "#1bbbbb, #0575e6" },
+  { name: "purple-paradise", colors: "#7b4397, #dc2430" },
+  { name: "plum-plate", colors: "#667eea, #764ba2" },
+  { name: "deep-purple", colors: "#24099c, #aa024e" },
+  { name: "quepal", colors: "#11998e, #31d470" },
+  { name: "very-blue", colors: "#021b79, #0575e6" },
+];

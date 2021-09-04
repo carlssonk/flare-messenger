@@ -1,11 +1,19 @@
 :root {
   --primary-gradient: linear-gradient(to bottom, #ff0011, #c471ed, #12c2e9);
-  // --bubble-gradient: linear-gradient(to bottom, #12c2e9 52px, #c471ed, #f64f59);
-  // --bubble-gradient: linear-gradient(to bottom, #1bbbbb 52px, #7231db);
-  // --bubble-gradient: linear-gradient(to top, #1bbbbb 52px, #38af6e);
-  // --bubble-gradient: linear-gradient(to bottom, #f15811, #f5af19);
-  // --bubble-gradient: linear-gradient(to bottom, #1aadad, #0575e6);
-  --bubble-gradient: linear-gradient(to top, #ff0040, #7173ed);
+
+  --bubble-gradient: linear-gradient(to bottom, #1bbbbb, #0575e6);
+  --top-color: #1bbbbb;
+  --bottom-color: #0575e6;
+
+  // --endless-river: linear-gradient(to bottom, #1bbbbb, #0575e6);
+  // --purple-paradise: linear-gradient(to bottom, #7b4397, #dc2430);
+  // --plum-plate: linear-gradient(to bottom, #667eea, #764ba2);
+  // --blood-mary: linear-gradient(to bottom, #ff512f, #dd2476);
+  // --celestial: linear-gradient(to bottom, #1d2671, #c33764);
+  // --quepal: linear-gradient(to bottom, #11998e, #38ef7d);
+  // --very-blue: linear-gradient(to bottom, #021b79, #0575e6);
+  // --flare: linear-gradient(to bottom, #f12711, #f5af19);
+
   --primary-cyan: #1bbbbb;
   --secondary-cyan: #1aadad;
   --cyan-gradient: linear-gradient(to right, #169c9c, #1bd8d8);

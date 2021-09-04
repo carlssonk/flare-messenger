@@ -16,6 +16,7 @@ const Ripple = ({
   color = "white",
   opacity = 0.2,
   disabled,
+  dataName,
   element = "div",
 }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -115,6 +116,7 @@ const Ripple = ({
       key: 1,
       className: `ripple-effect ${className ? className : ""}`,
       style: style,
+      "data-name": dataName,
       disabled,
       onClick: (e) => onClick && onClick(e),
       onContextMenu: (e) => onContextMenu && onContextMenu(e),
@@ -162,7 +164,6 @@ const Ripple = ({
     [children, renderRipples]
   );
 };
-
 const Article = ({
   children,
   className,
@@ -177,6 +178,7 @@ const Article = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -192,6 +194,7 @@ const Article = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="article"
   />
 );
@@ -211,6 +214,7 @@ const Aside = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -226,6 +230,7 @@ const Aside = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="aside"
   />
 );
@@ -245,6 +250,7 @@ const Header = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -260,6 +266,7 @@ const Header = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="header"
   />
 );
@@ -279,6 +286,7 @@ const Footer = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -294,6 +302,7 @@ const Footer = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="footer"
   />
 );
@@ -313,6 +322,7 @@ const Main = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -328,6 +338,7 @@ const Main = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="main"
   />
 );
@@ -347,6 +358,7 @@ const Nav = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -362,6 +374,7 @@ const Nav = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="nav"
   />
 );
@@ -381,6 +394,7 @@ const Section = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -396,6 +410,7 @@ const Section = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="section"
   />
 );
@@ -415,6 +430,7 @@ const Div = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -430,6 +446,7 @@ const Div = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="div"
   />
 );
@@ -449,6 +466,7 @@ const Span = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -464,6 +482,7 @@ const Span = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="span"
   />
 );
@@ -483,6 +502,7 @@ const Li = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -498,6 +518,7 @@ const Li = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="li"
   />
 );
@@ -517,6 +538,7 @@ const Ul = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -532,6 +554,7 @@ const Ul = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="ul"
   />
 );
@@ -551,6 +574,7 @@ const Ol = ({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -566,6 +590,7 @@ const Ol = ({
     onMouseLeave={onMouseLeave}
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
+    dataName={dataName}
     element="ol"
   />
 );
@@ -586,6 +611,7 @@ const Button = ({
   onTouchStart,
   onTouchEnd,
   disabled,
+  dataName,
 }) => (
   <Ripple
     children={children}
@@ -602,9 +628,11 @@ const Button = ({
     onTouchStart={onTouchStart}
     onTouchEnd={onTouchEnd}
     disabled={disabled}
+    dataName={dataName}
     element="button"
   />
 );
+
 Ripple.Button = Button;
 
 export default Ripple;

@@ -635,7 +635,12 @@ function Chat() {
         </Ripple.Div>
       </div>
       {toggleEmoji ? (
-        <div className="emoji-wrapper">
+        <div
+          className="emoji-wrapper"
+          style={{
+            maxHeight: `${document.documentElement.offsetHeight / 2}px`,
+          }}
+        >
           {switchEmojiGif === "emoji" ? (
             isMobile() ? null : (
               <Picker

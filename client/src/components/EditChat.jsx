@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import { chatColors } from "../utils/chat";
+import { v4 as uuidv4 } from "uuid";
 import Ripple from "./Effects/Ripple";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -22,6 +24,7 @@ function EditChat({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [removeThumbtack, setRemoveThumbtack] = useState(false);
   const [toggleTrashChat, setToggleTrashChat] = useState(false);
+  const [toggleColors, setToggleColors] = useState(false);
 
   useEffect(() => {
     if (!selectedChats) return;
@@ -75,6 +78,18 @@ function EditChat({
     setChats(chatsUpdate);
   };
 
+  const handleSetColor = (c) => {
+    console.log(c.name);
+    console.log(c.colors);
+    document.documentElement.style.setProperty(
+      "--bubble-gradient",
+      `linear-gradient(to bottom, ${c.colors}`
+    );
+    const arr = c.colors.split(",");
+    document.documentElement.style.setProperty("--top-color", arr[0]);
+    document.documentElement.style.setProperty("--bottom-color", arr[1]);
+  };
+
   return (
     <>
       {page === "archived" ||
@@ -126,6 +141,41 @@ function EditChat({
         <FontAwesomeIcon icon={faTrash} />
         <span>{page === "chat" ? "Trash Chat" : null}</span>
       </Ripple.Div>
+      {page === "chat" ? (
+        <div className="chat-color-container">
+          <hr className="edit-chat-hr" />
+          <Ripple.Div
+            className="chat-color-btn"
+            onClick={() => setToggleColors((bool) => !bool)}
+          >
+            <div className="color-box current"></div>
+            <span>Chat color</span>
+          </Ripple.Div>
+          <hr className="edit-chat-hr" />
+          <ul
+            style={toggleColors ? { maxHeight: "300px" } : { maxHeight: "0px" }}
+          >
+            {chatColors.map((c) => {
+              return (
+                <Ripple.Div
+                  key={uuidv4()}
+                  className="chat-color-btn"
+                  dataName={c.name}
+                  onClick={(e) => handleSetColor(c)}
+                >
+                  <div
+                    className="color-box"
+                    style={{
+                      background: `linear-gradient(to bottom, ${c.colors}`,
+                    }}
+                  ></div>
+                  <span>{c.name}</span>
+                </Ripple.Div>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
       <IonAlert
         isOpen={toggleTrashChat}
         onDidDismiss={() => setToggleTrashChat(false)}

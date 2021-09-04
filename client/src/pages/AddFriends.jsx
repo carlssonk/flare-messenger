@@ -5,9 +5,14 @@ import SentRequests from "../components/AddFriends/SentRequests";
 import UsersList from "../components/AddFriends/UsersList";
 import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
 import { findUserAndRemove } from "../utils/friends";
+import Ripple from "../components/Effects/Ripple";
 
 function AddFriends() {
   const [pageNum, setPageNum] = useState(0);
+
+  // const [btn0, setBtn0] = useState(null);
+  // const [btn1, setBtn1] = useState(null);
+  const [sliderStyle, setSliderStyle] = useState([{}, {}]);
 
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -17,7 +22,31 @@ function AddFriends() {
 
   useEffect(() => {
     getFriends();
+    setPageBtns();
   }, []);
+
+  const setPageBtns = () => {
+    if (
+      document.querySelector(`button[data-name="btn0"]`) &&
+      document.querySelector(`button[data-name="btn1"]`)
+    ) {
+      const btn0 = document.querySelector(`button[data-name="btn0"]`);
+      const btn1 = document.querySelector(`button[data-name="btn1"]`);
+
+      let sliderStyle = [];
+      sliderStyle[1] = {
+        width: `${btn1.offsetWidth}px`,
+        transform: `translate3d(${btn0.offsetWidth}px,0,0)`,
+      };
+      sliderStyle[0] = {
+        width: `${btn0.offsetWidth}px`,
+        transform: `translate3d(0,0,0)`,
+      };
+
+      setSliderStyle(sliderStyle);
+    }
+  };
+  window.onresize = setPageBtns;
 
   const handleFindUsers = async (e) => {
     setSearch(e.target.value);
@@ -117,42 +146,21 @@ function AddFriends() {
         />
       ) : (
         <>
-          <IonSegment swipeGesture="false">
-            <IonSegmentButton
-              className={
-                pageNum === 0
-                  ? "segment-button-checked switch-btn"
-                  : "segment-button-after-checked switch-btn"
-              }
-              onClick={() => setPageNum(0)}
-              value={0}
-            >
-              <IonLabel>Add Friends</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton
-              className={
-                pageNum === 1
-                  ? "segment-button-checked switch-btn"
-                  : "segment-button-after-checked switch-btn"
-              }
-              onClick={() => setPageNum(1)}
-              value={1}
-            >
-              <IonLabel>Sent Requests</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
+          <div className="select-page-container">
+            <div>
+              <Ripple.Button onClick={() => setPageNum(0)} dataName="btn0">
+                Add
+              </Ripple.Button>
+              <Ripple.Button onClick={() => setPageNum(1)} dataName="btn1">
+                Sent Requests
+              </Ripple.Button>
+              <div
+                className="page-line-slider"
+                style={pageNum ? { ...sliderStyle[1] } : { ...sliderStyle[0] }}
+              ></div>
+            </div>
+          </div>
 
-          {/* <SwipeableViews
-            enableMouseEvents
-            index={pageNum}
-            hysteresis={0.5}
-            onChangeIndex={() =>
-              pageNum === 0 ? setPageNum(1) : setPageNum(0)
-            }
-            onSwitching={() => setToggleScroll(false)}
-            onTransitionEnd={() => setToggleScroll(true)}
-            style={{ height: "100%" }}
-          > */}
           <div
             className="content-wrapper"
             style={
