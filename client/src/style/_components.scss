@@ -226,7 +226,7 @@
     height: 55%;
     background-color: var(--secondary-background);
     color: black;
-    border-radius: 12px;
+    border-radius: 4px;
     z-index: 15;
     transition: 250ms;
     overflow: hidden;
@@ -324,11 +324,12 @@
       -webkit-align-items: center;
       align-items: center;
       background: transparent;
-      width: 50%;
+      width: 70%;
       -webkit-flex: 1 1;
       flex: 1 1;
       height: 30px;
       margin-top: 15px;
+      margin-bottom: 20px;
       padding: 15px 0;
       input {
         width: 100%;
@@ -422,6 +423,16 @@
           }
         }
       }
+    }
+    .submit-btn {
+      position: absolute;
+      padding: 8px;
+      border: none;
+      outline: none;
+      background: var(--primary-cyan);
+      border-radius: 4px;
+      color: white;
+      bottom: 34px;
     }
   }
 }

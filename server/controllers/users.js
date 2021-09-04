@@ -38,6 +38,8 @@ module.exports.newAvatar = async (req, res) => {
   const myId = req.user._id;
   const resize = JSON.parse(req.body.resize);
 
+  console.log(req.file);
+
   const path = req.file.path.replace(
     "/upload",
     `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`

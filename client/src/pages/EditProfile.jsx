@@ -25,7 +25,6 @@ function EditProfile() {
   const [togglePopup, setTogglePopup] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [toggleOptions, setToggleOptions] = useState(false);
   const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
 
@@ -35,8 +34,20 @@ function EditProfile() {
     } else {
       setNav("forward");
     }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+
+    if (to === "/camera") {
+      setTimeout(
+        () =>
+          history.push({
+            pathname: "/camera",
+            state: { path: history.location.pathname },
+          }),
+        10
+      );
+    } else {
+      // we need to give a small delay so our transition class appends on the DOM before we redirect
+      setTimeout(() => history.push(to), 10);
+    }
   };
 
   useEffect(() => {
@@ -45,15 +56,23 @@ function EditProfile() {
     if (!togglePopup) resetAvatarState();
   }, [togglePopup]);
 
+  useEffect(() => {
+    if (history.location.state) {
+      setImageFile(history.location.state.files[0].file);
+      setPreviewAvatarUrl(history.location.state.files[0].url);
+      setTogglePopup(true);
+    }
+  }, []);
+
   const handleTogglePopup = (bool) => {
     if (isFading) return; // to avoid spam
     setTogglePopup(bool);
+    window.history.replaceState(null, "New Title");
   };
 
   const addFile = (e) => {
     if (e.target.files[0].type.indexOf("image/") > -1) {
       const file = e.target.files[0];
-      console.log(file);
       const fileURL = window.URL.createObjectURL(file);
       setImageFile(file);
       setPreviewAvatarUrl(fileURL);
@@ -88,7 +107,6 @@ function EditProfile() {
     });
     const data = await res.json();
     setIsLoading(false);
-    // setNewAvatarUrl("");
     setUser({
       ...user,
       avatar: {
@@ -161,7 +179,7 @@ function EditProfile() {
           className="avatar-options-popup"
           style={toggleOptions ? { transform: "translate3d(0, 0%, 0)" } : null}
         >
-          <Ripple.Div>
+          <Ripple.Div onClick={() => handleNavigation("/camera")}>
             <div>Take Photo</div>
           </Ripple.Div>
           <Ripple.Div onClick={() => handleToggleChooseAvatar()}>

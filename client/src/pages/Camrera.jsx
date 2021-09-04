@@ -68,7 +68,7 @@ function Camrera() {
       id: uuidv4(),
     };
 
-    if (history.location.state)
+    if (history.location.state && history.location.state.files)
       return [...history.location.state.files, filesObjArr];
     return [filesObjArr];
   };

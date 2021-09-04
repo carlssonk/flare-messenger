@@ -8,6 +8,8 @@ import CheckifCircleIsOutsideBounds from "./Profile/CheckIfCircleIsOutsideBounds
 
 import { UserContext } from "../context/UserContext";
 
+import Ripple from "./Effects/Ripple";
+
 function PreviewAvatar({
   type,
   handleTogglePopup,
@@ -130,7 +132,6 @@ function PreviewAvatar({
       )
     );
 
-    console.log(image);
     const res = await fetch(`/api/avatar`, {
       method: "POST",
       body: formData,
@@ -138,6 +139,7 @@ function PreviewAvatar({
     const avatar = await res.json();
 
     setIsLoading(false);
+    window.history.replaceState(null, "New Title");
     setUser({
       ...user,
       avatar: {
@@ -288,13 +290,14 @@ function PreviewAvatar({
               </div>
             </div>
           </div>
-          <button
+          <Ripple.Button
+            className="submit-btn"
             onClick={
               type === "profile" ? handleSubmitProfile : handleSubmitGroup
             }
           >
             SUBMIT
-          </button>
+          </Ripple.Button>
         </div>
       </div>
 
