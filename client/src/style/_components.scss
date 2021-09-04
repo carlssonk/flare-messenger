@@ -832,6 +832,7 @@
 }
 
 .chat-color-container {
+  padding: 0 !important;
   .chat-color-btn {
     display: flex;
     align-items: center;
@@ -842,11 +843,16 @@
       margin-right: 6px;
     }
     .current {
+      width: 18px;
+      height: 18px;
       background: var(--bubble-gradient);
     }
   }
   ul {
     overflow: auto;
     transition: 200ms;
+    div {
+      margin-left: 4px;
+    }
   }
 }

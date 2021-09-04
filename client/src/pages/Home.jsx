@@ -16,6 +16,7 @@ function Home() {
       const res = await fetch("/api/chats");
       const data = await res.json();
       handleSortChat(data.chats);
+      console.log(data.chats);
       setHasIncomingRequests(data.hasIncomingRequests);
     };
     getChats();

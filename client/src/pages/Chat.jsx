@@ -78,6 +78,10 @@ function Chat() {
   const [showChat, setShowChat] = useState(true);
   const [chat, setChat] = useState({});
   const [chatStatus, setChatStatus] = useState(0);
+  const [chatColor, setChatColor] = useState({
+    name: "endless-river",
+    colors: "#1bbbbb, #0575e6",
+  });
   const [simpleController, setSimpleController] = useState(false);
   const [switchEmojiGif, setSwitchEmojiGif] = useState(
     isMobile() ? "gif" : "emoji"
@@ -155,11 +159,25 @@ function Chat() {
 
   useEffect(() => {
     setTimeout(() => setInitPage(true), 400);
-
-    // return () => {
-    //   history.push({ state: { files: [] } });
-    // };
   }, []);
+
+  useEffect(() => {
+    if (chatColor) {
+      handleSetColor(chatColor);
+    } else {
+      handleSetColor({ name: "endless-river", colors: "#1bbbbb, #0575e6" });
+    }
+  }, [chatColor]);
+
+  const handleSetColor = (c) => {
+    document.documentElement.style.setProperty(
+      "--bubble-gradient",
+      `linear-gradient(to bottom, ${c.colors}`
+    );
+    const arr = c.colors.split(",");
+    document.documentElement.style.setProperty("--top-color", arr[0]);
+    document.documentElement.style.setProperty("--bottom-color", arr[1]);
+  };
 
   useEffect(() => {
     if (history.location.state) {
@@ -310,7 +328,8 @@ function Chat() {
       setInitMessages(data.messages.reverse());
       setFriends(data.friends);
       setChat(data.chat);
-      setChatStatus(data.chatStatus);
+      setChatStatus(data.chatSettings.status);
+      data.chatSettings.color && setChatColor(data.chatSettings.color);
       setMessagesCount(data.messagesCount);
       const filesCount = data.messages.filter((e) => e.file).length;
       setImagesCount(filesCount);
@@ -349,17 +368,19 @@ function Chat() {
 
   // Set simple controller
   useEffect(() => {
-    if (text.length === 0) {
-      setEditorState(
-        EditorState.createEmpty(
-          new CompositeDecorator([
-            {
-              strategy: linkStrategy,
-              component: LinkSpan,
-            },
-          ])
-        )
-      );
+    if (text.length === 0 && isMobile()) {
+      if (text.length === 0) {
+        setEditorState(
+          EditorState.createEmpty(
+            new CompositeDecorator([
+              {
+                strategy: linkStrategy,
+                component: LinkSpan,
+              },
+            ])
+          )
+        );
+      }
     }
 
     if (text.replace(/\s/g, "").length === 0) return setSimpleController(false);
@@ -468,6 +489,8 @@ function Chat() {
                   toggleEditChat={true}
                   setShowPopover={setShowPopover}
                   setChatStatus={setChatStatus}
+                  chatColor={chatColor}
+                  setChatColor={setChatColor}
                 />
               </div>
             </IonPopover>

@@ -4,6 +4,8 @@ import { chatColors } from "../utils/chat";
 import { v4 as uuidv4 } from "uuid";
 import Ripple from "./Effects/Ripple";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLocation } from "react-router-dom";
+
 import {
   faTrash,
   faArchive,
@@ -20,20 +22,22 @@ function EditChat({
   toggleEditChat,
   setShowPopover,
   setChatStatus,
+  chatColor,
+  setChatColor,
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [removeThumbtack, setRemoveThumbtack] = useState(false);
   const [toggleTrashChat, setToggleTrashChat] = useState(false);
   const [toggleColors, setToggleColors] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
     if (!selectedChats) return;
-    console.log(selectedChats);
     if (
       selectedChats.length > 0 &&
       selectedChats.every((e) => e.status === 1)
     ) {
-      console.log("REMOVE THUMBTACK");
       setRemoveThumbtack(true);
     } else {
       setRemoveThumbtack(false);
@@ -41,10 +45,6 @@ function EditChat({
   }, [selectedChats]);
 
   const editChatStatus = async (status) => {
-    console.log(selectedChats[0]);
-    console.log(page);
-
-    console.log(status);
     if (isSubmitting) return;
     setIsSubmitting(true);
 
@@ -79,15 +79,30 @@ function EditChat({
   };
 
   const handleSetColor = (c) => {
-    console.log(c.name);
-    console.log(c.colors);
-    document.documentElement.style.setProperty(
-      "--bubble-gradient",
-      `linear-gradient(to bottom, ${c.colors}`
-    );
-    const arr = c.colors.split(",");
-    document.documentElement.style.setProperty("--top-color", arr[0]);
-    document.documentElement.style.setProperty("--bottom-color", arr[1]);
+    setChatColor({ name: c.name, colors: c.colors });
+    // document.documentElement.style.setProperty(
+    //   "--bubble-gradient",
+    //   `linear-gradient(to bottom, ${c.colors}`
+    // );
+    // const arr = c.colors.split(",");
+    // document.documentElement.style.setProperty("--top-color", arr[0]);
+    // document.documentElement.style.setProperty("--bottom-color", arr[1]);
+  };
+
+  const handleSubmitColor = async (c) => {
+    handleSetColor(c);
+
+    const chatId = location.pathname.replace("/chat/", "");
+    setShowPopover && setShowPopover(false);
+
+    await fetch("/api/chats/color", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ chatId, color: c }),
+    });
   };
 
   return (
@@ -141,6 +156,7 @@ function EditChat({
         <FontAwesomeIcon icon={faTrash} />
         <span>{page === "chat" ? "Trash Chat" : null}</span>
       </Ripple.Div>
+
       {page === "chat" ? (
         <div className="chat-color-container">
           <hr className="edit-chat-hr" />
@@ -149,9 +165,8 @@ function EditChat({
             onClick={() => setToggleColors((bool) => !bool)}
           >
             <div className="color-box current"></div>
-            <span>Chat color</span>
+            <span>Chat color ({chatColor && chatColor.name})</span>
           </Ripple.Div>
-          <hr className="edit-chat-hr" />
           <ul
             style={toggleColors ? { maxHeight: "300px" } : { maxHeight: "0px" }}
           >
@@ -161,7 +176,7 @@ function EditChat({
                   key={uuidv4()}
                   className="chat-color-btn"
                   dataName={c.name}
-                  onClick={(e) => handleSetColor(c)}
+                  onClick={() => handleSubmitColor(c)}
                 >
                   <div
                     className="color-box"

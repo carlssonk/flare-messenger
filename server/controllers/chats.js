@@ -127,7 +127,7 @@ module.exports.showChat = async (req, res) => {
 
   updateLastActive(myId);
 
-  const chatStatus = await retrieveChatStatus(myId, id);
+  const chatSettings = await retrieveChatSettings(myId, id);
 
   const chat = await Chat.findById(id).populate(
     "users",
@@ -154,10 +154,10 @@ module.exports.showChat = async (req, res) => {
 
   const messagesCount = await handleReturnMessagesCount(user, id);
 
-  res.json({ friends, messages, chat, messagesCount, chatStatus });
+  res.json({ friends, messages, chat, messagesCount, chatSettings });
 };
 
-const retrieveChatStatus = async (myId, id) => {
+const retrieveChatSettings = async (myId, id) => {
   const userChats = await User.findById(
     myId,
     "-friends -__v -username -email -updatedAt -_id -avatar -name -createdAt"
@@ -169,7 +169,7 @@ const retrieveChatStatus = async (myId, id) => {
 
   return (chatStatus = userChats.chats.filter(
     (e) => e.chat._id.toString() === id
-  )[0].status);
+  )[0]);
 };
 
 module.exports.enableChat = async (req, res) => {
@@ -262,4 +262,22 @@ module.exports.editChatStatus = async (req, res) => {
   }
 
   res.json({ chats, status });
+};
+
+module.exports.setChatColor = async (req, res) => {
+  const myId = req.user._id;
+  const { chatId, color } = req.body;
+
+  const user = await User.findOneAndUpdate(
+    { _id: myId },
+    {
+      $set: {
+        "chats.$[elem].color": { name: color.name, colors: color.colors },
+      },
+    },
+    { arrayFilters: [{ "elem.chat": chatId }] }
+  );
+
+  console.log(user);
+  res.send("ok");
 };
