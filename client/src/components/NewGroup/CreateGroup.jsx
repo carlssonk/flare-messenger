@@ -12,7 +12,7 @@ import { getImgSizeInfo } from "../../utils/previewAvatar";
 
 const formRed = "#ff0042";
 
-function CreateGroup({ handleTogglePopup, selectedFriends }) {
+function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, setSelectedFriendsList }) {
   const { setNav } = useContext(NavContext);
   const { user, setUser } = useContext(UserContext);
   const history = useHistory();
@@ -43,9 +43,31 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
     } else {
       setNav("forward");
     }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+
+    if (to === "/camera") {
+      setTimeout(
+        () =>
+          history.push({
+            pathname: "/camera",
+            state: { path: history.location.pathname, selectedFriends },
+          }),
+        10
+      );
+    } else {
+      // we need to give a small delay so our transition class appends on the DOM before we redirect
+      setTimeout(() => history.push(to), 10);
+    }
   };
+
+  useEffect(() => {
+    if (history.location.state) {
+      setImageFile(history.location.state.files[0].file);
+      setPreviewAvatarUrl(history.location.state.files[0].url);
+      setSelectedFriends(history.location.state.selectedFriends);
+      setSelectedFriendsList(history.location.state.selectedFriends);
+      setTogglePreview(true);
+    }
+  }, []);
 
   const handleCreateChat = async () => {
     if (name.length === 0) return setError("Choose a name for the group.");
@@ -77,6 +99,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
 
   const handleTogglePreview = (bool) => {
     setTogglePreview(bool);
+    window.history.replaceState(null, "New Title");
   };
 
   const addFile = (e) => {
@@ -228,7 +251,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends }) {
           className="avatar-options-popup"
           style={toggleOptions ? { transform: "translate3d(0, 0%, 0)" } : null}
         >
-          <Ripple.Div>
+          <Ripple.Div onClick={() => handleNavigation("/camera")}>
             <div>Take Photo</div>
           </Ripple.Div>
           <Ripple.Div onClick={() => handleToggleChooseAvatar()}>

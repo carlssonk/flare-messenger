@@ -768,7 +768,7 @@ function Chat() {
                 emoji="point_up"
                 theme="auto"
                 style={{ width: "100%", height: "100%" }}
-                color="#0575e6"
+                color={chatColor.colors.split(",")[1]}
                 onSelect={handleAddEmoji}
               />
             )

@@ -149,7 +149,7 @@ function AddFriends() {
           <div className="select-page-container">
             <div>
               <Ripple.Button onClick={() => setPageNum(0)} dataName="btn0">
-                Add
+                Add Friends
               </Ripple.Button>
               <Ripple.Button onClick={() => setPageNum(1)} dataName="btn1">
                 Sent Requests

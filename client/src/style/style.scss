@@ -297,6 +297,21 @@ body {
     .page-section {
       width: 100%;
       height: 100%;
+      .cancel-request-btn {
+        height: 30px;
+        width: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 100%;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        color: rgb(200, 200, 200);
+        font-size: 20px;
+        svg {
+          margin: 0;
+        }
+      }
     }
   }
   .select-page-container {

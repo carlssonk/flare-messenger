@@ -6,8 +6,12 @@ import { IonToast } from "@ionic/react";
 import Ripple from "../components/Effects/Ripple";
 import CreateGroup from "../components/NewGroup/CreateGroup";
 import Avatar from "../components/Avatar";
+import { useHistory } from "react-router-dom";
 
 function NewGroup() {
+
+  const history = useHistory();
+
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [selectedFriendsList, setSelectedFriendsList] = useState([]);
@@ -58,12 +62,21 @@ function NewGroup() {
     setTogglePopup(bool);
   };
 
+  useEffect(() => {
+    if (history.location.state) {
+      setTogglePopup(true);
+    }
+    
+  },[])
+
   return (
     <div className="new-page page">
       {togglePopup ? (
         <CreateGroup
           handleTogglePopup={handleTogglePopup}
           selectedFriends={selectedFriends}
+          setSelectedFriends={setSelectedFriends}
+          setSelectedFriendsList={setSelectedFriendsList}
         />
       ) : null}
 

@@ -701,7 +701,7 @@
     }
   }
   .selected {
-    color: #0575e6 !important;
+    color: var(--bottom-color) !important;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     background-color: rgba(0, 0, 0, 0.2) !important;
   }

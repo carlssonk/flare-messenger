@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
+import Ripple from "../Effects/Ripple"
 
 function SentRequests({ sentRequests, handleRequest }) {
   return (
@@ -19,9 +20,9 @@ function SentRequests({ sentRequests, handleRequest }) {
                   />
                   <div className="name">{e.username}</div>
                 </div>
-                <button onClick={() => handleRequest("cancel", e._id)}>
+                <Ripple.Button onClick={() => handleRequest("cancel", e._id)} className="cancel-request-btn">
                   <FontAwesomeIcon icon={faTimes} className="cross-btn" />
-                </button>
+                </Ripple.Button>
               </li>
             );
           })}

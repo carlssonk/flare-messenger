@@ -3,6 +3,7 @@ import { IonButton } from "@ionic/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
+import Ripple from "../Effects/Ripple"
 // import { Scroll } from "framer";
 
 function FindFriends({ incomingRequests, handleRequest }) {
@@ -27,7 +28,7 @@ function FindFriends({ incomingRequests, handleRequest }) {
                   />
                   <div className="name">{e.username}</div>
                 </div>
-                <div>
+                <div className="section">
                   <IonButton
                     onClick={() => handleRequest("accept", e._id)}
                     className="accept-btn"
@@ -35,9 +36,9 @@ function FindFriends({ incomingRequests, handleRequest }) {
                     Accept
                     <FontAwesomeIcon icon={faUserPlus} />
                   </IonButton>
-                  <button onClick={() => handleRequest("reject", e._id)}>
+                  <Ripple.Button onClick={() => handleRequest("reject", e._id)} className="cancel-request-btn">
                     <FontAwesomeIcon icon={faTimes} className="cross-btn" />
-                  </button>
+                  </Ripple.Button>
                 </div>
               </li>
             );
