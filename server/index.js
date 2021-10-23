@@ -10,6 +10,7 @@ const Joi = require("joi");
 const cors = require("cors");
 const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
+const path = require("path");
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -114,10 +115,15 @@ app.use("/api/messages", messageRoutes);
 
 require("./socket")(io);
 
+
+// Serve dist
+app.use(express.static(path.join(__dirname, "..", "client", "build")));
+
 // PAGE NOT FOUND
-// app.all("*", (req, res, next) => {
-//   next(new ExpressError("Page Not Found", 404));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
+});
+
 
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
