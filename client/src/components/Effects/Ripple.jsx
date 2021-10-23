@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { isMobile as checkIsMobile } from "../../utils/isMobile";
+
 
 const Ripple = ({
   children,
@@ -24,13 +26,14 @@ const Ripple = ({
   const [pause, setPause] = useState(false);
   const [ripples, setRipples] = useState([]);
 
+  const handleCheckIsMobile = () => {
+    checkIsMobile() ? setIsMobile(true) : setIsMobile(false)
+  }
   useEffect(() => {
-    if (
-      "ontouchstart" in window ||
-      navigator.maxTouchPoints ||
-      navigator.msMaxTouchPoints
-    ) {
-      setIsMobile(true);
+    handleCheckIsMobile();
+    window.addEventListener("resize", handleCheckIsMobile)
+    return () => {
+      window.removeEventListener("resize", handleCheckIsMobile)
     }
   }, []);
 

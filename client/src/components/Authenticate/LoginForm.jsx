@@ -7,14 +7,17 @@ import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import SubmitTrigger from "./SubmitTrigger";
 
+const DEMO_USERNAME = "demouser"
+const DEMO_PASSWORD = "password123"
+
 function LoginForm() {
   const { setUser } = useContext(UserContext);
   const { nav, setNav } = useContext(NavContext);
 
   const history = useHistory();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(DEMO_USERNAME);
+  const [password, setPassword] = useState(DEMO_PASSWORD);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,6 +64,7 @@ function LoginForm() {
           placeholder="Username"
           type="text"
           onChange={(e) => setUsername(e.target.value)}
+          defaultValue={DEMO_USERNAME}
           name="username"
           required
         />
@@ -68,6 +72,7 @@ function LoginForm() {
           placeholder="Password"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
+          defaultValue={DEMO_PASSWORD}
           name="password"
           required
         />
