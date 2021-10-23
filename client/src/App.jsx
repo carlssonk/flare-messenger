@@ -56,7 +56,7 @@ function App() {
   // add & remove socket
   useEffect(() => {
     if (!socketIsActive && user) {
-      setSocket(io(window.location.origin));
+      setSocket(io(`${window.location.origin}/`, {transports: ["websocket"]}));
       setSocketIsActive(true);
     }
     if (socketIsActive && !user) {
