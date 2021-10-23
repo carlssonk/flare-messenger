@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 
 import { NavContext } from "../../context/NavContext";
-import { useHistory } from "react-router-dom";
 import Ripple from "../Effects/Ripple";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -18,21 +17,10 @@ function ChatList({
   page,
 }) {
   const { setNav } = useContext(NavContext);
-  const history = useHistory();
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-
-    // const chatId = to.replace("/chat/", "");
-    // const status = chats.filter((e) => e._id === chatId);
-    // console.log(status);
-
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+    const direction = to === "/" ? 0 : 1;
+    setNav({path: to, direction});
   };
 
   const handleSelectChat = (e, chat) => {

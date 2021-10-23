@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Avatar from "../Avatar";
-import MessageLoading from "./MessageLoading";
 
 function TextMessage({
   message,

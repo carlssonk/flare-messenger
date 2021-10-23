@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import Avatar from "../Avatar";
 import FileMessage from "./FileMessage";
 import GifMessage from "./GifMessage";
 import MessageLoading from "./MessageLoading";

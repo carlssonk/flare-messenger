@@ -11,16 +11,11 @@ function Profile() {
   const fileRef = useRef(null);
 
   const history = useHistory();
-  const { setNav } = useContext(NavContext);
+  const { nav, setNav } = useContext(NavContext);
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+    const direction = to === "/" ? 0 : 1;
+    setNav({path: to, direction});
   };
 
   const handleLogout = async () => {
@@ -31,7 +26,7 @@ function Profile() {
         "Content-Type": "application/json",
       },
     });
-    setNav("backward");
+    setNav({...nav, direction: 0});
     history.location.key = uuidv4(); // Change key to invoke animation
     setUser(null);
   };

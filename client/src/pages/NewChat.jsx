@@ -3,15 +3,12 @@ import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router-dom";
 import Header from "../components/Header";
 import Ripple from "../components/Effects/Ripple";
 import Avatar from "../components/Avatar";
-// import { Link } from "react-router-dom";
 
 function NewChat() {
   const [friends, setFriends] = useState([]);
-  const history = useHistory();
   const { setNav } = useContext(NavContext);
   const { setUser, user } = useContext(UserContext);
 
@@ -22,17 +19,15 @@ function NewChat() {
   const getFriends = async () => {
     const res = await fetch(`/api/friends/friends`);
     const data = await res.json();
-    setFriends(data.friends);
+    const friends = data.friends.map((obj) => {
+      return {...obj, isVisible: true}
+    })
+    setFriends(friends);
   };
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+    const direction = to === "/" ? 0 : 1;
+    setNav({path: to, direction});
   };
 
   const handleCreateChat = async (userId) => {
@@ -48,7 +43,6 @@ function NewChat() {
       }),
     });
     const data = await res.json();
-    console.log(data);
     setUser({
       ...user,
       chats: [...user.chats, data.chatId],
@@ -56,9 +50,22 @@ function NewChat() {
     handleNavigation(`/chat/${data.chatId}`);
   };
 
+  const handleSearchUsers = (e) => {
+    const query = e.target.value.toLowerCase();
+    
+    const friendsCopy = [...friends];
+    const newFriends = friendsCopy.map((obj) => {
+      if (obj.name && obj.name.toLowerCase().includes(query)) return {...obj, isVisible: true};
+      if (obj.username && obj.username.toLowerCase().includes(query)) return {...obj, isVisible: true};
+      return {...obj, isVisible: false}
+    });
+
+    setFriends(newFriends);
+  };
+
   return (
     <div className="new-page page">
-      <Header />
+      <Header handleSearchUsers={handleSearchUsers} />
       <div className="scroll-wrapper">
         <Ripple.Div
           className="new-group-box"
@@ -69,7 +76,7 @@ function NewChat() {
         </Ripple.Div>
 
         <ul className="users-list">
-          {friends.map((e) => {
+          {friends.filter((obj) => obj.isVisible).map((e) => {
             return (
               <Ripple.Li key={e._id} onClick={() => handleCreateChat(e._id)}>
                 <div className="section">

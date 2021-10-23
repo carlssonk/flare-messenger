@@ -4,19 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../Effects/Ripple";
 import { NavContext } from "../../context/NavContext";
-import { useHistory } from "react-router-dom";
 
 function Footer() {
   const { setNav } = useContext(NavContext);
-  const history = useHistory();
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-    setTimeout(() => history.push(to), 10);
+    const direction = to === "/" ? 0 : 1;
+    setNav({path: to, direction});
   };
 
   return (

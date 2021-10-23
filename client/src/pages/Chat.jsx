@@ -7,21 +7,15 @@ import { v4 as uuidv4 } from "uuid";
 
 import {
   faChevronLeft,
-  faPhoneAlt,
-  faVideo,
   faEllipsisV,
   faCamera,
   faImages,
   faPaperPlane,
-  faMicrophone,
   faGrinSquintTears,
   faTimes,
   faKeyboard,
   faChevronRight,
   faSmile,
-  faTrash,
-  faArchive,
-  faThumbtack,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import { useLocation, useHistory } from "react-router-dom";
@@ -137,26 +131,14 @@ function Chat() {
   const { setNav } = useContext(NavContext);
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
 
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
     if (to === "/camera") {
       if (files.length >= 10) return setMaximumFilesAlert(true);
-      setTimeout(
-        () =>
-          history.push({
-            pathname: "/camera",
-            state: { path: history.location.pathname, files, text },
-          }),
-        10
-      );
-    } else {
-      setTimeout(() => history.push(to), 10);
+      setNav({path: to, state: { prevPath: history.location.pathname, files, text }})
+      return;
     }
+    
+    setNav({path: to, direction: 0});
   };
 
   useEffect(() => {
@@ -373,17 +355,9 @@ function Chat() {
     setFriends(newFriends);
   };
 
-  // useEffect(() => {
-  //   if (!friends) return;
-  //   setUserDetailRefs((elRefs) =>
-  //     Array(friends.length)
-  //       .fill()
-  //       .map((_, i) => elRefs[i] || createRef())
-  //   );
-  // }, [friends.length]);
-
   useEffect(() => {
     if (chatStatus === 3) handleNavigation("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatStatus]);
 
   // Scroll To Bottom

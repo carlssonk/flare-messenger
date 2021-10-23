@@ -26,7 +26,10 @@ function NewGroup() {
   const getFriends = async () => {
     const res = await fetch(`/api/friends/friends`);
     const data = await res.json();
-    setFriends(data.friends);
+    const friends = data.friends.map((obj) => {
+      return {...obj, isVisible: true}
+    })
+    setFriends(friends);
   };
 
   const handleSelectFriend = (user) => {
@@ -63,11 +66,28 @@ function NewGroup() {
   };
 
   useEffect(() => {
-    if (history.location.state) {
+    const state = history.location.state
+    if (state && state.files) {
       setTogglePopup(true);
     }
+  },[history.location.state])
+
+  const handleSearchUsers = (e) => {
+    const query = e.target.value.toLowerCase();
     
-  },[])
+    const friendsCopy = [...friends];
+    const newFriends = friendsCopy.map((obj) => {
+      if (obj.name && obj.name.toLowerCase().includes(query)) return {...obj, isVisible: true};
+      if (obj.username && obj.username.toLowerCase().includes(query)) return {...obj, isVisible: true};
+      return {...obj, isVisible: false}
+    });
+
+    setFriends(newFriends);
+  };
+
+  useEffect(() => {
+    console.log(selectedFriends)
+  }, [selectedFriends])
 
   return (
     <div className="new-page page">
@@ -80,7 +100,7 @@ function NewGroup() {
         />
       ) : null}
 
-      <Header />
+      <Header handleSearchUsers={handleSearchUsers} />
       <ul
         className={`selected-friends-list ${
           selectedFriends.length > 0 ? "list-active" : ""
@@ -112,7 +132,7 @@ function NewGroup() {
       </ul>
       <div className="scroll-wrapper">
         <ul className="users-list">
-          {friends.map((e) => {
+          {friends.filter((obj) => obj.isVisible).map((e) => {
             return (
               <Ripple.Li
                 key={e._id}

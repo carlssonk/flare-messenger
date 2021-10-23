@@ -18,7 +18,7 @@ import SignupError from "./SignupError";
 const formGreen = "#00b627";
 
 function SignupForm() {
-  const { setNav } = useContext(NavContext);
+  const { setNav, nav } = useContext(NavContext);
   const history = useHistory();
   const { setUser } = useContext(UserContext);
 
@@ -158,7 +158,7 @@ function SignupForm() {
   };
 
   const handleRedirect = (user) => {
-    setNav("forward");
+    setNav({...nav, direction: 1});
     history.location.key = uuidv4(); // Change key to invoke animation
     setUser(user);
   };

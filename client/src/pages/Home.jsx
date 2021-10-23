@@ -16,14 +16,12 @@ function Home() {
       const res = await fetch("/api/chats");
       const data = await res.json();
       handleSortChat(data.chats);
-      console.log(data.chats);
       setHasIncomingRequests(data.hasIncomingRequests);
     };
     getChats();
   }, []);
 
   const handleSortChat = (chat) => {
-    console.log(chat);
     const sortedChat = chat.sort(function (a, b) {
       return new Date(b.lastMessageAt) - new Date(a.lastMessageAt);
     });
@@ -56,6 +54,7 @@ function Home() {
       if (obj.name && obj.name.toLowerCase().includes(query)) return obj;
       if (obj.users[0].name.toLowerCase().includes(query)) return obj;
       if (obj.users[0].username.toLowerCase().includes(query)) return obj;
+      return false;
     });
 
     setChats(newChats);

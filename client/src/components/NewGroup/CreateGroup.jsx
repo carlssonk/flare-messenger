@@ -38,35 +38,29 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
   const [togglePopupWait, setTogglePopupWait] = useState(true);
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
+    const direction = to === "/" ? 0 : 1;
 
     if (to === "/camera") {
-      setTimeout(
-        () =>
-          history.push({
-            pathname: "/camera",
-            state: { path: history.location.pathname, selectedFriends },
-          }),
-        10
-      );
-    } else {
-      // we need to give a small delay so our transition class appends on the DOM before we redirect
-      setTimeout(() => history.push(to), 10);
+      console.log(selectedFriends)
+      setNav({path: to, direction, state: { prevPath: history.location.pathname, selectedFriends }})
+      return;
     }
+
+    setNav({path: to, direction});
   };
 
   useEffect(() => {
-    if (history.location.state) {
-      setImageFile(history.location.state.files[0].file);
-      setPreviewAvatarUrl(history.location.state.files[0].url);
-      setSelectedFriends(history.location.state.selectedFriends);
-      setSelectedFriendsList(history.location.state.selectedFriends);
+    const state = history.location.state
+    if (state && state.files) {
+      console.log(state.files)
+      console.log(state)
+      setImageFile(state.files[0].file);
+      setPreviewAvatarUrl(state.files[0].url);
+      setSelectedFriends(state.selectedFriends);
+      setSelectedFriendsList(state.selectedFriends);
       setTogglePreview(true);
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleCreateChat = async () => {
@@ -84,7 +78,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
     formData.append("users", users);
     formData.append("name", name);
 
-    const res = await fetch(`http://localhost:3000/api/chats/group`, {
+    const res = await fetch(`/api/chats/group`, {
       method: "POST",
       body: formData,
     });

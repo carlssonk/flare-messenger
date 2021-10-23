@@ -3,15 +3,13 @@ import Header from "../components/Header";
 import FindFriends from "../components/AddFriends/FindFriends";
 import SentRequests from "../components/AddFriends/SentRequests";
 import UsersList from "../components/AddFriends/UsersList";
-import { IonPage, IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
+import { IonPage } from "@ionic/react";
 import { findUserAndRemove } from "../utils/friends";
 import Ripple from "../components/Effects/Ripple";
 
 function AddFriends() {
   const [pageNum, setPageNum] = useState(0);
 
-  // const [btn0, setBtn0] = useState(null);
-  // const [btn1, setBtn1] = useState(null);
   const [sliderStyle, setSliderStyle] = useState([{}, {}]);
 
   const [search, setSearch] = useState("");
@@ -134,6 +132,7 @@ function AddFriends() {
     setSentRequests(data.sent);
   };
 
+
   return (
     <IonPage className="add-page page">
       <Header handleFindUsers={handleFindUsers} />
@@ -178,8 +177,6 @@ function AddFriends() {
               handleRequest={handleRequest}
             />
           </div>
-
-          {/* </SwipeableViews> */}
         </>
       )}
     </IonPage>

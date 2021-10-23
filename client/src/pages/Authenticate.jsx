@@ -1,20 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import Login from "../components/Authenticate/Login";
 import ProfileSetup from "../components/Authenticate/ProfileSetup";
 import Signup from "../components/Authenticate/Signup";
 
-import { NavContext } from "../context/NavContext";
-
 function Authenticate() {
   const [page, setPage] = useState("login");
-  const { nav, setNav } = useContext(NavContext);
+  const [nav, setNav] = useState(0);
 
   const changePage = (page) => {
     page === "signup" || page === "setup"
-      ? setNav("forward")
-      : setNav("backward");
+      ? setNav(1)
+      : setNav(0);
     setTimeout(() => setPage(page), 10);
   };
 
@@ -23,7 +21,7 @@ function Authenticate() {
       <CSSTransition
         key={page}
         timeout={400}
-        classNames={nav}
+        classNames={nav ? "forward" : "backward"}
         onEnter={() =>
           document.documentElement.style.setProperty("--overflow", "hidden")
         }

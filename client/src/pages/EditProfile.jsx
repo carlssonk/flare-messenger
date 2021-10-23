@@ -29,25 +29,12 @@ function EditProfile() {
   const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
 
   const handleNavigation = (to) => {
-    if (to === "/profile") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-
     if (to === "/camera") {
-      setTimeout(
-        () =>
-          history.push({
-            pathname: "/camera",
-            state: { path: history.location.pathname },
-          }),
-        10
-      );
-    } else {
-      // we need to give a small delay so our transition class appends on the DOM before we redirect
-      setTimeout(() => history.push(to), 10);
+      setNav({path: to, direction: 1, state: { prevPath: history.location.pathname }})
+      return
     }
+    const direction = to === "/profile" ? 0 : 1;
+    setNav({path: to,direction})
   };
 
   useEffect(() => {
@@ -57,12 +44,14 @@ function EditProfile() {
   }, [togglePopup]);
 
   useEffect(() => {
-    if (history.location.state) {
-      setImageFile(history.location.state.files[0].file);
-      setPreviewAvatarUrl(history.location.state.files[0].url);
+    const state = history.location.state
+    if (state && state.files) {
+      console.log(state)
+      setImageFile(state.files[0].file);
+      setPreviewAvatarUrl(state.files[0].url);
       setTogglePopup(true);
     }
-  }, []);
+  }, [history.location.state]);
 
   const handleTogglePopup = (bool) => {
     if (isFading) return; // to avoid spam

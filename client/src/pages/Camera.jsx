@@ -1,18 +1,17 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavContext } from "../context/NavContext";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import {
   faChevronLeft,
   faChevronRight,
-  faTimes,
   faUndo,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 
-function Camrera() {
+function Camera() {
   const history = useHistory();
 
   const imageTag = useRef(null);
@@ -41,23 +40,14 @@ function Camrera() {
     }, 400);
 
     if (!blob || goBack) {
-      setNav("backward");
-      setTimeout(() => history.push(to), 10);
+      setNav({path: to, direction: 0});
       return;
-    } else {
-      setNav("forward");
     }
 
     const files = setFiles();
 
-    setTimeout(
-      () =>
-        history.push({
-          pathname: to,
-          state: { ...history.location.state, files },
-        }),
-      10
-    );
+    console.log(to)
+    setNav({path: to, state: { files }, direction: 1})
   };
 
   const setFiles = () => {
@@ -94,8 +84,11 @@ function Camrera() {
     }
   }, []);
 
+
   useEffect(() => {
-    if (history.location.state) setPrevPath(history.location.state.path);
+    const state = history.location.state;
+    console.log(state)
+    if (state && state.prevPath) setPrevPath(state.prevPath);
   }, [history]);
 
   useEffect(() => {
@@ -198,6 +191,7 @@ function Camrera() {
 
   useEffect(() => {
     getStream();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldFaceUser]);
 
   return (
@@ -265,7 +259,7 @@ function Camrera() {
                 onClick={() => handleNavigation(prevPath || "/")}
                 className="send-photo-btn action-btn"
               >
-                Use
+                <span>Use</span>
                 <FontAwesomeIcon icon={faChevronRight} />
               </Ripple.Div>
             ) : (
@@ -273,7 +267,7 @@ function Camrera() {
                 onClick={() => handleNavigation("/send-photo")}
                 className="send-photo-btn action-btn"
               >
-                Send To
+                <span>Send To</span>
                 <FontAwesomeIcon icon={faChevronRight} />
               </Ripple.Div>
             )}
@@ -301,4 +295,4 @@ function Camrera() {
   );
 }
 
-export default Camrera;
+export default Camera;

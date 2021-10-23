@@ -9,7 +9,7 @@ import SubmitTrigger from "./SubmitTrigger";
 
 function LoginForm() {
   const { setUser } = useContext(UserContext);
-  const { setNav } = useContext(NavContext);
+  const { nav, setNav } = useContext(NavContext);
 
   const history = useHistory();
 
@@ -49,7 +49,7 @@ function LoginForm() {
   };
 
   const handleRedirect = (user) => {
-    setNav("forward");
+    setNav({...nav, direction: 1});
     history.location.key = uuidv4(); // Change key to invoke animation
     console.log(user.chats);
     setUser(user);

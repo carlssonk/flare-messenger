@@ -1,39 +1,38 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Switch, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Authenticate from "./pages/Authenticate";
 import Loading from "./components/Loading";
 import "./style/style.min.css";
-import Profile from "./pages/Profile";
-import PrivateRoute from "./components/PrivateRoute";
 import { UserContext } from "./context/UserContext";
 import { NavContext } from "./context/NavContext";
-import AddFriends from "./pages/AddFriends";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import NewChat from "./pages/NewChat";
-import NewGroup from "./pages/NewGroup";
-import Chat from "./pages/Chat";
-import EditProfile from "./pages/EditProfile";
 import DeviceInfo from "./components/DeviceInfo";
-import EditName from "./pages/EditName";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { joinChat, leaveChat } from "./utils/socket";
 import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
-import Archived from "./pages/Archived";
-import Camrera from "./pages/Camrera";
-import SendPhoto from "./pages/SendPhoto";
 import FullScreen from "./components/FullScreen";
+import { isMobile } from "./utils/isMobile";
+import RoutesAnimation from "./components/routes/RoutesAnimation";
+import Routes from "./components/routes/Routes";
+
+const setRoutes = (user) => {
+  return isMobile() ? (
+    <RoutesAnimation user={user}></RoutesAnimation>
+  ) : (
+    <Routes user={user}></Routes>
+  )
+}
 
 function App() {
   const location = useLocation();
+  const history = useHistory();
 
-  const [nav, setNav] = useState("forward");
+  // const [nav, setNav] = useState("forward");
+  const [nav, setNav] = useState({path: "/", direction: 0, state: null});
   const [user, setUser] = useState(null);
   const [socket, setSocket] = useState(null);
   const [socketIsActive, setSocketIsActive] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lastLocation, setLastLocation] = useState("");
+  const [initialLoad, setInitialLoad] = useState(false);
 
   const navValue = useMemo(() => ({ nav, setNav }), [nav, setNav]);
   const userValue = useMemo(() => ({ user, setUser }), [user, setUser]);
@@ -43,6 +42,7 @@ function App() {
   );
 
   useEffect(() => {
+    setInitialLoad(true);
     getUser();
   }, []);
 
@@ -56,7 +56,7 @@ function App() {
   // add & remove socket
   useEffect(() => {
     if (!socketIsActive && user) {
-      setSocket(io("http://localhost:3000"));
+      setSocket(io(window.location.origin));
       setSocketIsActive(true);
     }
     if (socketIsActive && !user) {
@@ -77,9 +77,28 @@ function App() {
     }
   }, [socket, user, location, lastLocation]);
 
+
+  // Handle navigation
   useEffect(() => {
-    console.log(location.key);
-  }, [location]);
+    if(!initialLoad) return;
+    // We can either have files key, path key ot selectedFriends key in nav.state
+    // Adding stuff manually here is not scalable long term, but for now we only have 3 properties to worry about
+    const files = nav.state && nav.state.files;
+    const prevPath = nav.state && nav.state.prevPath;
+    const selectedFriends = nav.state && nav.state.selectedFriends;
+
+    history.push({
+      pathname: nav.path,
+      ...(nav.state && 
+        {state: {
+          ...history.location.state, 
+          ...(files && {files}), 
+          ...(prevPath && {prevPath}), 
+          ...(selectedFriends && {selectedFriends})} })
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nav])
+
 
   return (
     <NavContext.Provider value={navValue}>
@@ -88,91 +107,7 @@ function App() {
           <DeviceInfo />
           <FullScreen />
           {!isLoading ? (
-            <Route
-              render={({ location }) => (
-                <TransitionGroup>
-                  <CSSTransition
-                    key={location.key}
-                    timeout={400}
-                    classNames={nav}
-                    onEnter={() => {
-                      document.documentElement.style.setProperty(
-                        "--overflow",
-                        "hidden"
-                      );
-                    }}
-                    onExited={() => {
-                      document.documentElement.style.setProperty(
-                        "--overflow",
-                        "unset"
-                      );
-                    }}
-                  >
-                    <Switch location={location} key={location.key}>
-                      {!user ? (
-                        <Route exact path="/" component={Authenticate} />
-                      ) : null}
-                      <PrivateRoute
-                        user={user}
-                        exact
-                        path="/"
-                        component={Home}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/profile/edit/name"
-                        component={EditName}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/profile/edit"
-                        component={EditProfile}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/profile"
-                        component={Profile}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/add"
-                        component={AddFriends}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/new/chat"
-                        component={NewChat}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/new/group"
-                        component={NewGroup}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/chat/:id"
-                        component={Chat}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/archived"
-                        component={Archived}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/camera"
-                        component={Camrera}
-                      />
-                      <PrivateRoute
-                        user={user}
-                        path="/send-photo"
-                        component={SendPhoto}
-                      />
-                    </Switch>
-                  </CSSTransition>
-                </TransitionGroup>
-              )}
-            />
+            setRoutes(user)
           ) : (
             <Loading />
           )}

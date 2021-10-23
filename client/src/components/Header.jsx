@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { NavContext } from "../context/NavContext";
 import { UserContext } from "../context/UserContext";
 
@@ -9,17 +9,14 @@ import {
   faSearch,
   faUserPlus,
   faTimes,
-  faTrash,
-  faArchive,
-  faThumbtack,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import Ripple from "../components/Effects/Ripple";
 import Avatar from "./Avatar";
-import { IonAlert } from "@ionic/react";
 import EditChat from "./EditChat";
 
 function Header({
+  handleSearchUsers,
   hasIncomingRequests,
   handleFindUsers,
   handleSearchChats,
@@ -31,18 +28,12 @@ function Header({
   page,
 }) {
   const location = useLocation();
-  const history = useHistory();
   const { setNav } = useContext(NavContext);
   const { user } = useContext(UserContext);
 
   const handleNavigation = (to) => {
-    if (to === "/") {
-      setNav("backward");
-    } else {
-      setNav("forward");
-    }
-    // we need to give a small delay so our transition class appends on the DOM before we redirect
-    setTimeout(() => history.push(to), 10);
+    const direction = to === "/" ? 0 : 1;
+    setNav({path: to, direction});
   };
 
   return (
@@ -77,41 +68,6 @@ function Header({
               chats={chats}
               setChats={setChats}
             />
-            {/* {page === "archived" ? null : (
-              <Ripple.Div
-                onClick={() => editChatStatus(removeThumbtack ? 0 : 1)}
-              >
-                <span
-                  className="stroke"
-                  style={removeThumbtack ? { display: "block" } : null}
-                ></span>
-                <FontAwesomeIcon icon={faThumbtack} />
-              </Ripple.Div>
-            )}
-
-            <Ripple.Div
-              {...(page === "archived" && {
-                onClick: () => editChatStatus(0),
-              })}
-              {...(page !== "archived" && {
-                onClick: () => editChatStatus(2),
-              })}
-              className="archived-icon"
-              style={
-                toggleEditChat ? { opacity: "1", visibility: "visible" } : null
-              }
-            >
-              <FontAwesomeIcon icon={faArchive} />
-            </Ripple.Div>
-            <Ripple.Div
-              onClick={() => setToggleTrashChat(true)}
-              className="archived-icon"
-              style={
-                toggleEditChat ? { opacity: "1", visibility: "visible" } : null
-              }
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </Ripple.Div> */}
           </div>
         </div>
         <div className="nav-container">
@@ -181,7 +137,12 @@ function Header({
             ) : null}
             {location.pathname !== "/add" ? (
               <input
-                onChange={handleSearchChats}
+                {...(handleSearchChats && {
+                  onChange: (e) => handleSearchChats(e),
+                })}
+                {...(handleSearchUsers && {
+                  onChange: (e) => handleSearchUsers(e),
+                })}
                 type="text"
                 className="search"
                 placeholder="Search"
