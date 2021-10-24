@@ -110,7 +110,6 @@ function PreviewAvatar({
       naturalWidth: imageInfo.naturalWidth,
       naturalHeight: imageInfo.naturalHeight,
     });
-    // console.log(calculatePosition(imageSize, circleRef, imageRef, scaleValue));
   };
   window.onresize = handleWindowResize;
 

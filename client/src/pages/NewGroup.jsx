@@ -85,9 +85,6 @@ function NewGroup() {
     setFriends(newFriends);
   };
 
-  useEffect(() => {
-    console.log(selectedFriends)
-  }, [selectedFriends])
 
   return (
     <div className="new-page page">
@@ -131,7 +128,7 @@ function NewGroup() {
         })}
       </ul>
       <div className="scroll-wrapper">
-        <ul className="users-list">
+        <ul className="users-list" style={friends.length > 0 ? {opacity: "1"} : null}>
           {friends.filter((obj) => obj.isVisible).map((e) => {
             return (
               <Ripple.Li

@@ -71,7 +71,7 @@ function Chat() {
   const [initMessages, setInitMessages] = useState([]);
   const [imagesHasLoaded, setImagesHasLoaded] = useState(0);
   const [imagesCount, setImagesCount] = useState(0);
-  const [showChat, setShowChat] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   const [chat, setChat] = useState({});
   const [chatStatus, setChatStatus] = useState(0);
   const [chatColor, setChatColor] = useState({
@@ -175,7 +175,7 @@ function Chat() {
   useEffect(() => {
     if (imagesCount === 0) return;
     if (imagesCount === imagesHasLoaded) {
-      setShowChat(true);
+      setTimeout(() => setShowChat(true), 50)
     }
   }, [imagesHasLoaded, imagesCount]);
 
@@ -460,7 +460,7 @@ function Chat() {
                 <FontAwesomeIcon icon={faChevronLeft} />
               </Ripple.Div>
 
-              <div className="user-box">
+              <div className="user-box" style={showChat ? {opacity: "1"} : null}>
                 <div
                   className={`${
                     chat.isPrivate ? "img-box-wrapper" : "img-box-wrapper-group"
@@ -522,7 +522,7 @@ function Chat() {
       </div>
       {!chat.isPrivate ? (
         <>
-          <div className="users-container">
+          <div className="users-container" style={showChat ? {opacity: "1"} : null}>
             <ul className="users-list">
               {friends &&
                 friends.map((e, i) => {
@@ -574,8 +574,11 @@ function Chat() {
       <div
         className="message-container"
         ref={messageContainer}
-        style={showChat ? null : { visibility: "hidden" }}
+        style={showChat ? {opacity: "1"} : null}
       >
+        {messages && messages.length === 0 ? (
+          <div style={{color: "#a1a1a1", position: "fixed", inset: "0", zIndex: "0", display: "grid", placeItems: "center"}}>It's empty here ( ͡° ͜ʖ ͡°)</div>
+        ):null}
         <InfiniteScroll
           ref={scrollRef}
           className="message-list"

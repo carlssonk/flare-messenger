@@ -10,6 +10,9 @@ import PreviewAvatar from "../PreviewAvatar";
 import Draggable from "react-draggable";
 import { getImgSizeInfo } from "../../utils/previewAvatar";
 
+import { hasImageCapture } from "../../utils/hasImageCapture"
+import UserMediaAlert from "../UserMediaAlert";
+
 const formRed = "#ff0042";
 
 function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, setSelectedFriendsList }) {
@@ -28,6 +31,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
   const [toggleOptions, setToggleOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showImage, setShowImage] = useState(false);
+  const [toggleCameraAlert, setToggleCameraAlert] = useState(false);
 
   const [previewScale, setPreviewScale] = useState(0);
   const [previewX, setPreviewX] = useState(0);
@@ -41,7 +45,6 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
     const direction = to === "/" ? 0 : 1;
 
     if (to === "/camera") {
-      console.log(selectedFriends)
       setNav({path: to, direction, state: { prevPath: history.location.pathname, selectedFriends }})
       return;
     }
@@ -52,8 +55,6 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
   useEffect(() => {
     const state = history.location.state
     if (state && state.files) {
-      console.log(state.files)
-      console.log(state)
       setImageFile(state.files[0].file);
       setPreviewAvatarUrl(state.files[0].url);
       setSelectedFriends(state.selectedFriends);
@@ -245,7 +246,10 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
           className="avatar-options-popup"
           style={toggleOptions ? { transform: "translate3d(0, 0%, 0)" } : null}
         >
-          <Ripple.Div onClick={() => handleNavigation("/camera")}>
+          <Ripple.Div onClick={() => {
+            if (!hasImageCapture()) return setToggleCameraAlert(true);
+            handleNavigation("/camera")
+          }}>
             <div>Take Photo</div>
           </Ripple.Div>
           <Ripple.Div onClick={() => handleToggleChooseAvatar()}>
@@ -271,6 +275,7 @@ function CreateGroup({ handleTogglePopup, selectedFriends, setSelectedFriends, s
           togglePopupWait ? "show-fade-half" : "hide-fade-half"
         }`}
       ></div>
+      <UserMediaAlert toggleCameraAlert={toggleCameraAlert} setToggleCameraAlert={setToggleCameraAlert} />
     </>
   );
 }

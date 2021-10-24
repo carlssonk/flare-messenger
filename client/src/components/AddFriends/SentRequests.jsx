@@ -1,13 +1,20 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../Avatar";
 import Ripple from "../Effects/Ripple"
 
 function SentRequests({ sentRequests, handleRequest }) {
   return (
     <div className="page-section">
-      <ul className="incoming__requests users-list">
+
+      {sentRequests && sentRequests.length === 0 ? (
+        <div className="empty-requests-wrapper">
+          <div className="main-label">Click <span> <FontAwesomeIcon icon={faSearch} /> </span> input to search for friends.</div>
+        </div>
+      ):null}
+
+      <ul className="incoming__requests users-list" style={sentRequests && sentRequests.length > 0 ? {opacity: "1"} : null}>
         {sentRequests &&
           sentRequests.map((e) => {
             return (

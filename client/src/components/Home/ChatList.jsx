@@ -34,7 +34,7 @@ function ChatList({
   };
 
   return (
-    <div className="chat-list">
+    <div className="chat-list" style={chats.length > 0 ? {opacity: "1"} : null}>
       <ul>
         {page === "archived" ? (
           chats &&

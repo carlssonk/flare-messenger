@@ -192,10 +192,6 @@ module.exports.createGroup = async (req, res) => {
   const users = req.body.users.split(",");
 
 
-
-  console.log(name)
-  console.log(users)
-
   let path = null;
   let filename = null;
   let resize = {};
@@ -283,6 +279,5 @@ module.exports.setChatColor = async (req, res) => {
     { arrayFilters: [{ "elem.chat": chatId }] }
   );
 
-  console.log(user);
   res.send("ok");
 };

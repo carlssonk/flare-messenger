@@ -92,12 +92,10 @@ function Gif({ handleSubmit }) {
     );
     const data = await res.json();
     setGifs(data.results);
-    console.log(data.results);
     setShowGifs(true);
   };
 
   const handleWindowResize = () => {
-    console.log("GIF RESIZE");
     const columnsCount = handleSetColumnsCount();
     if (columnsCount !== columns) handleSetGifsOrder();
   };

@@ -13,6 +13,8 @@ import { UserContext } from "../context/UserContext";
 
 import { IonLoading, IonAlert } from "@ionic/react";
 import Avatar from "../components/Avatar";
+import { hasImageCapture } from "../utils/hasImageCapture";
+import UserMediaAlert from "../components/UserMediaAlert";
 
 function EditProfile() {
   const { setUser, user } = useContext(UserContext);
@@ -27,6 +29,7 @@ function EditProfile() {
   const [isLoading, setIsLoading] = useState(false);
   const [toggleOptions, setToggleOptions] = useState(false);
   const [toggleRemoveAvatar, setToggleRemoveAvatar] = useState(false);
+  const [toggleCameraAlert, setToggleCameraAlert] = useState(false);
 
   const handleNavigation = (to) => {
     if (to === "/camera") {
@@ -46,7 +49,6 @@ function EditProfile() {
   useEffect(() => {
     const state = history.location.state
     if (state && state.files) {
-      console.log(state)
       setImageFile(state.files[0].file);
       setPreviewAvatarUrl(state.files[0].url);
       setTogglePopup(true);
@@ -168,7 +170,10 @@ function EditProfile() {
           className="avatar-options-popup"
           style={toggleOptions ? { transform: "translate3d(0, 0%, 0)" } : null}
         >
-          <Ripple.Div onClick={() => handleNavigation("/camera")}>
+          <Ripple.Div onClick={() => {
+            if (!hasImageCapture()) return setToggleCameraAlert(true);
+            handleNavigation("/camera")
+          }}>
             <div>Take Photo</div>
           </Ripple.Div>
           <Ripple.Div onClick={() => handleToggleChooseAvatar()}>
@@ -200,6 +205,7 @@ function EditProfile() {
         }`}
         // style={{ height: "calc(100% - 44px)" }} Use this when using DeviceInfo
       ></div>
+      <UserMediaAlert toggleCameraAlert={toggleCameraAlert} setToggleCameraAlert={setToggleCameraAlert} />
     </>
   );
 }

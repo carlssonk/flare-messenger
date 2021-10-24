@@ -61,7 +61,6 @@ function SendPhoto() {
   const handleSendPhoto = async () => {
     setIsLoading(true);
     const photo = history.location.state.files[0];
-    console.log(photo)
     let formData = new FormData();
     formData.append("photo", photo.file);
     formData.append("chats", selectedChats);

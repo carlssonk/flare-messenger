@@ -4,12 +4,19 @@ import Header from "../components/Header";
 import Footer from "../components/Home/Footer";
 import ChatList from "../components/Home/ChatList";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+
 function Home() {
   const [chats, setChats] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [toggleEditChat, setToggleEditChat] = useState(false);
   const [selectedChats, setSelectedChats] = useState([]);
   const [hasIncomingRequests, setHasIncomingRequests] = useState(false);
+  const [showPlaceholder, setShowPlaceholder] = useState(false);
 
   useEffect(() => {
     const getChats = async () => {
@@ -17,6 +24,7 @@ function Home() {
       const data = await res.json();
       handleSortChat(data.chats);
       setHasIncomingRequests(data.hasIncomingRequests);
+      setShowPlaceholder(true);
     };
     getChats();
   }, []);
@@ -86,6 +94,14 @@ function Home() {
         toggleEditChat={toggleEditChat}
         setToggleEditChat={setToggleEditChat}
       />
+      {allChats.length === 0 && showPlaceholder ? (
+        <div className="empty-chats-wrapper">
+          <div className="main-label">You currently have no active chats.</div>
+          <br />
+          <div>Click<span> <FontAwesomeIcon icon={faUserPlus} /> </span>to add friends.</div>
+          <div>Click <span> <FontAwesomeIcon icon={faEdit} /> </span> to start a new chat.</div>
+        </div>
+      ):null}
       <Footer />
     </div>
   );

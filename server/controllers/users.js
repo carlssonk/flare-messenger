@@ -34,11 +34,9 @@ module.exports.updateName = async (req, res) => {
 };
 
 module.exports.newAvatar = async (req, res) => {
-  console.log("New avatar");
   const myId = req.user._id;
   const resize = JSON.parse(req.body.resize);
 
-  console.log(req.file);
 
   const path = req.file.path.replace(
     "/upload",

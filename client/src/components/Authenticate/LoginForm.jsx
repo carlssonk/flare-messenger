@@ -12,7 +12,7 @@ const DEMO_PASSWORD = "password123"
 
 function LoginForm() {
   const { setUser } = useContext(UserContext);
-  const { nav, setNav } = useContext(NavContext);
+  const { setNav } = useContext(NavContext);
 
   const history = useHistory();
 
@@ -52,9 +52,8 @@ function LoginForm() {
   };
 
   const handleRedirect = (user) => {
-    setNav({...nav, direction: 1});
+    setNav({path: "/", direction: 1, state: null});
     history.location.key = uuidv4(); // Change key to invoke animation
-    console.log(user.chats);
     setUser(user);
   };
   return (

@@ -46,7 +46,6 @@ function Camera() {
 
     const files = setFiles();
 
-    console.log(to)
     setNav({path: to, state: { files }, direction: 1})
   };
 
@@ -87,7 +86,6 @@ function Camera() {
 
   useEffect(() => {
     const state = history.location.state;
-    console.log(state)
     if (state && state.prevPath) setPrevPath(state.prevPath);
   }, [history]);
 

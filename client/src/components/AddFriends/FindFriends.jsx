@@ -16,7 +16,13 @@ function FindFriends({ incomingRequests, handleRequest }) {
       > */}
       <div className="incoming__label">Incoming Requests</div>
 
-      <ul className="incoming__requests users-list">
+      {incomingRequests && incomingRequests.length === 0 ? (
+        <div className="empty-friends-wrapper">
+          <div className="main-label">You have no incoming friend requests.</div>
+        </div>
+      ):null}
+
+      <ul className="incoming__requests users-list" style={incomingRequests && incomingRequests.length > 0 ? {opacity: "1"} : null}>
         {incomingRequests &&
           incomingRequests.map((e) => {
             return (

@@ -62,8 +62,7 @@ function AddFriends() {
         "Content-Type": "application/json",
       },
     });
-    const data = await res.json();
-    if (data.friends) handleYouAreNowFriends();
+    await res.json();
     handleUpdateArraysAdd(id);
   };
 
@@ -91,7 +90,6 @@ function AddFriends() {
     await res.json();
     if (action === "accept") {
       removeUserFromArray("incomingRequests", id);
-      handleYouAreNowFriends();
     }
     if (action === "reject") {
       removeUserFromArray("incomingRequests", id);
@@ -118,10 +116,6 @@ function AddFriends() {
   const removeFromFriendsAndPending = (id) => {
     const updatedArrayB = findUserAndRemove(friendsAndPending, id);
     setFriendsAndPending(updatedArrayB);
-  };
-
-  const handleYouAreNowFriends = () => {
-    alert("you are now friends!");
   };
 
   const getFriends = async () => {

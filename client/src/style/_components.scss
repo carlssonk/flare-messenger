@@ -183,6 +183,8 @@
 }
 
 .users-list {
+  opacity: 0;
+  transition: 100ms;
   li {
     height: 60px;
     display: flex;
@@ -751,6 +753,8 @@
   width: 100%;
   color: white;
   overflow-y: auto;
+  transition: 100ms;
+  opacity: 0;
   li {
     position: relative;
     display: flex;

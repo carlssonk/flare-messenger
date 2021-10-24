@@ -14,7 +14,7 @@ function UsersList({ users, handleAddUser, friendsAndPending }) {
   };
 
   return (
-    <ul className="users-list">
+    <ul className="users-list" style={users.length > 0 ? {opacity: "1"} : null}>
       {users.map((e) => {
         return (
           <React.Fragment key={e._id}>

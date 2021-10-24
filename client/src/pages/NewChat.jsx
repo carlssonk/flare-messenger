@@ -75,7 +75,7 @@ function NewChat() {
           <div className="new-group-label">Create New Group</div>
         </Ripple.Div>
 
-        <ul className="users-list">
+        <ul className="users-list" style={friends.length > 0 ? {opacity: "1"} : null}>
           {friends.filter((obj) => obj.isVisible).map((e) => {
             return (
               <Ripple.Li key={e._id} onClick={() => handleCreateChat(e._id)}>
