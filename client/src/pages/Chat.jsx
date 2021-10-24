@@ -523,7 +523,7 @@ function Chat() {
       {!chat.isPrivate ? (
         <>
           <div className="users-container" style={showChat ? {opacity: "1"} : null}>
-            <ul className="users-list">
+            <ul className="users-list" style={showChat ? {opacity: "1"} : null}>
               {friends &&
                 friends.map((e, i) => {
                   return (
