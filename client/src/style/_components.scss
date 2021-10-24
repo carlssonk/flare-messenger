@@ -4,9 +4,7 @@
   place-items: center normal;
   height: 44px;
   padding: 0 14px;
-  // background-color: black;
   background-color: rgb(24, 24, 24);
-  // font-size: 40px;
   color: white;
   .device-info__time {
     padding-left: 20px;
@@ -112,8 +110,9 @@
           height: 40px;
           border-radius: 100%;
           margin: 0 4px;
-          display: grid;
-          place-items: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           .stroke {
             display: none;
             background-color: white;
@@ -469,9 +468,27 @@
   }
 }
 
-.remove-avatar-alert {
+// .remove-avatar-alert {
+//   div {
+//     background: rgb(50, 50, 50) !important;
+//     h2 {
+//       color: white !important;
+//     }
+//   }
+// }
+.popup-alert {
+  .alert-wrapper.sc-ion-alert-md {
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .alert-title.sc-ion-alert-md {
+    font-size: 18px;
+  }
+  .alert-message.sc-ion-alert-md {
+    padding-bottom: 0;
+  }
   div {
-    background: rgb(50, 50, 50) !important;
+    background: rgba(25, 25, 25, 0.8) !important;
     h2 {
       color: white !important;
     }

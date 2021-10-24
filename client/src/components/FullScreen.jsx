@@ -1,4 +1,3 @@
-
 function FullScreen() {
   setTimeout(() => {
     if (

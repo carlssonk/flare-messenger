@@ -198,7 +198,7 @@ function EditProfile() {
         className={`click-catcher ${
           toggleOptions ? "show-fade-half" : "hide-fade-half"
         }`}
-        style={{ height: "calc(100% - 44px)" }}
+        // style={{ height: "calc(100% - 44px)" }} Use this when using DeviceInfo
       ></div>
     </>
   );

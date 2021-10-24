@@ -3,12 +3,12 @@ import Loading from "./components/Loading";
 import "./style/style.min.css";
 import { UserContext } from "./context/UserContext";
 import { NavContext } from "./context/NavContext";
-import DeviceInfo from "./components/DeviceInfo";
+// import DeviceInfo from "./components/DeviceInfo";
 import { useLocation, useHistory } from "react-router-dom";
 import { joinChat, leaveChat } from "./utils/socket";
 import { SocketContext } from "./context/SocketContext";
 import io from "socket.io-client";
-import FullScreen from "./components/FullScreen";
+// import FullScreen from "./components/FullScreen";
 import { isMobile } from "./utils/isMobile";
 import RoutesAnimation from "./components/routes/RoutesAnimation";
 import Routes from "./components/routes/Routes";
@@ -104,8 +104,8 @@ function App() {
     <NavContext.Provider value={navValue}>
       <UserContext.Provider value={userValue}>
         <SocketContext.Provider value={socketValue}>
-          <DeviceInfo />
-          <FullScreen />
+          {/* <DeviceInfo /> */}
+          {/* <FullScreen /> */}
           {!isLoading ? (
             setRoutes(user)
           ) : (

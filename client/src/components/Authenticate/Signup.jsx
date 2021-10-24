@@ -7,10 +7,12 @@ function Signup({ changePage }) {
   return (
     <div className="page auth-page">
       <FlareIcon />
-      <SignupForm />
-      <Ripple.Button className="small-btn" onClick={() => changePage("login")}>
-        ALREADY HAVE AN ACCOUNT?
-      </Ripple.Button>
+      <div className="bottom-wrapper">
+        <SignupForm />
+        <Ripple.Button className="small-btn" onClick={() => changePage("login")}>
+          ALREADY HAVE AN ACCOUNT?
+        </Ripple.Button>
+      </div>
     </div>
   );
 }

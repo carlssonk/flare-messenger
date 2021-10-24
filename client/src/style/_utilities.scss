@@ -27,10 +27,7 @@
   background-color: var(--primary-background);
   position: absolute !important;
   inset: 0;
-  margin-top: 44px;
-  // ::-webkit-scrollbar {
-  //   width: 50px;
-  // }
+  // margin-top: 44px; Use this when using DeviceInfo
 }
 
 // GO FORWARD

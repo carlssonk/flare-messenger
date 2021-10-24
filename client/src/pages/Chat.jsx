@@ -54,6 +54,8 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import VisibilitySensor from "react-visibility-sensor";
 import EditChat from "../components/EditChat";
+import UserMediaAlert from "../components/UserMediaAlert";
+import { hasImageCapture } from "../utils/hasImageCapture";
 
 const draftUtils = require("draftjs-utils");
 
@@ -90,6 +92,7 @@ function Chat() {
   const [messagesCount, setMessagesCount] = useState(0);
   const [currentLimit, setCurrentLimit] = useState(40);
   const [showPopover, setShowPopover] = useState(false);
+  const [toggleCameraAlert, setToggleCameraAlert] = useState(false);
 
   const inputRef = useRef(null);
   const editorWrapper = useRef(null);
@@ -622,7 +625,10 @@ function Chat() {
         >
           <Ripple.Div
             className="icon-outside"
-            onClick={() => handleNavigation("/camera")}
+            onClick={() => {
+              if (!hasImageCapture()) return setToggleCameraAlert(true);
+              handleNavigation("/camera")
+            }}
           >
             <FontAwesomeIcon icon={faCamera} />
           </Ripple.Div>
@@ -776,11 +782,12 @@ function Chat() {
       <IonAlert
         isOpen={maximumFilesAlert}
         onDidDismiss={() => setMaximumFilesAlert(false)}
-        cssClass="remove-avatar-alert"
+        cssClass="popup-alert"
         header={"The limit for attachments has been reached"}
         message={"Maxmimum number of attatchments is 10."}
         buttons={[{ text: "OK", handler: () => setMaximumFilesAlert(false) }]}
       />
+      <UserMediaAlert toggleCameraAlert={toggleCameraAlert} setToggleCameraAlert={setToggleCameraAlert} />
     </div>
   );
 }
