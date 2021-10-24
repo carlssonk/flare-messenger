@@ -73,3 +73,15 @@
     }
   }
 }
+
+
+@media all and (max-height: 750px) {
+  .auth-page {
+    .flare-icon {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 40px;
+    }
+  }
+}
