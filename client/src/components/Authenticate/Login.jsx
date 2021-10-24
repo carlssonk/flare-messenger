@@ -10,7 +10,7 @@ function Login({ changePage }) {
       <div style={{color: "#999999", margin: "10px 0"}}>
         <div><strong>NOTE:</strong></div>
         <div>This is a demo version;</div>
-        <div>Log in with the demo user for the best experience;</div>
+        <div>Log in with the demo user for pre-populated data;</div>
         <br />
         <div><strong>Username: </strong>demouser</div>
         <div><strong>Password: </strong>password123</div>
