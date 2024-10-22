@@ -12,8 +12,8 @@ I built this app because I wanted a place I could send messages through 1 app, n
 ### Prerequisites
 1. You need to have [MonogDB](https://www.mongodb.com/) installed locally on your machine.
 2. Make sure you also have [Node.js](https://nodejs.org/en/) and NPM installed
-3. Make an account on cloudinary and add the following inside a .env file in the server folder:
-(Cloudinary is used for image uploading)
+3. ~~Make an account on cloudinary and add the following inside a .env file in the server folder:
+(Cloudinary is used for image uploading)~~
 ```
 CLOUDINARY_CLOUD_NAME=[your_cloud_name]
 CLOUDINARY_KEY=[your_api_key]
