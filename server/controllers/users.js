@@ -5,6 +5,7 @@ const { randomHexGenerator } = require("../utils/generateAvatar");
 const { updateLastActive } = require("../utils/users");
 
 module.exports.user = (req, res) => {
+  console.log("user");
   if (!req.isAuthenticated()) return res.json(null);
   const {
     _id,
@@ -35,15 +36,17 @@ module.exports.updateName = async (req, res) => {
 
 module.exports.newAvatar = async (req, res) => {
   const myId = req.user._id;
+  console.log(req.body)
   const resize = JSON.parse(req.body.resize);
-
+  console.log(resize)
 
   const path = req.file.path.replace(
     "/upload",
     `/upload/ar_1,c_crop,w_${resize.ZOOM},x_${resize.FindX},y_${resize.FindY}/w_200`
   );
+  console.log(path)
   const filename = req.file.filename;
-
+  console.log(filename)
   const user = await User.findOneAndUpdate(
     { _id: myId },
     {
@@ -54,6 +57,7 @@ module.exports.newAvatar = async (req, res) => {
   // Delete old avatar on cloudinary
   cloudinary.uploader.destroy(user.avatar.filename);
 
+  console.log("end")
   res.json({ path });
 };
 

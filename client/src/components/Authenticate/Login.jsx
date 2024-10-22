@@ -7,14 +7,14 @@ function Login({ changePage }) {
   return (
     <div className="page auth-page">
       <FlareIcon />
-      <div style={{color: "#999999", margin: "10px 0"}}>
+      {/* <div style={{color: "#999999", margin: "10px 0"}}>
         <div><strong>NOTE:</strong></div>
         <div>This is a demo version;</div>
         <div>Log in with the demo user for pre-populated data;</div>
         <br />
         <div><strong>Username: </strong>demouser</div>
         <div><strong>Password: </strong>password123</div>
-      </div>
+      </div> */}
       <div className="bottom-wrapper">
         <LoginForm />
         <Ripple.Button onClick={() => changePage("signup")}>

@@ -1,6 +1,6 @@
 // const { sendMessage } = require("./controllers/messages");
 
-module.exports = (io) => {
+const socketModule = (io) => {
   io.on("connection", (socket) => {
     // console.log(`Connected: ${socket.id}`);
 
@@ -12,12 +12,16 @@ module.exports = (io) => {
       // console.log(`Socket ${socket.id} joining ${roomId}`);
       socket.join(roomId);
     });
+
     socket.on("leave", (roomId) => {
       // console.log(`Socket ${socket.id} leaving ${roomId}`);
       socket.leave(roomId);
     });
-    module.exports.emitMessage = (chatId, message) => {
-      io.to(chatId).emit("message", message);
-    };
   });
 };
+
+// socketModule.emitMessage = (chatId, message) => {
+//   io.to(chatId).emit("message", message);
+// };
+
+module.exports = socketModule

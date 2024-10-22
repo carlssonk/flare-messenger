@@ -29,7 +29,7 @@ const messageRoutes = require("./routes/messages");
 const MongoStore = require("connect-mongo");
 
 // Connect to database
-const dbUrl = "mongodb://localhost:27017/flare-chat";
+const dbUrl = process.env.MONGODB_URI || "mongodb://localhost:27017/messenger";
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -44,7 +44,7 @@ db.once("open", () => {
 });
 
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+global.io = require("socket.io")(server);
 
 app.use(cors());
 app.use(express.json());

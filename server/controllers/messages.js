@@ -3,7 +3,8 @@ const User = require("../models/user");
 const Message = require("../models/message");
 const _ = require("lodash");
 const mongoose = require("mongoose");
-const socket = require("../socket");
+// const socket = require("../socket");
+// const { io } = require("../index");
 const {
   handleSpreadMessages,
   createMessageObject,
@@ -39,7 +40,8 @@ module.exports.sendPhoto = async (req, res) => {
 
     const spreadMessage = handleSpreadMessages([message], true);
 
-    socket.emitMessage(id, spreadMessage);
+    global.io.to(id).emit("message", spreadMessage);
+    // socket.emitMessage(id, spreadMessage);
   }
   res.json({ status: 200 });
 };
@@ -73,7 +75,8 @@ module.exports.sendMessage = async (req, res) => {
 
   const spreadMessage = handleSpreadMessages([message], true);
 
-  socket.emitMessage(chatId, spreadMessage);
+  global.io.to(chatId).emit("message", spreadMessage);
+  // socket.emitMessage(chatId, spreadMessage);
 
   res.json({ message: spreadMessage });
 };

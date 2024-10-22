@@ -117,12 +117,14 @@ function PreviewAvatar({
   // https://res.cloudinary.com/plexeronthecloud/image/upload/ar_1,c_crop,w_${Zoom},x_${FindX},y_${FindY}/v1625506265/YelpCamp/boxes_mqd5wg.png
 
   const handleSubmitProfile = async (e) => {
+    console.log('HELLO')
     e.preventDefault();
     setIsLoading(true);
     setTogglePopupWait(false);
     if (imageUrl.length === 0) return;
 
     const formData = new FormData();
+    console.log(image)
     formData.append("avatar", image);
     formData.append(
       "resize",
@@ -131,10 +133,12 @@ function PreviewAvatar({
       )
     );
 
+    console.log(formData)
     const res = await fetch(`/api/avatar`, {
       method: "POST",
       body: formData,
     });
+    console.log(res)
     const avatar = await res.json();
 
     setIsLoading(false);

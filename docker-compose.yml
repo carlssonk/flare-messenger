@@ -1,0 +1,41 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/messenger
+      - CLOUDINARY_CLOUD_NAME=dtkp7zavl
+      - CLOUDINARY_KEY=293124619195618
+      - CLOUDINARY_SECRET=28RUJnGR9eVQHV69JFc4owV2Uck
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
